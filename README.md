@@ -1,0 +1,1 @@
+# rubiks-cube-resolver-bot
