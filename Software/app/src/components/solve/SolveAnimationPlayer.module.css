@@ -1,0 +1,134 @@
+.player {
+  display: grid;
+  gap: 1rem;
+}
+
+.statusBlock,
+.controls,
+.sequence,
+.result {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.statusBlock h2 {
+  margin-bottom: 0.55rem;
+}
+
+.progressBar {
+  margin-top: 0.55rem;
+  width: 100%;
+  height: 10px;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progressBar > div {
+  height: 100%;
+  background: #22c55e;
+  transition: width 120ms linear;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.controls button {
+  border: 1px solid var(--border);
+  background: var(--background);
+  color: var(--foreground);
+  border-radius: 0.45rem;
+  padding: 0.45rem 0.7rem;
+  cursor: pointer;
+}
+
+.controls button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.speedControl {
+  margin-left: auto;
+  display: grid;
+  gap: 0.2rem;
+  font-size: 0.9rem;
+}
+
+.speedControl input {
+  width: 230px;
+}
+
+.viewerGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.sequence h3 {
+  margin-bottom: 0.6rem;
+}
+
+.moveList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.moveChip {
+  border: 1px solid var(--border);
+  background: var(--background);
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.appliedMove {
+  border-color: #22c55e;
+  background: #dcfce7;
+  color: #14532d;
+}
+
+.currentMove {
+  border-color: #2563eb;
+  background: #dbeafe;
+  color: #1e3a8a;
+}
+
+.success {
+  color: #166534;
+}
+
+.error {
+  color: #b91c1c;
+}
+
+.ready {
+  color: #166534;
+}
+
+.waiting {
+  color: #92400e;
+}
+
+@media (max-width: 980px) {
+  .viewerGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .speedControl {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .speedControl input {
+    width: 100%;
+  }
+}

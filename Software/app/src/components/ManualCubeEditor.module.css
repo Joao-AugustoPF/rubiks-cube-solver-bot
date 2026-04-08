@@ -1,0 +1,205 @@
+.editor {
+  display: grid;
+  gap: 1rem;
+}
+
+.toolbar {
+  display: grid;
+  gap: 0.9rem;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.palette {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.colorButton {
+  border: 1px solid transparent;
+  border-radius: 0.45rem;
+  padding: 0.45rem 0.7rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.colorButtonActive {
+  border-color: var(--foreground);
+  box-shadow: inset 0 0 0 1px var(--foreground);
+}
+
+.darkText {
+  color: #0f172a;
+}
+
+.lightText {
+  color: #f8fafc;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.actions button {
+  border: 1px solid var(--border);
+  background: var(--background);
+  color: var(--foreground);
+  border-radius: 0.45rem;
+  padding: 0.45rem 0.65rem;
+  cursor: pointer;
+}
+
+.actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.statusGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.colorCount,
+.feedback,
+.preview,
+.solution {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.colorCount ul,
+.errorList {
+  display: grid;
+  gap: 0.4rem;
+  list-style: none;
+}
+
+.colorCount li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.colorCount li strong {
+  margin-left: auto;
+}
+
+.colorBadge {
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+}
+
+.error {
+  color: #b91c1c;
+  margin-bottom: 0.5rem;
+}
+
+.errorList li {
+  color: #b91c1c;
+}
+
+.success {
+  color: #166534;
+}
+
+.preview h3,
+.solution h3,
+.feedback h3,
+.colorCount h3 {
+  margin-bottom: 0.55rem;
+}
+
+.net {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(120px, 1fr));
+  grid-template-rows: repeat(3, auto);
+  grid-template-areas:
+    ". u . ."
+    "l f r b"
+    ". d . .";
+  gap: 0.7rem;
+}
+
+.faceCard {
+  border: 1px solid var(--border);
+  border-radius: 0.45rem;
+  padding: 0.45rem;
+  background: var(--background);
+}
+
+.faceCard header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+  font-size: 0.85rem;
+}
+
+.faceGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.25rem;
+}
+
+.sticker {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.centerSticker {
+  border: 2px solid #111827;
+}
+
+.solutionJson {
+  margin-top: 0.6rem;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 0.45rem;
+  padding: 0.7rem;
+  white-space: pre-wrap;
+  overflow-x: auto;
+  font-size: 0.85rem;
+}
+
+.executionActions {
+  margin-top: 0.7rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.executionActions button,
+.executionLink {
+  border: 1px solid var(--border);
+  background: var(--background);
+  color: var(--foreground);
+  border-radius: 0.45rem;
+  padding: 0.45rem 0.65rem;
+  cursor: pointer;
+}
+
+@media (max-width: 940px) {
+  .statusGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .net {
+    grid-template-columns: repeat(4, minmax(80px, 1fr));
+    gap: 0.5rem;
+  }
+}

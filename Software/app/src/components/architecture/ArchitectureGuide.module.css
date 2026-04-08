@@ -1,0 +1,481 @@
+.page {
+  width: min(1160px, 100%);
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.hero {
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 1.4rem;
+  background: linear-gradient(135deg, var(--surface), var(--background));
+  display: grid;
+  gap: 0.7rem;
+}
+
+.kicker {
+  display: inline-flex;
+  width: fit-content;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid #93c5fd;
+  color: #1e40af;
+  background: #dbeafe;
+  padding: 0.2rem 0.45rem;
+  border-radius: 999px;
+}
+
+.hero h1 {
+  font-size: clamp(1.5rem, 2.6vw, 2.2rem);
+}
+
+.quickLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.quickLinks a {
+  border: 1px solid var(--border);
+  border-radius: 0.45rem;
+  padding: 0.35rem 0.6rem;
+  background: var(--background);
+  font-weight: 600;
+}
+
+.sectionNav {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  border: 1px solid var(--border);
+  border-radius: 0.85rem;
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  backdrop-filter: blur(8px);
+  padding: 0.55rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.sectionNav a {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: var(--background);
+}
+
+.section {
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: var(--surface);
+  padding: 1rem;
+  display: grid;
+  gap: 0.85rem;
+  scroll-margin-top: 5rem;
+}
+
+.section h2 {
+  font-size: 1.16rem;
+}
+
+.flowCards {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.flowCard {
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--background);
+  padding: 0.75rem 0.55rem;
+  display: grid;
+  gap: 0.3rem;
+  text-align: center;
+}
+
+.flowCard span {
+  width: 1.7rem;
+  height: 1.7rem;
+  margin: 0 auto;
+  border-radius: 999px;
+  background: #dbeafe;
+  color: #1e3a8a;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.layerGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.layerCard {
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--background);
+  padding: 0.75rem;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.layerCard code {
+  width: fit-content;
+  background: #0f172a;
+  color: #f8fafc;
+  border-radius: 0.35rem;
+  padding: 0.2rem 0.35rem;
+  font-size: 0.82rem;
+}
+
+.folderTree {
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 0.8rem;
+  background: var(--background);
+}
+
+.folderList {
+  list-style: none;
+  display: grid;
+  gap: 0.38rem;
+  margin-left: 0.55rem;
+}
+
+.folderItem {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.folderItem summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  cursor: pointer;
+}
+
+.folderItem code {
+  background: #0f172a;
+  color: #f8fafc;
+  border-radius: 0.35rem;
+  padding: 0.18rem 0.35rem;
+}
+
+.folderItem small {
+  opacity: 0.8;
+}
+
+.dirBadge,
+.fileBadge {
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.15rem 0.38rem;
+}
+
+.dirBadge {
+  border: 1px solid #60a5fa;
+  background: #dbeafe;
+  color: #1e3a8a;
+}
+
+.fileBadge {
+  border: 1px solid #86efac;
+  background: #dcfce7;
+  color: #166534;
+  width: fit-content;
+}
+
+.dirResponsibilityGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.dirResponsibilityGrid article {
+  border: 1px solid var(--border);
+  border-radius: 0.65rem;
+  background: var(--background);
+  padding: 0.7rem;
+  display: grid;
+  gap: 0.32rem;
+}
+
+.typeTabs {
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--background);
+  padding: 0.75rem;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.typeTabButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.typeTabButton {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 999px;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.typeTabButtonActive {
+  border-color: #2563eb;
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.typeTabPanel {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.typeTabPanel pre,
+.endpointTable pre,
+.comparisonGrid pre {
+  margin: 0;
+  border: 1px solid #0f172a;
+  border-radius: 0.6rem;
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 0.65rem;
+  overflow-x: auto;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.infoCallout {
+  border: 1px solid #fde68a;
+  border-radius: 0.75rem;
+  background: #fefce8;
+  padding: 0.75rem;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.stepGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.stepGrid article {
+  border: 1px solid var(--border);
+  border-radius: 0.65rem;
+  background: var(--background);
+  padding: 0.75rem;
+  display: grid;
+  gap: 0.3rem;
+}
+
+.endpointTable {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.endpointTable > div {
+  border: 1px solid var(--border);
+  border-radius: 0.7rem;
+  background: var(--background);
+  padding: 0.75rem;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.timeline div {
+  border: 1px solid var(--border);
+  border-radius: 0.65rem;
+  background: var(--background);
+  padding: 0.6rem;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+
+.comparisonGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.comparisonGrid article {
+  border: 1px solid var(--border);
+  border-radius: 0.7rem;
+  background: var(--background);
+  padding: 0.75rem;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.endpointList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.endpointList article {
+  border: 1px solid var(--border);
+  border-radius: 0.7rem;
+  background: var(--background);
+  padding: 0.7rem;
+  display: grid;
+  gap: 0.3rem;
+}
+
+.endpointList span {
+  width: fit-content;
+  border-radius: 999px;
+  padding: 0.1rem 0.42rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  border: 1px solid #93c5fd;
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.endpointList code {
+  width: fit-content;
+  background: #0f172a;
+  color: #f8fafc;
+  border-radius: 0.35rem;
+  padding: 0.16rem 0.35rem;
+}
+
+.orderedFlow {
+  margin-left: 1rem;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.decisionList {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.decisionList details {
+  border: 1px solid var(--border);
+  border-radius: 0.7rem;
+  background: var(--background);
+  padding: 0.65rem;
+}
+
+.decisionList summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.decisionList p {
+  margin-top: 0.45rem;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.summaryGrid article {
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--background);
+  padding: 0.75rem;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.summaryGrid ul {
+  margin-left: 1rem;
+  display: grid;
+  gap: 0.35rem;
+}
+
+@media (max-width: 1050px) {
+  .flowCards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .layerGrid,
+  .endpointTable,
+  .comparisonGrid,
+  .summaryGrid,
+  .endpointList {
+    grid-template-columns: 1fr;
+  }
+
+  .timeline {
+    grid-template-columns: 1fr;
+  }
+
+  .dirResponsibilityGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .stepGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .page {
+    padding-top: 1.3rem;
+  }
+
+  .flowCards,
+  .dirResponsibilityGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .sectionNav {
+    position: static;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .kicker {
+    border-color: #1d4ed8;
+    color: #bfdbfe;
+    background: #1e3a8a;
+  }
+
+  .infoCallout {
+    border-color: #92400e;
+    background: #3f2b0d;
+  }
+
+  .layerCard code,
+  .folderItem code,
+  .endpointList code {
+    background: #020617;
+  }
+
+  .typeTabPanel pre,
+  .endpointTable pre,
+  .comparisonGrid pre {
+    border-color: #020617;
+    background: #020617;
+  }
+}

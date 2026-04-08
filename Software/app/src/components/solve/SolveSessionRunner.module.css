@@ -1,0 +1,118 @@
+.block {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.stack {
+  display: grid;
+  gap: 1rem;
+}
+
+.machineBlock {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.machineBlock h2 {
+  margin-bottom: 0.25rem;
+}
+
+.badge {
+  display: inline-flex;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid var(--border);
+}
+
+.badge_neutral {
+  background: var(--background);
+}
+
+.badge_queued {
+  background: #fef9c3;
+  border-color: #fde047;
+  color: #713f12;
+}
+
+.badge_started {
+  background: #dbeafe;
+  border-color: #93c5fd;
+  color: #1e3a8a;
+}
+
+.badge_finished {
+  background: #dcfce7;
+  border-color: #86efac;
+  color: #14532d;
+}
+
+.badge_error {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #7f1d1d;
+}
+
+.error {
+  color: #b91c1c;
+}
+
+.success {
+  color: #166534;
+}
+
+.note {
+  font-size: 0.9rem;
+}
+
+.pollingInfo {
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+.machineActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.primaryButton {
+  border: 1px solid #2563eb;
+  background: #2563eb;
+  color: #ffffff;
+  border-radius: 0.45rem;
+  padding: 0.45rem 0.75rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.primaryButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.emptyActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.linkButton {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--border);
+  background: var(--background);
+  border-radius: 0.45rem;
+  padding: 0.45rem 0.7rem;
+  width: fit-content;
+}

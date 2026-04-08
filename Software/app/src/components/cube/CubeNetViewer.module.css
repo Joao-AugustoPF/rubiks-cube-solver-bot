@@ -1,0 +1,64 @@
+.viewer {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.viewer h3 {
+  margin-bottom: 0.3rem;
+}
+
+.viewer p {
+  margin-bottom: 0.8rem;
+}
+
+.net {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(120px, 1fr));
+  grid-template-rows: repeat(3, auto);
+  grid-template-areas:
+    ". u . ."
+    "l f r b"
+    ". d . .";
+  gap: 0.7rem;
+}
+
+.faceCard {
+  border: 1px solid var(--border);
+  border-radius: 0.45rem;
+  padding: 0.45rem;
+  background: var(--background);
+}
+
+.faceCard header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+  font-size: 0.85rem;
+}
+
+.faceGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.25rem;
+}
+
+.sticker {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+}
+
+.centerSticker {
+  border: 2px solid #111827;
+}
+
+@media (max-width: 940px) {
+  .net {
+    grid-template-columns: repeat(4, minmax(80px, 1fr));
+    gap: 0.5rem;
+  }
+}

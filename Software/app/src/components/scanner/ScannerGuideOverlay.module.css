@@ -1,0 +1,51 @@
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.guide {
+  width: 62%;
+  aspect-ratio: 1;
+  border: 2px solid rgba(255, 255, 255, 0.95);
+  box-shadow:
+    0 0 0 9999px rgba(0, 0, 0, 0.35),
+    0 0 8px rgba(0, 0, 0, 0.45);
+  position: relative;
+}
+
+.vertical,
+.horizontal {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.vertical {
+  top: 0;
+  bottom: 0;
+  width: 2px;
+}
+
+.vertical:nth-child(1) {
+  left: 33.333%;
+}
+
+.vertical:nth-child(2) {
+  left: 66.666%;
+}
+
+.horizontal {
+  left: 0;
+  right: 0;
+  height: 2px;
+}
+
+.horizontal:nth-child(3) {
+  top: 33.333%;
+}
+
+.horizontal:nth-child(4) {
+  top: 66.666%;
+}

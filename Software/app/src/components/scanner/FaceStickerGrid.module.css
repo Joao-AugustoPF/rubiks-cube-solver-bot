@@ -1,0 +1,31 @@
+.card {
+  border: 1px solid var(--border);
+  border-radius: 0.45rem;
+  background: var(--background);
+  padding: 0.45rem;
+}
+
+.card header {
+  margin-bottom: 0.35rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.24rem;
+}
+
+.sticker {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 1px solid var(--border);
+  border-radius: 0.24rem;
+}
+
+button.sticker {
+  cursor: pointer;
+}
+
+.centerSticker {
+  border: 2px solid #111827;
+}
