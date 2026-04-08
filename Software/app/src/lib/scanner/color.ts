@@ -62,11 +62,20 @@ export function rgbToHsv({ r, g, b }: RGB): HSV {
 
 export function classifyCubeColor(rgb: RGB): ColorDetectionResult {
   const hsv = rgbToHsv(rgb);
+  const channelSpread =
+    (Math.max(rgb.r, rgb.g, rgb.b) - Math.min(rgb.r, rgb.g, rgb.b)) / 255;
+  const isNeutral = hsv.s < 0.22 || channelSpread < 0.12;
 
-  if (hsv.s < 0.18 && hsv.v > 0.52) {
+  if (isNeutral && hsv.v > 0.24) {
+    const neutralConfidence = clamp01(
+      (0.28 - Math.min(hsv.s, 0.28)) * 2.2 +
+        (0.16 - Math.min(channelSpread, 0.16)) * 2.4 +
+        (hsv.v - 0.24) * 0.9,
+    );
+
     return {
       color: "white",
-      confidence: clamp01((0.25 - hsv.s) * 3 + (hsv.v - 0.52)),
+      confidence: neutralConfidence,
       rgb,
       hsv,
     };

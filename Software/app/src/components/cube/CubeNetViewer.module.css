@@ -1,7 +1,8 @@
 .viewer {
   border: 1px solid var(--border);
-  background: var(--surface);
-  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--card-shadow);
   padding: 1rem;
 }
 
@@ -11,6 +12,7 @@
 
 .viewer p {
   margin-bottom: 0.8rem;
+  color: var(--muted);
 }
 
 .net {
@@ -26,9 +28,10 @@
 
 .faceCard {
   border: 1px solid var(--border);
-  border-radius: 0.45rem;
-  padding: 0.45rem;
-  background: var(--background);
+  border-radius: 0.65rem;
+  padding: 0.55rem;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  box-shadow: var(--card-shadow);
 }
 
 .faceCard header {
@@ -49,11 +52,16 @@
   width: 100%;
   aspect-ratio: 1;
   border: 1px solid var(--border);
-  border-radius: 0.25rem;
+  border-radius: 0.32rem;
+  transition: transform var(--duration-fast) var(--easing-standard);
+}
+
+.sticker:hover {
+  transform: scale(1.02);
 }
 
 .centerSticker {
-  border: 2px solid #111827;
+  border: 2px solid var(--primary);
 }
 
 @media (max-width: 940px) {

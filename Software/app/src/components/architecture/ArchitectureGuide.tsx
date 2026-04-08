@@ -153,6 +153,24 @@ const ENDPOINTS = [
   { method: "GET", path: "/api/machine/status", purpose: "consultar status da execução" },
 ] as const;
 
+const START_GUIDE = [
+  {
+    title: "Se você quer usar o produto",
+    description:
+      "Comece em Scanner ou Manual. Depois siga para Execução para ver máquina mock e animação.",
+  },
+  {
+    title: "Se você quer entender o código",
+    description:
+      "Leia nesta ordem: Visão Geral, Arquitetura, Pastas, Domínio do Cubo e Integração da Máquina.",
+  },
+  {
+    title: "Se você quer saber o que falta",
+    description:
+      "O backend, o planner e o mock já estão prontos. O próximo passo é trocar o mock pelo firmware real do ESP32.",
+  },
+] as const;
+
 export function ArchitectureGuide() {
   return (
     <div className={styles.page}>
@@ -171,6 +189,24 @@ export function ArchitectureGuide() {
           <Link href="/">Home</Link>
         </div>
       </header>
+
+      <section className={styles.startSection}>
+        <div className={styles.startHeader}>
+          <h2>Comece por aqui</h2>
+          <p>
+            Esta página ficou organizada para onboarding. Antes de mergulhar nos
+            detalhes, use estes três blocos para saber por onde ler.
+          </p>
+        </div>
+        <div className={styles.startGrid}>
+          {START_GUIDE.map((item) => (
+            <article key={item.title} className={styles.startCard}>
+              <h3>{item.title}</h3>
+              <p>{item.description}</p>
+            </article>
+          ))}
+        </div>
+      </section>
 
       <nav className={styles.sectionNav} aria-label="Navegação da apresentação">
         {SECTION_ITEMS.map((item) => (

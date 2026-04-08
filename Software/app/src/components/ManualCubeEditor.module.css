@@ -3,56 +3,142 @@
   gap: 1rem;
 }
 
-.toolbar {
+.topGrid,
+.statusGrid,
+.workspaceGrid,
+.metricsGrid {
   display: grid;
-  gap: 0.9rem;
+  gap: 1rem;
+}
+
+.topGrid {
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  align-items: start;
+}
+
+.toolbar,
+.howToCard,
+.colorCount,
+.feedback,
+.preview,
+.solution,
+.metricCard {
   border: 1px solid var(--border);
-  background: var(--surface);
-  border-radius: 0.5rem;
+  background: rgba(255, 253, 250, 0.9);
+  border-radius: 1.45rem;
+  box-shadow: var(--card-shadow);
+}
+
+.toolbar,
+.howToCard,
+.colorCount,
+.feedback,
+.preview,
+.solution,
+.metricCard {
   padding: 1rem;
+}
+
+.toolbar,
+.howToCard,
+.preview,
+.solution,
+.feedback,
+.colorCount {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.sectionTag {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 30px;
+  align-items: center;
+  border-radius: 999px;
+  background: rgba(17, 24, 39, 0.08);
+  color: #374151;
+  padding: 0.16rem 0.56rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
 }
 
 .palette {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.55rem;
 }
 
 .colorButton {
-  border: 1px solid transparent;
-  border-radius: 0.45rem;
-  padding: 0.45rem 0.7rem;
-  font-size: 0.9rem;
-  font-weight: 600;
+  border: 2px solid transparent;
+  border-radius: 0.8rem;
+  min-height: 46px;
+  padding: 0.52rem 0.88rem;
+  font-size: 0.92rem;
+  font-weight: 800;
   cursor: pointer;
+  transition:
+    transform var(--duration-fast) var(--easing-standard),
+    border-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard);
+}
+
+.colorButton:hover {
+  transform: translateY(-1px);
 }
 
 .colorButtonActive {
-  border-color: var(--foreground);
-  box-shadow: inset 0 0 0 1px var(--foreground);
+  border-color: #111827;
+  box-shadow: 0 10px 20px rgba(20, 27, 45, 0.12);
 }
 
 .darkText {
-  color: #0f172a;
+  color: #111827;
 }
 
 .lightText {
-  color: #f8fafc;
+  color: #f9fafb;
 }
 
-.actions {
+.actions,
+.executionActions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.6rem;
 }
 
-.actions button {
+.actions button,
+.executionActions button,
+.executionLink {
   border: 1px solid var(--border);
-  background: var(--background);
+  background: #fffdfa;
   color: var(--foreground);
-  border-radius: 0.45rem;
-  padding: 0.45rem 0.65rem;
+  border-radius: 0.9rem;
+  min-height: 46px;
+  padding: 0.7rem 0.95rem;
   cursor: pointer;
+  font-weight: 800;
+  transition:
+    border-color var(--duration-fast) var(--easing-standard),
+    transform var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard);
+}
+
+.actions button:hover,
+.executionActions button:hover,
+.executionLink:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+  box-shadow: var(--card-shadow);
+}
+
+.actions button:nth-child(3),
+.actions button:nth-child(4),
+.executionActions button {
+  background: #111827;
+  color: #f9fafb;
+  border-color: #111827;
 }
 
 .actions button:disabled {
@@ -60,33 +146,60 @@
   opacity: 0.65;
 }
 
-.statusGrid {
+.howToCard article {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.8rem;
+  gap: 0.15rem;
 }
 
-.colorCount,
-.feedback,
-.preview,
-.solution {
-  border: 1px solid var(--border);
-  background: var(--surface);
-  border-radius: 0.5rem;
-  padding: 1rem;
+.howToCard p {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.stepList {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.metricsGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.metricCard {
+  display: grid;
+  gap: 0.24rem;
+}
+
+.metricCard span {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.metricCard strong {
+  font-family: var(--font-heading), sans-serif;
+  font-size: 1.55rem;
+}
+
+.statusGrid,
+.workspaceGrid {
+  grid-template-columns: minmax(280px, 0.7fr) minmax(0, 1.3fr);
+  align-items: start;
 }
 
 .colorCount ul,
 .errorList {
   display: grid;
-  gap: 0.4rem;
+  gap: 0.45rem;
   list-style: none;
 }
 
 .colorCount li {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
 }
 
 .colorCount li strong {
@@ -94,34 +207,38 @@
 }
 
 .colorBadge {
-  width: 0.9rem;
-  height: 0.9rem;
+  width: 0.95rem;
+  height: 0.95rem;
   border-radius: 999px;
   border: 1px solid var(--border);
 }
 
-.error {
-  color: #b91c1c;
-  margin-bottom: 0.5rem;
+.feedback p,
+.preview p,
+.solution p {
+  color: var(--muted);
 }
 
-.errorList li {
-  color: #b91c1c;
+.error {
+  color: var(--error);
+  font-weight: 700;
+}
+
+.errorList {
+  border: 1px solid rgba(180, 35, 24, 0.18);
+  background: var(--error-soft);
+  border-radius: 1rem;
+  padding: 0.95rem 1rem;
+  color: var(--error);
 }
 
 .success {
-  color: #166534;
-}
-
-.preview h3,
-.solution h3,
-.feedback h3,
-.colorCount h3 {
-  margin-bottom: 0.55rem;
+  color: var(--success);
+  font-weight: 700;
 }
 
 .net {
-  margin-top: 1rem;
+  margin-top: 0.3rem;
   display: grid;
   grid-template-columns: repeat(4, minmax(120px, 1fr));
   grid-template-rows: repeat(3, auto);
@@ -129,77 +246,134 @@
     ". u . ."
     "l f r b"
     ". d . .";
-  gap: 0.7rem;
+  gap: 0.75rem;
 }
 
 .faceCard {
   border: 1px solid var(--border);
-  border-radius: 0.45rem;
-  padding: 0.45rem;
-  background: var(--background);
+  border-radius: 1rem;
+  padding: 0.7rem;
+  background: rgba(255, 255, 255, 0.74);
 }
 
 .faceCard header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.4rem;
-  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.faceCard header strong {
+  font-family: var(--font-heading), sans-serif;
+  font-size: 1rem;
+  color: var(--foreground);
 }
 
 .faceGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.25rem;
+  gap: 0.3rem;
 }
 
 .sticker {
   width: 100%;
   aspect-ratio: 1;
   border: 1px solid var(--border);
-  border-radius: 0.25rem;
+  border-radius: 0.46rem;
   cursor: pointer;
+  transition:
+    transform var(--duration-fast) var(--easing-standard),
+    border-color var(--duration-fast) var(--easing-standard);
+}
+
+.sticker:hover {
+  transform: scale(1.03);
+  border-color: var(--border-strong);
 }
 
 .centerSticker {
   border: 2px solid #111827;
 }
 
-.solutionJson {
-  margin-top: 0.6rem;
-  background: var(--background);
+.solutionSummary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.solutionSummary article {
   border: 1px solid var(--border);
-  border-radius: 0.45rem;
-  padding: 0.7rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.76);
+  padding: 0.8rem;
+  display: grid;
+  gap: 0.2rem;
+}
+
+.solutionSummary span {
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.solutionSummary strong {
+  font-family: var(--font-heading), sans-serif;
+  font-size: 1.15rem;
+}
+
+.moveLine {
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: var(--surface-soft);
+  padding: 0.85rem 1rem;
+  color: var(--foreground) !important;
+  font-weight: 700;
+}
+
+.solutionDetails {
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.74);
+  padding: 0.7rem 0.8rem;
+}
+
+.solutionDetails summary {
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.solutionJson {
+  margin-top: 0.7rem;
+  background: #111827;
+  color: #f9fafb;
+  border: 1px solid #111827;
+  border-radius: 1rem;
+  padding: 0.85rem;
   white-space: pre-wrap;
   overflow-x: auto;
-  font-size: 0.85rem;
+  font-size: 0.84rem;
 }
 
-.executionActions {
-  margin-top: 0.7rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.executionActions button,
-.executionLink {
-  border: 1px solid var(--border);
-  background: var(--background);
-  color: var(--foreground);
-  border-radius: 0.45rem;
-  padding: 0.45rem 0.65rem;
-  cursor: pointer;
-}
-
-@media (max-width: 940px) {
-  .statusGrid {
+@media (max-width: 1120px) {
+  .topGrid,
+  .statusGrid,
+  .workspaceGrid,
+  .metricsGrid {
     grid-template-columns: 1fr;
   }
+}
 
+@media (max-width: 820px) {
   .net {
-    grid-template-columns: repeat(4, minmax(80px, 1fr));
+    grid-template-columns: repeat(4, minmax(72px, 1fr));
     gap: 0.5rem;
+  }
+
+  .solutionSummary {
+    grid-template-columns: 1fr;
   }
 }

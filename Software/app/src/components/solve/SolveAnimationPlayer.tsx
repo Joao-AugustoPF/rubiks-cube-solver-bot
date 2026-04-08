@@ -51,7 +51,7 @@ export function SolveAnimationPlayer({
   return (
     <section className={styles.player}>
       <div className={styles.statusBlock}>
-        <h2>Execução da Solução</h2>
+        <h2>Execução da solução</h2>
         <p>
           <strong>jobId:</strong> {session.jobId}
         </p>
@@ -61,9 +61,9 @@ export function SolveAnimationPlayer({
         <p>
           <strong>Status de disparo:</strong>{" "}
           {hasMachineStarted ? (
-            <span className={styles.ready}>liberado (started recebido)</span>
+            <span className={styles.ready}>liberado (status `started` recebido)</span>
           ) : (
-            <span className={styles.waiting}>bloqueado até status started</span>
+            <span className={styles.waiting}>bloqueado até o status `started`</span>
           )}
         </p>
         <p>
@@ -81,13 +81,13 @@ export function SolveAnimationPlayer({
           onClick={play}
           disabled={!hasMachineStarted || isPlaying || isFinished}
         >
-          Play
+          Reproduzir
         </button>
         <button type="button" onClick={pause} disabled={!hasMachineStarted || !isPlaying}>
-          Pause
+          Pausar
         </button>
         <button type="button" onClick={reset} disabled={!hasMachineStarted}>
-          Reset
+          Reiniciar
         </button>
         <label className={styles.speedControl}>
           Velocidade: {speedMs}ms
@@ -105,18 +105,18 @@ export function SolveAnimationPlayer({
       <div className={styles.viewerGrid}>
         <CubeNetViewer
           cubeState={session.initialCubeState}
-          title="Estado Inicial"
-          subtitle="Estado recebido do solve."
+          title="Estado inicial"
+          subtitle="Estado recebido da solução."
         />
         <CubeNetViewer
           cubeState={cubeState}
-          title="Estado Atual"
-          subtitle="Atualizado a cada logicalMove."
+          title="Estado atual"
+          subtitle="Atualizado a cada `logicalMove`."
         />
       </div>
 
       <div className={styles.sequence}>
-        <h3>Sequência de Movimentos</h3>
+        <h3>Sequência de movimentos</h3>
         {session.logicalMoves.length === 0 ? (
           <p>Cubo já está resolvido. Não há movimentos para executar.</p>
         ) : (

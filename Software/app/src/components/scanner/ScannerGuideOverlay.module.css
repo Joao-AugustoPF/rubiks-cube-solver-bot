@@ -8,12 +8,32 @@
 
 .guide {
   width: 62%;
+  height: auto;
   aspect-ratio: 1;
   border: 2px solid rgba(255, 255, 255, 0.95);
+  border-radius: 0.42rem;
   box-shadow:
     0 0 0 9999px rgba(0, 0, 0, 0.35),
-    0 0 8px rgba(0, 0, 0, 0.45);
+    0 0 12px rgba(56, 189, 248, 0.5);
   position: relative;
+  transition:
+    left 180ms ease,
+    top 180ms ease,
+    width 180ms ease,
+    height 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease;
+}
+
+.guideSearching {
+  border-color: rgba(255, 255, 255, 0.92);
+}
+
+.guideDetected {
+  border-color: rgba(52, 211, 153, 0.98);
+  box-shadow:
+    0 0 0 9999px rgba(0, 0, 0, 0.3),
+    0 0 18px rgba(52, 211, 153, 0.72);
 }
 
 .vertical,
@@ -48,4 +68,24 @@
 
 .horizontal:nth-child(4) {
   top: 66.666%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .guide {
+    animation: pulse-guide 1.8s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse-guide {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 9999px rgba(0, 0, 0, 0.35),
+      0 0 10px rgba(56, 189, 248, 0.45);
+  }
+  50% {
+    box-shadow:
+      0 0 0 9999px rgba(0, 0, 0, 0.35),
+      0 0 16px rgba(56, 189, 248, 0.75);
+  }
 }

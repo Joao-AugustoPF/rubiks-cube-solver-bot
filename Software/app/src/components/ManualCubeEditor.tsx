@@ -89,6 +89,8 @@ export function ManualCubeEditor() {
   const [isSolving, setIsSolving] = useState(false);
 
   const colorCount = useMemo(() => countColors(cube), [cube]);
+  const filledStickers = useMemo(() => countFilledStickers(cube), [cube]);
+  const missingStickers = 54 - filledStickers;
 
   const handlePaintSticker = (face: Face, index: number) => {
     setCube((current) => {
@@ -212,41 +214,78 @@ export function ManualCubeEditor() {
 
   return (
     <section className={styles.editor}>
-      <div className={styles.toolbar}>
-        <div className={styles.palette}>
-          {COLOR_ORDER.map((color) => (
-            <button
-              key={color}
-              type="button"
-              className={`${styles.colorButton} ${
-                activeColor === color ? styles.colorButtonActive : ""
-              } ${COLOR_TEXT_CLASS[color]}`}
-              style={{ backgroundColor: COLOR_HEX[color] }}
-              onClick={() => setActiveColor(color)}
-            >
-              {COLOR_LABEL[color]}
+      <div className={styles.topGrid}>
+        <div className={styles.toolbar}>
+          <span className={styles.sectionTag}>paleta ativa</span>
+          <div className={styles.palette}>
+            {COLOR_ORDER.map((color) => (
+              <button
+                key={color}
+                type="button"
+                className={`${styles.colorButton} ${
+                  activeColor === color ? styles.colorButtonActive : ""
+                } ${COLOR_TEXT_CLASS[color]}`}
+                style={{ backgroundColor: COLOR_HEX[color] }}
+                onClick={() => setActiveColor(color)}
+              >
+                {COLOR_LABEL[color]}
+              </button>
+            ))}
+          </div>
+
+          <div className={styles.actions}>
+            <button type="button" onClick={handleResetSolved}>
+              Estado resolvido
             </button>
-          ))}
+            <button type="button" onClick={handleClearCube}>
+              Limpar cubo
+            </button>
+            <button type="button" onClick={handleValidate} disabled={isValidating}>
+              {isValidating ? "Validando..." : "Validar"}
+            </button>
+            <button type="button" onClick={handleSolve} disabled={isSolving}>
+              {isSolving ? "Resolvendo..." : "Resolver"}
+            </button>
+          </div>
         </div>
 
-        <div className={styles.actions}>
-          <button type="button" onClick={handleResetSolved}>
-            Estado Resolvido
-          </button>
-          <button type="button" onClick={handleClearCube}>
-            Limpar Cubo
-          </button>
-          <button type="button" onClick={handleValidate} disabled={isValidating}>
-            {isValidating ? "Validando..." : "Validar"}
-          </button>
-          <button type="button" onClick={handleSolve} disabled={isSolving}>
-            {isSolving ? "Resolvendo..." : "Resolver"}
-          </button>
+        <div className={styles.howToCard}>
+          <span className={styles.sectionTag}>como usar</span>
+          <div className={styles.stepList}>
+            <article>
+              <strong>1. Escolha uma cor</strong>
+              <p>Selecione uma cor na paleta e clique nos stickers para pintar.</p>
+            </article>
+            <article>
+              <strong>2. Revise a contagem</strong>
+              <p>As 6 cores devem fechar em 9 stickers cada antes da solução.</p>
+            </article>
+            <article>
+              <strong>3. Valide e execute</strong>
+              <p>Depois da validação, gere a sessão e siga para a tela de execução.</p>
+            </article>
+          </div>
         </div>
+      </div>
+
+      <div className={styles.metricsGrid}>
+        <article className={styles.metricCard}>
+          <span>stickers preenchidos</span>
+          <strong>{filledStickers} / 54</strong>
+        </article>
+        <article className={styles.metricCard}>
+          <span>faltando</span>
+          <strong>{missingStickers}</strong>
+        </article>
+        <article className={styles.metricCard}>
+          <span>cor ativa</span>
+          <strong>{COLOR_LABEL[activeColor]}</strong>
+        </article>
       </div>
 
       <div className={styles.statusGrid}>
         <div className={styles.colorCount}>
+          <span className={styles.sectionTag}>contagem por cor</span>
           <h3>Contagem por cor</h3>
           <ul>
             {COLOR_ORDER.map((color) => (
@@ -263,10 +302,15 @@ export function ManualCubeEditor() {
         </div>
 
         <div className={styles.feedback}>
+          <span className={styles.sectionTag}>retorno</span>
           <h3>Mensagens</h3>
-          {requestError ? <p className={styles.error}>{requestError}</p> : null}
+          {requestError ? (
+            <p role="alert" className={styles.error}>
+              {requestError}
+            </p>
+          ) : null}
           {validationErrors.length > 0 ? (
-            <ul className={styles.errorList}>
+            <ul role="alert" className={styles.errorList}>
               {validationErrors.map((error) => (
                 <li key={error}>{error}</li>
               ))}
@@ -277,82 +321,98 @@ export function ManualCubeEditor() {
         </div>
       </div>
 
-      <div className={styles.preview}>
-        <h3>Preview 2D do Cubo (URFDLB)</h3>
-        <p>
-          Clique em um sticker para pintar com a cor selecionada. Clique com o
-          botão direito para limpar o sticker.
-        </p>
+      <div className={styles.workspaceGrid}>
+        <div className={styles.preview}>
+          <span className={styles.sectionTag}>área de trabalho</span>
+          <h3>Pré-visualização 2D do cubo (URFDLB)</h3>
+          <p>
+            Clique em um sticker para pintar com a cor selecionada. Clique com o
+            botão direito para limpar o sticker.
+          </p>
 
-        <div className={styles.net}>
-          {FACE_ORDER.map((face) => (
-            <div
-              key={face}
-              className={styles.faceCard}
-              style={{ gridArea: FACE_GRID_AREA[face] }}
-            >
-              <header>
-                <strong>{face}</strong>
-                <span>{FACE_NAME[face]}</span>
-              </header>
+          <div className={styles.net}>
+            {FACE_ORDER.map((face) => (
+              <div
+                key={face}
+                className={styles.faceCard}
+                style={{ gridArea: FACE_GRID_AREA[face] }}
+              >
+                <header>
+                  <strong>{face}</strong>
+                  <span>{FACE_NAME[face]}</span>
+                </header>
 
-              <div className={styles.faceGrid}>
-                {cube[face].map((stickerColor, index) => (
-                  <button
-                    key={`${face}-${index}`}
-                    type="button"
-                    className={`${styles.sticker} ${
-                      index === 4 ? styles.centerSticker : ""
-                    }`}
-                    style={{
-                      backgroundColor: stickerColor
-                        ? COLOR_HEX[stickerColor]
-                        : "transparent",
-                    }}
-                    onClick={() => handlePaintSticker(face, index)}
-                    onContextMenu={(event) => {
-                      event.preventDefault();
-                      handleClearSticker(face, index);
-                    }}
-                    aria-label={`Face ${face}, posição ${index}`}
-                  />
-                ))}
+                <div className={styles.faceGrid}>
+                  {cube[face].map((stickerColor, index) => (
+                    <button
+                      key={`${face}-${index}`}
+                      type="button"
+                      className={`${styles.sticker} ${
+                        index === 4 ? styles.centerSticker : ""
+                      }`}
+                      style={{
+                        backgroundColor: stickerColor
+                          ? COLOR_HEX[stickerColor]
+                          : "transparent",
+                      }}
+                      onClick={() => handlePaintSticker(face, index)}
+                      onContextMenu={(event) => {
+                        event.preventDefault();
+                        handleClearSticker(face, index);
+                      }}
+                      aria-label={`Face ${face}, posição ${index}`}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
 
-      <div className={styles.solution}>
-        <h3>Solução lógica</h3>
-        {solution ? (
-          <>
-            <p>
-              <strong>jobId:</strong> {solution.jobId}
-            </p>
-            <p>
-              <strong>Movimentos:</strong>{" "}
-              {solution.logicalMoves.length > 0
-                ? solution.logicalMoves.join(" ")
-                : "Cubo já está resolvido."}
-            </p>
-            <pre className={styles.solutionJson}>
-              {JSON.stringify(solution, null, 2)}
-            </pre>
-            {solveSession ? (
-              <div className={styles.executionActions}>
-                <button type="button" onClick={() => router.push("/solve")}>
-                  Executar animação da solução
-                </button>
-                <Link href="/solve" className={styles.executionLink}>
-                  Abrir página de execução
-                </Link>
+        <div className={styles.solution}>
+          <span className={styles.sectionTag}>resultado</span>
+          <h3>Solução lógica</h3>
+          {solution ? (
+            <>
+              <div className={styles.solutionSummary}>
+                <article>
+                  <span>jobId</span>
+                  <strong>{solution.jobId}</strong>
+                </article>
+                <article>
+                  <span>movimentos</span>
+                  <strong>{solution.logicalMoves.length}</strong>
+                </article>
               </div>
-            ) : null}
-          </>
-        ) : (
-          <p>A solução aparecerá aqui após chamar a API de solve.</p>
-        )}
+              <p className={styles.moveLine}>
+                {solution.logicalMoves.length > 0
+                  ? solution.logicalMoves.join(" ")
+                  : "Cubo já está resolvido."}
+              </p>
+              <details className={styles.solutionDetails}>
+                <summary>Ver payload completo da API</summary>
+                <pre className={styles.solutionJson}>
+                  {JSON.stringify(solution, null, 2)}
+                </pre>
+              </details>
+              {solveSession ? (
+                <div className={styles.executionActions}>
+                  <button type="button" onClick={() => router.push("/solve")}>
+                    Executar animação da solução
+                  </button>
+                  <Link href="/solve" className={styles.executionLink}>
+                    Abrir página de execução
+                  </Link>
+                </div>
+              ) : null}
+            </>
+          ) : (
+            <p>
+              A resposta da solução aparece aqui com jobId, quantidade de movimentos
+              e acesso direto para a tela de execução.
+            </p>
+          )}
+        </div>
       </div>
     </section>
   );
@@ -410,4 +470,18 @@ function countColors(cubeState: EditableCubeState): Record<Color, number> {
   }
 
   return count;
+}
+
+function countFilledStickers(cubeState: EditableCubeState) {
+  let total = 0;
+
+  for (const face of FACE_ORDER) {
+    for (const sticker of cubeState[face]) {
+      if (sticker) {
+        total += 1;
+      }
+    }
+  }
+
+  return total;
 }

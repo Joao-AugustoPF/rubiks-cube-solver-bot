@@ -1,12 +1,15 @@
 .card {
   border: 1px solid var(--border);
-  border-radius: 0.45rem;
-  background: var(--background);
-  padding: 0.45rem;
+  border-radius: 0.65rem;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  box-shadow: var(--card-shadow);
+  padding: 0.55rem;
 }
 
 .card header {
   margin-bottom: 0.35rem;
+  color: var(--muted);
+  font-weight: 600;
 }
 
 .grid {
@@ -19,13 +22,18 @@
   width: 100%;
   aspect-ratio: 1;
   border: 1px solid var(--border);
-  border-radius: 0.24rem;
+  border-radius: 0.32rem;
+  transition: transform var(--duration-fast) var(--easing-standard);
 }
 
 button.sticker {
   cursor: pointer;
 }
 
+button.sticker:hover {
+  transform: scale(1.03);
+}
+
 .centerSticker {
-  border: 2px solid #111827;
+  border: 2px solid var(--primary);
 }

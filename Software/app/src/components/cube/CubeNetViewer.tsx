@@ -17,12 +17,12 @@ const FACE_GRID_AREA: Record<Face, string> = {
 };
 
 const FACE_NAME: Record<Face, string> = {
-  U: "Up",
-  R: "Right",
-  F: "Front",
-  D: "Down",
-  L: "Left",
-  B: "Back",
+  U: "Cima",
+  R: "Direita",
+  F: "Frente",
+  D: "Baixo",
+  L: "Esquerda",
+  B: "Trás",
 };
 
 const STICKER_COLOR_HEX: Record<Color, string> = {

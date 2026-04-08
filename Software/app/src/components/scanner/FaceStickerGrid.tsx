@@ -49,7 +49,7 @@ export function FaceStickerGrid({
               type="button"
               {...commonProps}
               onClick={() => onChangeSticker(index, activeColor)}
-              aria-label={`Face ${face}, sticker ${index}`}
+              aria-label={`Face ${face}, posição ${index}`}
             />
           );
         })}

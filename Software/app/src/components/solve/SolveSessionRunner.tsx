@@ -107,7 +107,7 @@ export function SolveSessionRunner() {
       <section className={styles.block}>
         <h2>Nenhuma sessão de solução disponível</h2>
         <p>
-          Gere uma sessão de solve via scanner ou montagem manual para abrir a
+          Gere uma sessão de solução via scanner ou montagem manual para abrir a
           execução completa.
         </p>
         <div className={styles.emptyActions}>
@@ -115,7 +115,7 @@ export function SolveSessionRunner() {
             Abrir scanner
           </Link>
           <Link href="/manual" className={styles.linkButton}>
-            Abrir montagem manual
+            Abrir editor manual
           </Link>
         </div>
       </section>
@@ -125,18 +125,23 @@ export function SolveSessionRunner() {
   return (
     <div className={styles.stack}>
       <section className={styles.machineBlock}>
-        <h2>Execução da Máquina Mock</h2>
-        <p>
-          <strong>jobId:</strong> {session.jobId}
-        </p>
-        <p>
-          <strong>Movimentos lógicos:</strong> {session.logicalMoves.length}
-        </p>
-        <p>
-          <strong>Ações mecânicas:</strong> {session.mechanicalPlan.actions.length}
-        </p>
-        <p>
-          <strong>status:</strong>{" "}
+        <h2>Execução da máquina mock</h2>
+        <div className={styles.metricsGrid}>
+          <article className={styles.metricCard}>
+            <span>jobId</span>
+            <code>{session.jobId}</code>
+          </article>
+          <article className={styles.metricCard}>
+            <span>Movimentos lógicos</span>
+            <code>{session.logicalMoves.length}</code>
+          </article>
+          <article className={styles.metricCard}>
+            <span>Ações mecânicas</span>
+            <code>{session.mechanicalPlan.actions.length}</code>
+          </article>
+        </div>
+        <div className={styles.statusRow}>
+          <span className={styles.statusLabel}>status:</span>
           <span
             className={`${styles.badge} ${
               machineStatus ? styles[`badge_${machineStatus}`] : styles.badge_neutral
@@ -144,9 +149,9 @@ export function SolveSessionRunner() {
           >
             {statusLabel}
           </span>
-        </p>
+        </div>
         <p className={styles.pollingInfo}>
-          Polling do status: {isPollingMachine ? "ativo" : "inativo"}
+          Consulta de status: {isPollingMachine ? "ativa" : "inativa"}
         </p>
         <div className={styles.machineActions}>
           <button

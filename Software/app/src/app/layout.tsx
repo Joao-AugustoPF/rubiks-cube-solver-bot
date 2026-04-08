@@ -1,14 +1,20 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { DM_Sans, Geist_Mono, Space_Grotesk } from "next/font/google";
+import { SiteHeader } from "@/components/SiteHeader";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const headingFont = Space_Grotesk({
+  variable: "--font-heading",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const bodyFont = DM_Sans({
+  variable: "--font-body",
+  subsets: ["latin"],
+});
+
+const monoFont = Geist_Mono({
+  variable: "--font-mono",
   subsets: ["latin"],
 });
 
@@ -24,8 +30,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body>{children}</body>
+    <html
+      lang="pt-BR"
+      suppressHydrationWarning
+      className={`${headingFont.variable} ${bodyFont.variable} ${monoFont.variable}`}
+    >
+      <body>
+        <a href="#main-content" className="skipLink">
+          Pular para o conteúdo principal
+        </a>
+        <SiteHeader />
+        <div className="app-content">{children}</div>
+      </body>
     </html>
   );
 }

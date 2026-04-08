@@ -1,6 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  getCameraUnavailableMessage,
+  hasCameraSupport,
+  requestUserMedia,
+} from "@/lib/camera/support";
 
 export type CameraStatus = "idle" | "requesting" | "ready" | "error";
 
@@ -31,41 +36,97 @@ export function useCameraStream(): UseCameraStreamResult {
   const [status, setStatus] = useState<CameraStatus>("idle");
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const mountedRef = useRef(false);
+  const requestIdRef = useRef(0);
 
-  const stop = useCallback(() => {
-    setStatus("idle");
-    setError(null);
-    setStream((current) => {
-      if (current) {
-        current.getTracks().forEach((track) => track.stop());
-      }
-      return null;
-    });
+  const releaseStream = useCallback((target: MediaStream | null) => {
+    if (!target) {
+      return;
+    }
+
+    target.getTracks().forEach((track) => track.stop());
   }, []);
 
-  const start = useCallback(async () => {
-    if (typeof navigator === "undefined" || !navigator.mediaDevices) {
-      setStatus("error");
-      setError("Navegador sem suporte a getUserMedia.");
+  const stop = useCallback(() => {
+    requestIdRef.current += 1;
+    releaseStream(streamRef.current);
+    streamRef.current = null;
+
+    if (!mountedRef.current) {
       return;
+    }
+
+    setStream(null);
+    setStatus("idle");
+    setError(null);
+  }, [releaseStream]);
+
+  const start = useCallback(async () => {
+    if (typeof window === "undefined" || typeof navigator === "undefined") {
+      setStatus("error");
+      setError(
+        getCameraUnavailableMessage({
+          isSecureContext: false,
+        }),
+      );
+      return;
+    }
+
+    if (!hasCameraSupport(navigator)) {
+      setStatus("error");
+      setError(
+        getCameraUnavailableMessage({
+          isSecureContext: window.isSecureContext,
+          navigatorLike: navigator,
+        }),
+      );
+      return;
+    }
+
+    requestIdRef.current += 1;
+    const requestId = requestIdRef.current;
+
+    if (streamRef.current) {
+      releaseStream(streamRef.current);
+      streamRef.current = null;
+      setStream(null);
     }
 
     setStatus("requesting");
     setError(null);
 
     try {
-      const mediaStream = await navigator.mediaDevices.getUserMedia(
-        CAMERA_CONSTRAINTS,
-      );
+      const mediaStream = await requestUserMedia(navigator, CAMERA_CONSTRAINTS);
+
+      if (!mountedRef.current || requestId !== requestIdRef.current) {
+        releaseStream(mediaStream);
+        return;
+      }
+
+      streamRef.current = mediaStream;
       setStream(mediaStream);
       setStatus("ready");
     } catch (cameraError) {
+      if (!mountedRef.current || requestId !== requestIdRef.current) {
+        return;
+      }
+
       setStatus("error");
       setError(getCameraErrorMessage(cameraError));
     }
-  }, []);
+  }, [releaseStream]);
 
-  useEffect(() => stop, [stop]);
+  useEffect(() => {
+    mountedRef.current = true;
+
+    return () => {
+      mountedRef.current = false;
+      requestIdRef.current += 1;
+      releaseStream(streamRef.current);
+      streamRef.current = null;
+    };
+  }, [releaseStream]);
 
   return {
     status,

@@ -123,11 +123,29 @@ const IMPLEMENTATION_ORDER = [
   "Integração de ações completas (`turn_face`, `rotate_cube`) e safety.",
 ] as const;
 
+const QUICK_ENTRY = [
+  {
+    title: "O ESP32 não resolve o cubo",
+    description:
+      "Ele recebe um plano mecânico pronto e apenas executa a parte física com segurança.",
+  },
+  {
+    title: "O contrato já está definido",
+    description:
+      "jobId, actions e status started/finished/error já estão preparados no Next.js.",
+  },
+  {
+    title: "A ordem de implementação importa",
+    description:
+      "Comece por comunicação, machine state e homing antes de controlar todas as ações físicas.",
+  },
+] as const;
+
 export function Esp32FirmwareGuide() {
   return (
     <div className={styles.page}>
       <header className={styles.hero}>
-        <p className={styles.kicker}>Firmware Architecture Onboarding</p>
+        <p className={styles.kicker}>Guia de arquitetura do firmware</p>
         <h1>Como estruturar o firmware ESP32 deste projeto</h1>
         <p>
           Esta página explica, de forma visual e prática, como organizar o código
@@ -140,6 +158,24 @@ export function Esp32FirmwareGuide() {
           <Link href="/scan">Fluxo scanner</Link>
         </div>
       </header>
+
+      <section className={styles.quickEntrySection}>
+        <div className={styles.quickEntryHeader}>
+          <h2>Leitura rápida para quem vai implementar</h2>
+          <p>
+            Se você entrou agora no projeto, estes três pontos resumem o papel do
+            firmware e evitam confundir responsabilidade de backend com controle físico.
+          </p>
+        </div>
+        <div className={styles.quickEntryGrid}>
+          {QUICK_ENTRY.map((item) => (
+            <article key={item.title} className={styles.quickEntryCard}>
+              <h3>{item.title}</h3>
+              <p>{item.description}</p>
+            </article>
+          ))}
+        </div>
+      </section>
 
       <nav className={styles.sectionNav} aria-label="Navegação da apresentação">
         {SECTION_ITEMS.map((section) => (
