@@ -40,7 +40,7 @@ struct SolverPayload {
 
 static Job               currentJob       = { "", IDLE, "", 0 };
 static SemaphoreHandle_t jobMutex         = nullptr;
-static SemaphoreHandle_t httpMutex        = nullptr;  // protege WebServer (não thread-safe)
+static SemaphoreHandle_t httpMutex        = nullptr;
 static TaskHandle_t      solverTaskHandle = nullptr;
 static WebServer         server(80);
 
@@ -97,6 +97,14 @@ void setup() {
 
   if (WiFi.status() == WL_CONNECTED) {
     Serial.printf("\n[WiFi] Conectado! IP: %s\n", WiFi.localIP().toString().c_str());
+      configTime(0, 0, "pool.ntp.org", "time.google.com");
+      Serial.print("[NTP] Sincronizando horário");
+      struct tm timeinfo;
+      int ntpAttempts = 0;
+      while (!getLocalTime(&timeinfo) && ntpAttempts < 10) {
+        delay(500); Serial.print("."); ntpAttempts++;
+      }
+      Serial.println(ntpAttempts < 10 ? " OK" : " FALHOU (usando millis)");
   } else {
     Serial.println("\n[WiFi] FALHA na conexão. Reiniciando em 5s...");
     delay(5000);
@@ -107,6 +115,8 @@ void setup() {
   server.on("/status", HTTP_GET,  handleStatus);
   server.on("/health", HTTP_GET,  handleHealth);
   server.onNotFound(handleNotFound);
+  const char* headersToCollect[] = { "X-Device-Secret", "Content-Type" };
+  server.collectHeaders(headersToCollect, 2);
   server.begin();
   Serial.println("[HTTP] Servidor iniciado na porta 80");
 
@@ -223,6 +233,7 @@ void handleStart() {
   xSemaphoreTake(jobMutex, portMAX_DELAY);
   bool alreadyRunning = (strcmp(currentJob.id, jobId) == 0) &&
                         (currentJob.status == QUEUED || currentJob.status == STARTED);
+  bool machineBusy    = (solverTaskHandle != nullptr);
   JobStatus curStatus = currentJob.status;
   xSemaphoreGive(jobMutex);
 
@@ -235,7 +246,7 @@ void handleStart() {
     return;
   }
 
-  if (solverTaskHandle != nullptr) {
+  if (machineBusy) {
     StaticJsonDocument<128> resp;
     resp["jobId"]        = jobId;
     resp["status"]       = "error";
@@ -486,12 +497,15 @@ const char* statusStr(JobStatus s) {
 }
 
 String isoTimestamp() {
-  unsigned long ms  = millis();
-  unsigned long sec = ms / 1000;
-  unsigned long min = sec / 60;
-  unsigned long hr  = min / 60;
+  struct tm timeinfo;
+  if (getLocalTime(&timeinfo)) {
+    char buf[32];
+    strftime(buf, sizeof(buf), "%Y-%m-%dT%H:%M:%S.000Z", &timeinfo);
+    return String(buf);
+  }
+  unsigned long ms = millis();
   char buf[32];
   snprintf(buf, sizeof(buf), "1970-01-01T%02lu:%02lu:%02lu.%03luZ",
-           hr % 24, min % 60, sec % 60, ms % 1000);
+           (ms/3600000) % 24, (ms/60000) % 60, (ms/1000) % 60, ms % 1000);
   return String(buf);
 }
