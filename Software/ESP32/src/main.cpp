@@ -1,25 +1,3 @@
-/*
- * Rubik's Cube Resolver — ESP32 Firmware (Wi-Fi + HTTP Server)
- * ═════════════════════════════════════════════════════════════
- *
- * Fluxo de boot:
- *   1. Conecta ao Wi-Fi
- *   2. Sobe servidor HTTP na porta 80
- *   3. Registra o próprio IP no Next.js (POST /api/device/register)
- *   4. Aguarda requisições HTTP do Next.js
- *
- * Endpoints expostos pelo ESP32:
- *   POST /start   — recebe {jobId, actions[]}, responde {status:"queued"}
- *   GET  /status  — recebe ?jobId=x, responde {jobId, status, updatedAt}
- *   GET  /health  — liveness check, responde {ok:true, ip, uptime}
- *
- * Tasks FreeRTOS:
- *   taskHttp    (Core 0, P4) — loop do servidor HTTP (WebServer.handleClient)
- *   taskSolver  (Core 1, P2) — dinâmica, executa ações, se auto-deleta
- *   taskLed     (Core 1, P1) — pisca LEDs conforme estado do job
- *   taskWatchdog(Core 0, P2) — monitora Wi-Fi e reconecta se necessário
- */
-
 #include <Arduino.h>
 #include <WiFi.h>
 #include <WebServer.h>
@@ -29,36 +7,23 @@
 #include "freertos/task.h"
 #include "freertos/semphr.h"
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// CONFIGURAÇÃO — edite aqui antes de gravar
-// ═══════════════════════════════════════════════════════════════════════════════
 #define WIFI_SSID        "SUA_REDE_WIFI"
 #define WIFI_PASSWORD    "SUA_SENHA_WIFI"
 
-// URL completa da rota de registro no Next.js
-// Exemplo: "https://meuapp.vercel.app/api/device/register"
-#define NEXTJS_REGISTER_URL  "https://SEU_VPS_OU_DOMINIO/api/device/register"
+#define NEXTJS_REGISTER_URL  "http://cubo.joaoaugustopf.com/api/device/register"
 
-// Chave secreta compartilhada entre ESP32 e Next.js
-// Defina a mesma string em DEVICE_SECRET no .env do Next.js
-#define DEVICE_SECRET    "mude-esta-chave-secreta"
+#define DEVICE_SECRET    "MC48399J3CUJBWTCC62HAJ"
 
-// Pinos
 #define LED_STATUS   2
 #define LED_RUNNING  4
 
-// Tamanhos de stack das tasks
 #define STACK_HTTP       6144
 #define STACK_SOLVER     8192
 #define STACK_LED        1024
 #define STACK_WATCHDOG   2048
 
-// Tamanho máximo do body de uma requisição HTTP
 #define HTTP_BODY_SIZE   8192
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// TIPOS
-// ═══════════════════════════════════════════════════════════════════════════════
 enum JobStatus : uint8_t { IDLE, QUEUED, STARTED, FINISHED, JOB_ERROR };
 
 struct Job {
@@ -73,18 +38,12 @@ struct SolverPayload {
   char actionsJson[HTTP_BODY_SIZE];
 };
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// ESTADO GLOBAL
-// ═══════════════════════════════════════════════════════════════════════════════
 static Job               currentJob       = { "", IDLE, "", 0 };
 static SemaphoreHandle_t jobMutex         = nullptr;
 static SemaphoreHandle_t httpMutex        = nullptr;  // protege WebServer (não thread-safe)
 static TaskHandle_t      solverTaskHandle = nullptr;
 static WebServer         server(80);
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// PROTÓTIPOS
-// ═══════════════════════════════════════════════════════════════════════════════
 void taskHttp     (void* pv);
 void taskSolver   (void* pv);
 void taskLed      (void* pv);
@@ -110,27 +69,21 @@ void        sendJsonResponse(int code, JsonDocument& doc);
 const char* statusStr(JobStatus s);
 String      isoTimestamp();
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// SETUP
-// ═══════════════════════════════════════════════════════════════════════════════
 void setup() {
   Serial.begin(115200);
   pinMode(LED_STATUS,  OUTPUT);
   pinMode(LED_RUNNING, OUTPUT);
 
-  // Pisca durante boot
   for (int i = 0; i < 4; i++) {
     digitalWrite(LED_STATUS, HIGH); delay(80);
     digitalWrite(LED_STATUS, LOW);  delay(80);
   }
 
-  // Primitivas de sincronização
   jobMutex  = xSemaphoreCreateMutex();
   httpMutex = xSemaphoreCreateMutex();
   configASSERT(jobMutex);
   configASSERT(httpMutex);
 
-  // Conecta Wi-Fi (bloqueante no setup — antes das tasks)
   Serial.printf("[WiFi] Conectando a %s", WIFI_SSID);
   WiFi.mode(WIFI_STA);
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
@@ -150,7 +103,6 @@ void setup() {
     ESP.restart();
   }
 
-  // Registra rotas HTTP
   server.on("/start",  HTTP_POST, handleStart);
   server.on("/status", HTTP_GET,  handleStatus);
   server.on("/health", HTTP_GET,  handleHealth);
@@ -158,7 +110,6 @@ void setup() {
   server.begin();
   Serial.println("[HTTP] Servidor iniciado na porta 80");
 
-  // Registra IP no Next.js
   bool registered = false;
   for (int i = 0; i < 5 && !registered; i++) {
     registered = registerWithNextJs();
@@ -171,7 +122,6 @@ void setup() {
     Serial.println("[REG] AVISO: Não foi possível registrar no Next.js. Continuando...");
   }
 
-  // Cria tasks fixas
   xTaskCreatePinnedToCore(taskHttp,     "http",     STACK_HTTP,     nullptr, 4, nullptr, 0);
   xTaskCreatePinnedToCore(taskLed,      "led",      STACK_LED,      nullptr, 1, nullptr, 1);
   xTaskCreatePinnedToCore(taskWatchdog, "watchdog", STACK_WATCHDOG, nullptr, 2, nullptr, 0);
@@ -181,9 +131,6 @@ void setup() {
 
 void loop() { vTaskDelay(portMAX_DELAY); }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// TASK: taskHttp — processa requisições HTTP continuamente
-// ═══════════════════════════════════════════════════════════════════════════════
 void taskHttp(void* pv) {
   for (;;) {
     xSemaphoreTake(httpMutex, portMAX_DELAY);
@@ -193,12 +140,9 @@ void taskHttp(void* pv) {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// TASK: taskWatchdog — reconecta Wi-Fi se cair
-// ═══════════════════════════════════════════════════════════════════════════════
 void taskWatchdog(void* pv) {
   for (;;) {
-    vTaskDelay(pdMS_TO_TICKS(10000)); // verifica a cada 10s
+    vTaskDelay(pdMS_TO_TICKS(10000));
 
     if (WiFi.status() != WL_CONNECTED) {
       Serial.println("[WiFi] Conexão perdida. Reconectando...");
@@ -213,7 +157,7 @@ void taskWatchdog(void* pv) {
 
       if (WiFi.status() == WL_CONNECTED) {
         Serial.printf("[WiFi] Reconectado! IP: %s\n", WiFi.localIP().toString().c_str());
-        registerWithNextJs(); // re-registra o IP após reconexão
+        registerWithNextJs();
       } else {
         Serial.println("[WiFi] Falha ao reconectar.");
       }
@@ -221,9 +165,6 @@ void taskWatchdog(void* pv) {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// REGISTRO NO NEXT.JS
-// ═══════════════════════════════════════════════════════════════════════════════
 bool registerWithNextJs() {
   HTTPClient http;
   http.begin(NEXTJS_REGISTER_URL);
@@ -246,15 +187,7 @@ bool registerWithNextJs() {
   return ok;
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// HANDLERS HTTP
-// ═══════════════════════════════════════════════════════════════════════════════
-
-// POST /start
-// Body: {"jobId":"x","actions":[...]}
-// Resposta: {"jobId":"x","status":"queued","updatedAt":"..."}
 void handleStart() {
-  // Valida secret header
   if (server.header("X-Device-Secret") != DEVICE_SECRET) {
     StaticJsonDocument<64> err;
     err["error"] = "Unauthorized";
@@ -287,7 +220,6 @@ void handleStart() {
     return;
   }
 
-  // Idempotência
   xSemaphoreTake(jobMutex, portMAX_DELAY);
   bool alreadyRunning = (strcmp(currentJob.id, jobId) == 0) &&
                         (currentJob.status == QUEUED || currentJob.status == STARTED);
@@ -303,7 +235,6 @@ void handleStart() {
     return;
   }
 
-  // Rejeita se já tem job rodando
   if (solverTaskHandle != nullptr) {
     StaticJsonDocument<128> resp;
     resp["jobId"]        = jobId;
@@ -314,7 +245,6 @@ void handleStart() {
     return;
   }
 
-  // Registra job como QUEUED
   xSemaphoreTake(jobMutex, portMAX_DELAY);
   strncpy(currentJob.id, jobId, sizeof(currentJob.id) - 1);
   currentJob.status      = QUEUED;
@@ -322,14 +252,12 @@ void handleStart() {
   currentJob.startedAt   = 0;
   xSemaphoreGive(jobMutex);
 
-  // Responde QUEUED imediatamente (antes de criar a task)
   StaticJsonDocument<128> resp;
   resp["jobId"]     = jobId;
   resp["status"]    = "queued";
   resp["updatedAt"] = isoTimestamp();
   sendJsonResponse(200, resp);
 
-  // Monta payload para taskSolver
   SolverPayload* payload = (SolverPayload*)pvPortMalloc(sizeof(SolverPayload));
   if (!payload) {
     setJobStatus(JOB_ERROR, "Sem memória para iniciar solver");
@@ -338,7 +266,6 @@ void handleStart() {
   strncpy(payload->jobId, jobId, sizeof(payload->jobId) - 1);
   serializeJson(doc["actions"], payload->actionsJson, sizeof(payload->actionsJson));
 
-  // Cria task no Core 1
   BaseType_t created = xTaskCreatePinnedToCore(
     taskSolver, "solver", STACK_SOLVER, payload, 2, &solverTaskHandle, 1
   );
@@ -349,7 +276,6 @@ void handleStart() {
   }
 }
 
-// GET /status?jobId=x
 void handleStatus() {
   if (server.header("X-Device-Secret") != DEVICE_SECRET) {
     StaticJsonDocument<64> err;
@@ -391,7 +317,6 @@ void handleStatus() {
   sendJsonResponse(200, resp);
 }
 
-// GET /health
 void handleHealth() {
   StaticJsonDocument<128> resp;
   resp["ok"]     = true;
@@ -407,9 +332,6 @@ void handleNotFound() {
   sendJsonResponse(404, err);
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// TASK: taskSolver — executa ações mecânicas, se auto-deleta
-// ═══════════════════════════════════════════════════════════════════════════════
 void taskSolver(void* pv) {
   SolverPayload* payload = (SolverPayload*)pv;
   char jobId[64];
@@ -426,7 +348,6 @@ void taskSolver(void* pv) {
     return;
   }
 
-  // → STARTED
   xSemaphoreTake(jobMutex, portMAX_DELAY);
   currentJob.status    = STARTED;
   currentJob.startedAt = xTaskGetTickCount();
@@ -456,9 +377,6 @@ void taskSolver(void* pv) {
   vTaskDelete(nullptr);
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// TASK: taskLed
-// ═══════════════════════════════════════════════════════════════════════════════
 void taskLed(void* pv) {
   bool ledState = false;
   for (;;) {
@@ -496,9 +414,6 @@ void taskLed(void* pv) {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// ACTUATORS (mock — substitua pelo hardware real)
-// ═══════════════════════════════════════════════════════════════════════════════
 bool actuatorHome(JsonObject a) {
   Serial.printf("[ACT] home target=%s\n", (const char*)(a["target"] | "all"));
   vTaskDelay(pdMS_TO_TICKS(300));
@@ -540,9 +455,6 @@ bool executeAction(JsonObject action) {
   return true;
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// HELPERS
-// ═══════════════════════════════════════════════════════════════════════════════
 void setJobStatus(JobStatus s, const char* errMsg) {
   xSemaphoreTake(jobMutex, portMAX_DELAY);
   currentJob.status = s;
@@ -560,7 +472,6 @@ JobStatus getJobStatus() {
 void sendJsonResponse(int code, JsonDocument& doc) {
   String body;
   serializeJson(doc, body);
-  // httpMutex já tomado pelo taskHttp ao chamar handleClient — não tomar de novo
   server.send(code, "application/json", body);
 }
 
@@ -575,9 +486,6 @@ const char* statusStr(JobStatus s) {
 }
 
 String isoTimestamp() {
-  // Com Wi-Fi disponível, use NTP para timestamp real:
-  // configTime(0, 0, "pool.ntp.org"); → getLocalTime(&timeinfo)
-  // Por ora, millis() como fallback:
   unsigned long ms  = millis();
   unsigned long sec = ms / 1000;
   unsigned long min = sec / 60;
