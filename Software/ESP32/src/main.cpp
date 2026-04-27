@@ -6,6 +6,7 @@
 #include "freertos/semphr.h"
 
 #include "config/Config.h"
+#include "config/DeviceConfig.h"
 #include "job/JobManager.h"
 #include "network/Network.h"
 #include "server/HttpServer.h"
@@ -96,6 +97,17 @@ void setup() {
   blinkBootSequence();
 
   JobManager::init();
+  DeviceConfig::init();
+
+  if (!DeviceConfig::isProvisioned()) {
+    Serial.println("[BOOT] NVS vazia — entrando em modo provisionamento.");
+    HttpServer::startProvisioningAP(server);
+    HttpServer::init(server);
+    for (;;) {
+      HttpServer::handle(server);
+      vTaskDelay(pdMS_TO_TICKS(5));
+    }
+  }
 
   Network::connectWiFi();
   Network::syncNTP();
@@ -108,5 +120,5 @@ void setup() {
 }
 
 void loop() {
-  vTaskDelay(portMAX_DELAY);
+  vTaskDelay(portMAX_DELAY); // Tudo é gerenciado pelo FreeRTOS
 }
