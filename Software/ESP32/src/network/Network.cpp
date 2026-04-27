@@ -5,13 +5,15 @@
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 #include "../config/Config.h"
+#include "../config/DeviceConfig.h"
 
 namespace Network {
 
 void connectWiFi() {
-  Serial.printf("[WiFi] Conectando a %s", WIFI_SSID);
+  String ssid = DeviceConfig::getWifiSsid();
+  Serial.printf("[WiFi] Conectando a %s", ssid.c_str());
   WiFi.mode(WIFI_STA);
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  WiFi.begin(ssid.c_str(), DeviceConfig::getWifiPassword().c_str());
 
   int attempts = 0;
   while (WiFi.status() != WL_CONNECTED && attempts < WIFI_CONNECT_MAX_ATTEMPTS) {
@@ -48,11 +50,11 @@ static bool postRegistration() {
   HTTPClient http;
   http.begin(NEXTJS_REGISTER_URL);
   http.addHeader("Content-Type",    "application/json");
-  http.addHeader("X-Device-Secret", DEVICE_SECRET);
+  http.addHeader("X-Device-Secret", DeviceConfig::getSecret());
 
   StaticJsonDocument<128> body;
   body["ip"]       = WiFi.localIP().toString();
-  body["deviceId"] = DEVICE_ID;
+  body["deviceId"] = DeviceConfig::getDeviceId();
 
   String bodyStr;
   serializeJson(body, bodyStr);
@@ -81,7 +83,8 @@ void reconnectIfNeeded() {
 
   Serial.println("[WiFi] Conexão perdida. Reconectando...");
   WiFi.disconnect();
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  WiFi.begin(DeviceConfig::getWifiSsid().c_str(),
+             DeviceConfig::getWifiPassword().c_str());
 
   int attempts = 0;
   while (WiFi.status() != WL_CONNECTED && attempts < WIFI_RECONNECT_MAX_ATTEMPTS) {

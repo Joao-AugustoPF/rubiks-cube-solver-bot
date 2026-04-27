@@ -4,6 +4,7 @@
 #include <WiFi.h>
 #include "../actuators/Actuators.h"
 #include "../config/Config.h"
+#include "../config/DeviceConfig.h"
 #include "../job/JobManager.h"
 #include "../utils/TimeUtils.h"
 
@@ -61,7 +62,7 @@ static void taskSolver(void* pv) {
 }
 
 static bool isAuthorized(WebServer& server) {
-  return server.header("X-Device-Secret") == DEVICE_SECRET;
+  return server.header("X-Device-Secret") == DeviceConfig::getSecret();
 }
 
 static void sendJson(WebServer& server, int code, JsonDocument& doc) {
@@ -196,13 +197,52 @@ static void handleNotFound(WebServer& server) {
   sendError(server, 404, "Rota não encontrada");
 }
 
+static void handleProvision(WebServer& server) {
+  if (!server.hasArg("plain") || server.arg("plain").isEmpty()) {
+    sendError(server, 400, "Body vazio");
+    return;
+  }
+
+  StaticJsonDocument<256> doc;
+  DeserializationError parseError = deserializeJson(doc, server.arg("plain"));
+  if (parseError) {
+    sendError(server, 400, "JSON inválido");
+    return;
+  }
+
+  String wifiSsid     = doc["wifiSsid"]     | "";
+  String wifiPassword = doc["wifiPassword"] | "";
+  String secret       = doc["secret"]       | "";
+  String deviceId     = doc["deviceId"]     | "";
+
+  if (!DeviceConfig::provision(wifiSsid, wifiPassword, secret, deviceId)) {
+    sendError(server, 400, "Campos obrigatórios ausentes: wifiSsid, wifiPassword, secret");
+    return;
+  }
+
+  StaticJsonDocument<128> resp;
+  resp["ok"]      = true;
+  resp["message"] = "Provisionado. Reiniciando em 2s...";
+  sendJson(server, 200, resp);
+
+  delay(2000);
+  ESP.restart();
+}
+
 namespace HttpServer {
 
+void startProvisioningAP() {
+  WiFi.softAP(PROVISION_AP_SSID, *PROVISION_AP_PASSWORD ? PROVISION_AP_PASSWORD : nullptr);
+  Serial.printf("[AP] Modo provisionamento ativo. SSID: %s  IP: %s\n",
+                PROVISION_AP_SSID, WiFi.softAPIP().toString().c_str());
+}
+
 void init(WebServer& server) {
-  server.on("/start",  HTTP_POST, [&]() { handleStart(server);  });
-  server.on("/status", HTTP_GET,  [&]() { handleStatus(server); });
-  server.on("/health", HTTP_GET,  [&]() { handleHealth(server); });
-  server.onNotFound(              [&]() { handleNotFound(server); });
+  server.on("/provision", HTTP_POST, [&]() { handleProvision(server); });
+  server.on("/start",     HTTP_POST, [&]() { handleStart(server);     });
+  server.on("/status",    HTTP_GET,  [&]() { handleStatus(server);    });
+  server.on("/health",    HTTP_GET,  [&]() { handleHealth(server);    });
+  server.onNotFound(                 [&]() { handleNotFound(server);  });
 
   const char* headersToCollect[] = { "X-Device-Secret", "Content-Type" };
   server.collectHeaders(headersToCollect, 2);

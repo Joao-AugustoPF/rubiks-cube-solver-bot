@@ -1,11 +1,10 @@
 #pragma once
 
-#define WIFI_SSID      "SUA_REDE_WIFI"
-#define WIFI_PASSWORD  "SUA_SENHA_WIFI"
-
 #define NEXTJS_REGISTER_URL  "http://cubo.joaoaugustopf.com/api/device/register"
-#define DEVICE_ID            "rubik-solver-01"
-#define DEVICE_SECRET        "MC48399J3CUJBWTCC62HAJ"
+
+#define PROVISION_AP_SSID      "RubikSolver-Setup"
+#define PROVISION_AP_PASSWORD  ""
+#define PROVISION_AP_PORT      80
 
 #define PIN_LED_STATUS   2
 #define PIN_LED_RUNNING  4
