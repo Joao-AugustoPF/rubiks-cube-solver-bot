@@ -1,4 +1,7 @@
 .viewer {
+  min-width: 0;
+  overflow: hidden;
+  container-type: inline-size;
   border: 1px solid var(--border);
   background: color-mix(in srgb, var(--surface) 94%, transparent);
   border-radius: var(--radius-lg);
@@ -17,19 +20,20 @@
 
 .net {
   display: grid;
-  grid-template-columns: repeat(4, minmax(120px, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   grid-template-rows: repeat(3, auto);
   grid-template-areas:
     ". u . ."
     "l f r b"
     ". d . .";
-  gap: 0.7rem;
+  gap: clamp(0.32rem, 1vw, 0.7rem);
 }
 
 .faceCard {
+  min-width: 0;
   border: 1px solid var(--border);
   border-radius: 0.65rem;
-  padding: 0.55rem;
+  padding: clamp(0.34rem, 0.85vw, 0.55rem);
   background: color-mix(in srgb, var(--surface) 92%, transparent);
   box-shadow: var(--card-shadow);
 }
@@ -38,14 +42,22 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 0.25rem;
+  min-width: 0;
   margin-bottom: 0.4rem;
-  font-size: 0.85rem;
+  font-size: clamp(0.68rem, 1vw, 0.85rem);
+}
+
+.faceCard header span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .faceGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.25rem;
+  gap: clamp(0.14rem, 0.6vw, 0.25rem);
 }
 
 .sticker {
@@ -54,7 +66,7 @@
   min-height: 0;
   aspect-ratio: 1;
   border: 1px solid var(--border);
-  border-radius: 0.32rem;
+  border-radius: clamp(0.18rem, 0.7vw, 0.32rem);
   transition: transform var(--duration-fast) var(--easing-standard);
 }
 
@@ -80,5 +92,15 @@
       "u d"
       "l r"
       "f b";
+  }
+}
+
+@container (max-width: 360px) {
+  .faceCard header {
+    justify-content: center;
+  }
+
+  .faceCard header span {
+    display: none;
   }
 }

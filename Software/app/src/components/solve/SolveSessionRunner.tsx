@@ -123,9 +123,20 @@ export function SolveSessionRunner() {
   }
 
   return (
-    <div className={styles.stack}>
-      <section className={styles.machineBlock}>
-        <h2>Iniciar execução</h2>
+    <section className={styles.console} aria-label="Console da execução">
+      <aside className={styles.machinePanel}>
+        <div className={styles.panelHeader}>
+          <span className={styles.panelLabel}>Máquina mock</span>
+          <span
+            className={`${styles.badge} ${
+              machineStatus ? styles[`badge_${machineStatus}`] : styles.badge_neutral
+            }`}
+          >
+            {statusLabel}
+          </span>
+        </div>
+
+        <h2>Sessão ativa</h2>
         <div className={styles.metricsGrid}>
           <article className={styles.metricCard}>
             <span>jobId</span>
@@ -140,19 +151,22 @@ export function SolveSessionRunner() {
             <code>{session.mechanicalPlan.actions.length}</code>
           </article>
         </div>
-        <div className={styles.statusRow}>
-          <span className={styles.statusLabel}>status:</span>
-          <span
-            className={`${styles.badge} ${
-              machineStatus ? styles[`badge_${machineStatus}`] : styles.badge_neutral
-            }`}
-          >
-            {statusLabel}
-          </span>
-        </div>
-        <p className={styles.pollingInfo}>
-          Consulta de status: {isPollingMachine ? "ativa" : "inativa"}
-        </p>
+
+        <dl className={styles.runtimeList}>
+          <div>
+            <dt>Consulta de status</dt>
+            <dd>{isPollingMachine ? "ativa" : "inativa"}</dd>
+          </div>
+          <div>
+            <dt>Disparo da animação</dt>
+            <dd>
+              {machineStatus === "started" || machineStatus === "finished"
+                ? "liberado"
+                : "aguardando start"}
+            </dd>
+          </div>
+        </dl>
+
         <div className={styles.machineActions}>
           <button
             type="button"
@@ -170,13 +184,15 @@ export function SolveSessionRunner() {
           </p>
         ) : null}
         <p className={styles.note}>
-          Clique em iniciar execução. Quando o mock retornar <code>started</code>,
-          o cubo 3D começa a girar automaticamente.
+          O botão envia o plano mecânico para o mock. Quando o status muda para{" "}
+          <code>started</code>, o palco 3D começa automaticamente.
         </p>
-      </section>
+      </aside>
 
-      <SolveAnimationPlayer session={session} machineStatus={machineStatus} />
-    </div>
+      <div className={styles.stagePanel}>
+        <SolveAnimationPlayer session={session} machineStatus={machineStatus} />
+      </div>
+    </section>
   );
 
   async function handleStartMachine() {
