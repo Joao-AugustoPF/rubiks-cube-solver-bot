@@ -105,17 +105,17 @@ export function SolveSessionRunner() {
   if (!session) {
     return (
       <section className={styles.block}>
-        <h2>Nenhuma sessão de solução disponível</h2>
+        <h2>Comece pela etapa 1</h2>
         <p>
-          Gere uma sessão de solução via scanner ou montagem manual para abrir a
-          execução completa.
+          Esta tela só mostra a animação depois que uma sessão é criada no
+          scanner ou no editor manual.
         </p>
         <div className={styles.emptyActions}>
           <Link href="/scan" className={styles.linkButton}>
-            Abrir scanner
+            Usar scanner
           </Link>
           <Link href="/manual" className={styles.linkButton}>
-            Abrir editor manual
+            Montar manualmente
           </Link>
         </div>
       </section>
@@ -125,7 +125,7 @@ export function SolveSessionRunner() {
   return (
     <div className={styles.stack}>
       <section className={styles.machineBlock}>
-        <h2>Execução da máquina mock</h2>
+        <h2>Iniciar execução</h2>
         <div className={styles.metricsGrid}>
           <article className={styles.metricCard}>
             <span>jobId</span>
@@ -170,8 +170,8 @@ export function SolveSessionRunner() {
           </p>
         ) : null}
         <p className={styles.note}>
-          A animação inicia automaticamente somente quando o mock retornar{" "}
-          <code>started</code>.
+          Clique em iniciar execução. Quando o mock retornar <code>started</code>,
+          o cubo 3D começa a girar automaticamente.
         </p>
       </section>
 

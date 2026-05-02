@@ -20,7 +20,10 @@
 
 .sticker {
   width: 100%;
+  min-width: 0;
+  min-height: 0;
   aspect-ratio: 1;
+  padding: 0;
   border: 1px solid var(--border);
   border-radius: 0.32rem;
   transition: transform var(--duration-fast) var(--easing-standard);

@@ -15,6 +15,10 @@ describe("cube validation and solver flow", () => {
     expect(result.errors).toEqual([]);
   });
 
+  it("solver não cria movimentos para cubo já resolvido", () => {
+    expect(solveCubeLogically(createSolvedCube())).toEqual([]);
+  });
+
   it("rejeita estado incompleto", () => {
     const incompleteState = createSolvedCube() as unknown as Record<
       Face,

@@ -1,47 +1,48 @@
 import { SolveSessionRunner } from "@/components/solve/SolveSessionRunner";
+import { FlowStepper } from "@/components/FlowStepper";
 import Link from "next/link";
 
 export default function SolvePage() {
   return (
     <main id="main-content" className="page-shell">
       <header className="page-intro">
-        <span className="eyebrow">Fluxo 3 · Execução</span>
+        <span className="eyebrow">Etapa 3 · Execução 3D</span>
         <div className="heroGrid">
           <div>
-            <h1>Veja a sessão inteira: máquina mock, plano e animação no mesmo lugar.</h1>
+            <h1>Assista o cubo resolvendo movimento por movimento.</h1>
             <p className="leadText">
-              Esta é a tela de demonstração do produto. Aqui fica claro de onde a
-              sessão veio, quando a máquina começa e quando a animação pode ser
-              disparada.
+              Esta tela é o destino final do fluxo. Ela carrega a última sessão
+              gerada pelo scanner ou pelo editor manual, inicia o mock da máquina
+              e mostra a solução em 3D.
             </p>
             <div className="actionRow">
-              <Link href="/scan">Gerar sessão pelo scanner</Link>
-              <Link href="/manual">Gerar sessão manual</Link>
+              <Link href="/scan">Criar pelo scanner</Link>
+              <Link href="/manual">Criar manualmente</Link>
             </div>
           </div>
 
           <aside className="heroAside">
-            <h3>O que observar aqui</h3>
+            <h3>Nesta etapa</h3>
             <div className="miniSteps">
               <div className="miniStep">
                 <span className="miniStepNumber">1</span>
                 <div>
-                  <strong>Sessão carregada</strong>
-                  <p>O `jobId` e o plano mecânico resumem o que vai ser executado.</p>
+                  <strong>Conferir sessão</strong>
+                  <p>O `jobId` e os movimentos vêm da etapa anterior.</p>
                 </div>
               </div>
               <div className="miniStep">
                 <span className="miniStepNumber">2</span>
                 <div>
-                  <strong>Status da máquina</strong>
-                  <p>A animação só inicia quando o mock devolver o estado `started`.</p>
+                  <strong>Iniciar execução</strong>
+                  <p>O botão dispara o mock e libera a animação.</p>
                 </div>
               </div>
               <div className="miniStep">
                 <span className="miniStepNumber">3</span>
                 <div>
-                  <strong>Resolução visual</strong>
-                  <p>O player mostra estado inicial, estado atual e sequência aplicada.</p>
+                  <strong>Assistir em 3D</strong>
+                  <p>Cada camada gira até o cubo chegar resolvido.</p>
                 </div>
               </div>
             </div>
@@ -49,25 +50,7 @@ export default function SolvePage() {
         </div>
       </header>
 
-      <section className="sectionCard">
-        <div className="infoGrid">
-          <article className="infoCard">
-            <span className="tag">entrada</span>
-            <h3>De onde a sessão vem</h3>
-            <p>Do scanner ou do editor manual. A persistência temporária salva o contexto de execução.</p>
-          </article>
-          <article className="infoCard">
-            <span className="tag">gatilho</span>
-            <h3>Quando a animação começa</h3>
-            <p>Quando a API da máquina mock responde com o status `started` para o job atual.</p>
-          </article>
-          <article className="infoCard">
-            <span className="tag">próxima etapa</span>
-            <h3>O que muda com o ESP32 real</h3>
-            <p>Troca-se apenas a camada de execução da máquina; o frontend e o contrato continuam os mesmos.</p>
-          </article>
-        </div>
-      </section>
+      <FlowStepper activeStep={3} />
 
       <SolveSessionRunner />
     </main>

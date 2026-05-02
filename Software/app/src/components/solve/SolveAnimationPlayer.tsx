@@ -5,6 +5,7 @@ import type { SolveSession } from "@/types";
 import { isSolvedCube } from "@/lib/cube";
 import { useSolveAnimation } from "@/hooks/useSolveAnimation";
 import { CubeNetViewer } from "@/components/cube/CubeNetViewer";
+import { Cube3DAnimator } from "./Cube3DAnimator";
 import styles from "./SolveAnimationPlayer.module.css";
 
 interface SolveAnimationPlayerProps {
@@ -32,7 +33,11 @@ export function SolveAnimationPlayer({
   const startedTriggerRef = useRef(false);
 
   useEffect(() => {
-    if (machineStatus !== "started") {
+    startedTriggerRef.current = false;
+  }, [session.jobId]);
+
+  useEffect(() => {
+    if (machineStatus !== "started" && machineStatus !== "finished") {
       return;
     }
     if (startedTriggerRef.current) {
@@ -44,6 +49,8 @@ export function SolveAnimationPlayer({
 
   const isFinished = moveIndex >= totalMoves;
   const isSolvedAtEnd = isFinished && isSolvedCube(cubeState);
+  const active3DMove =
+    moveIndex < totalMoves ? (session.logicalMoves[moveIndex] ?? null) : null;
   const hasMachineStarted =
     machineStatus === "started" || machineStatus === "finished";
   const waitingMachineStart = !hasMachineStarted && totalMoves > 0;
@@ -61,7 +68,7 @@ export function SolveAnimationPlayer({
         <p>
           <strong>Status de disparo:</strong>{" "}
           {hasMachineStarted ? (
-            <span className={styles.ready}>liberado (status `started` recebido)</span>
+            <span className={styles.ready}>liberado (máquina iniciada)</span>
           ) : (
             <span className={styles.waiting}>bloqueado até o status `started`</span>
           )}
@@ -101,6 +108,16 @@ export function SolveAnimationPlayer({
           />
         </label>
       </div>
+
+      <Cube3DAnimator
+        cubeState={cubeState}
+        activeMove={active3DMove}
+        isPlaying={isPlaying}
+        moveIndex={moveIndex}
+        progress={progress}
+        speedMs={speedMs}
+        totalMoves={totalMoves}
+      />
 
       <div className={styles.viewerGrid}>
         <CubeNetViewer

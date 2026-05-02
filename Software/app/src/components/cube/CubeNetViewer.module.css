@@ -50,6 +50,8 @@
 
 .sticker {
   width: 100%;
+  min-width: 0;
+  min-height: 0;
   aspect-ratio: 1;
   border: 1px solid var(--border);
   border-radius: 0.32rem;
@@ -66,7 +68,17 @@
 
 @media (max-width: 940px) {
   .net {
-    grid-template-columns: repeat(4, minmax(80px, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 0.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .net {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      "u d"
+      "l r"
+      "f b";
   }
 }

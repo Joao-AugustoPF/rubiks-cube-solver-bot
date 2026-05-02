@@ -5,7 +5,9 @@ import {
   applyMoves,
   cloneCubeState,
   createSolvedCube,
+  generateRandomScramble,
   isValidCubeStateStructure,
+  validateCubeState,
   serializeCubeForSolver,
 } from "@/lib/cube";
 
@@ -79,6 +81,27 @@ describe("cube domain", () => {
     const restored = applyMoves(scrambled, invertSequence(sequence));
 
     expect(restored).toEqual(solved);
+  });
+
+  it("gera scramble aleatório válido para demonstração", () => {
+    const randomValues = [
+      0.01, 0.1, 0.01, 0.7, 0.25, 0.9, 0.42, 0.35, 0.75, 0.6, 0.99, 0.2,
+    ];
+    let randomIndex = 0;
+
+    const scramble = generateRandomScramble(6, () => {
+      const value = randomValues[randomIndex] ?? 0.5;
+      randomIndex += 1;
+      return value;
+    });
+    const scrambled = applyMoves(createSolvedCube(), scramble);
+
+    expect(scramble).toHaveLength(6);
+    expect(validateCubeState(scrambled).isValid).toBe(true);
+
+    for (let index = 1; index < scramble.length; index += 1) {
+      expect(scramble[index][0]).not.toBe(scramble[index - 1][0]);
+    }
   });
 
   it("serializa cubo resolvido em ordem URFDLB", () => {

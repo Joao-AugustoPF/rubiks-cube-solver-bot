@@ -1,5 +1,7 @@
 import Cube from "cubejs";
 import type { CubeState, LogicalMove } from "@/types";
+import { applyMoves } from "./moves";
+import { isSolvedCube } from "./solved";
 import { cloneCubeState } from "./state";
 import { serializeCubeForSolver } from "./serializer";
 import { assertValidCubeState } from "./validation";
@@ -18,6 +20,11 @@ function ensureSolverInitialized(): void {
 
 export function solveCubeLogically(cubeState: CubeState): LogicalMove[] {
   assertValidCubeState(cubeState, "Não foi possível enviar o cubo para o solver.");
+
+  if (isSolvedCube(cubeState)) {
+    return [];
+  }
+
   ensureSolverInitialized();
 
   const serialized = serializeCubeForSolver(cubeState);
@@ -25,7 +32,13 @@ export function solveCubeLogically(cubeState: CubeState): LogicalMove[] {
   try {
     const cube = Cube.fromString(serialized);
     const rawSolution = cube.solve();
-    return parseSolverMoves(rawSolution);
+    const logicalMoves = parseSolverMoves(rawSolution);
+
+    if (!isSolvedCube(applyMoves(cubeState, logicalMoves))) {
+      throw new Error("solver returned a sequence that does not solve the cube");
+    }
+
+    return logicalMoves;
   } catch {
     throw new Error(
       "Estado de cubo inválido para solução. Verifique se a combinação é solucionável.",

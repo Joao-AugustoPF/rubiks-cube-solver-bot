@@ -63,5 +63,6 @@ describe("cube api routes", () => {
     expect(payload.jobId.startsWith("cube-")).toBe(true);
     expect(payload.initialCubeState).toEqual(createSolvedCube());
     expect(Array.isArray(payload.logicalMoves)).toBe(true);
+    expect(payload.logicalMoves).toEqual([]);
   });
 });

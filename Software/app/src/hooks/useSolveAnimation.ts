@@ -2,8 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { CubeState, LogicalMove, SolveSession } from "@/types";
-import { applyMove, cloneCubeState } from "@/lib/cube";
-import { getCurrentMove, getSolveProgress } from "@/lib/solve-session";
+import {
+  getCubeStateAtMoveIndex,
+  getCurrentMove,
+  getSolveProgress,
+} from "@/lib/solve-session";
 
 interface SolveAnimationController {
   cubeState: CubeState;
@@ -21,19 +24,21 @@ interface SolveAnimationController {
 
 export function useSolveAnimation(session: SolveSession): SolveAnimationController {
   const totalMoves = session.logicalMoves.length;
-  const [cubeState, setCubeState] = useState<CubeState>(() =>
-    cloneCubeState(session.initialCubeState),
-  );
   const [moveIndex, setMoveIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(session.animation.autoPlay);
   const [speedMs, setSpeedMs] = useState(session.animation.stepIntervalMs);
 
   useEffect(() => {
-    setCubeState(cloneCubeState(session.initialCubeState));
     setMoveIndex(0);
     setIsPlaying(session.animation.autoPlay);
     setSpeedMs(session.animation.stepIntervalMs);
-  }, [session]);
+  }, [
+    session.jobId,
+    session.initialCubeState,
+    session.logicalMoves,
+    session.animation.autoPlay,
+    session.animation.stepIntervalMs,
+  ]);
 
   useEffect(() => {
     if (!isPlaying || moveIndex >= totalMoves) {
@@ -45,19 +50,22 @@ export function useSolveAnimation(session: SolveSession): SolveAnimationControll
 
     const timer = window.setTimeout(() => {
       setMoveIndex((currentIndex) => {
-        if (currentIndex >= totalMoves) {
-          return currentIndex;
-        }
-
-        setCubeState((currentState) =>
-          applyMove(currentState, session.logicalMoves[currentIndex]),
-        );
-        return currentIndex + 1;
+        return Math.min(currentIndex + 1, totalMoves);
       });
     }, speedMs);
 
     return () => window.clearTimeout(timer);
-  }, [isPlaying, moveIndex, totalMoves, speedMs, session.logicalMoves]);
+  }, [isPlaying, moveIndex, totalMoves, speedMs]);
+
+  const cubeState = useMemo(
+    () =>
+      getCubeStateAtMoveIndex(
+        session.initialCubeState,
+        session.logicalMoves,
+        moveIndex,
+      ),
+    [session.initialCubeState, session.logicalMoves, moveIndex],
+  );
 
   const currentMove = useMemo(
     () => getCurrentMove(session.logicalMoves, moveIndex),
@@ -86,7 +94,6 @@ export function useSolveAnimation(session: SolveSession): SolveAnimationControll
     reset: () => {
       setIsPlaying(false);
       setMoveIndex(0);
-      setCubeState(cloneCubeState(session.initialCubeState));
     },
     setSpeedMs: (nextSpeedMs: number) => setSpeedMs(nextSpeedMs),
   };

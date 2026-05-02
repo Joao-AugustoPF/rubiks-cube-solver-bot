@@ -1,0 +1,132 @@
+.sceneShell {
+  position: relative;
+  min-height: 460px;
+  overflow: hidden;
+  border-radius: 1rem;
+  background:
+    linear-gradient(180deg, rgba(8, 13, 24, 0.92), rgba(19, 28, 45, 0.96)),
+    #111827;
+  color: #f8fafc;
+}
+
+.viewport {
+  position: absolute;
+  inset: 0;
+}
+
+.viewport canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+.overlay {
+  position: absolute;
+  inset: 1rem 1rem auto 1rem;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  pointer-events: none;
+}
+
+.headline {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.headline span {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #93c5fd;
+}
+
+.headline h3 {
+  margin: 0;
+  max-width: 24ch;
+  font-size: clamp(1.25rem, 2.6vw, 2rem);
+  line-height: 1;
+  color: #ffffff;
+  letter-spacing: 0;
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.45rem;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.72);
+  color: #e2e8f0;
+  padding: 0.24rem 0.62rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.legend {
+  position: absolute;
+  inset: auto 1rem 1rem 1rem;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  pointer-events: none;
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.36rem;
+  min-height: 30px;
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.68);
+  color: #dbeafe;
+  padding: 0.2rem 0.56rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.swatch {
+  width: 0.72rem;
+  height: 0.72rem;
+  border-radius: 0.16rem;
+  border: 1px solid rgba(15, 23, 42, 0.34);
+}
+
+.fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  color: #cbd5e1;
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  .sceneShell {
+    min-height: 430px;
+    border-radius: 0.85rem;
+  }
+
+  .overlay {
+    inset: 0.75rem 0.75rem auto 0.75rem;
+  }
+
+  .legend {
+    inset: auto 0.75rem 0.75rem 0.75rem;
+  }
+}

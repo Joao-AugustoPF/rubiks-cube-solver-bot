@@ -1,27 +1,28 @@
 import { CubeScannerFlow } from "@/components/scanner/CubeScannerFlow";
+import { FlowStepper } from "@/components/FlowStepper";
 import Link from "next/link";
 
 export default function ScanPage() {
   return (
     <main id="main-content" className="page-shell">
       <header className="page-intro">
-        <span className="eyebrow">Fluxo 1 · Scanner</span>
+        <span className="eyebrow">Etapa 2 · Mapear e resolver</span>
         <div className="heroGrid">
           <div>
-            <h1>Use a câmera sem adivinhar o próximo passo.</h1>
+            <h1>Escaneie as 6 faces e envie para a execução 3D.</h1>
             <p className="leadText">
-              Esta tela foi organizada para funcionar como um roteiro: capturar,
-              conferir, corrigir e resolver. A ideia é que qualquer pessoa entenda
-              o que precisa fazer ao olhar a primeira dobra da página.
+              Siga a ordem das faces, revise a leitura e clique em validar e
+              resolver. Quando a sessão estiver pronta, o app leva você para a
+              etapa final automaticamente.
             </p>
             <div className="actionRow">
-              <Link href="/manual">Ir para o modo manual</Link>
-              <Link href="/solve">Ver execução atual</Link>
+              <Link href="/">Voltar ao início</Link>
+              <Link href="/manual">Trocar para manual</Link>
             </div>
           </div>
 
           <aside className="heroAside">
-            <h3>Como usar</h3>
+            <h3>Nesta etapa</h3>
             <div className="miniSteps">
               <div className="miniStep">
                 <span className="miniStepNumber">1</span>
@@ -40,8 +41,8 @@ export default function ScanPage() {
               <div className="miniStep">
                 <span className="miniStepNumber">3</span>
                 <div>
-                  <strong>Revisar e resolver</strong>
-                  <p>No final, corrija qualquer sticker e envie para validação.</p>
+                  <strong>Resolver e avançar</strong>
+                  <p>No final, o app cria a sessão e abre a execução 3D.</p>
                 </div>
               </div>
             </div>
@@ -49,34 +50,7 @@ export default function ScanPage() {
         </div>
       </header>
 
-      <section className="sectionCard">
-        <div className="infoGrid">
-          <article className="infoCard">
-            <span className="tag">melhor uso</span>
-            <h3>Quando usar esta página</h3>
-            <p>
-              Quando você quer demonstrar o fluxo real do produto, com captura das
-              6 faces e revisão antes da solução.
-            </p>
-          </article>
-          <article className="infoCard">
-            <span className="tag">fallback</span>
-            <h3>Se a leitura falhar</h3>
-            <p>
-              Corrija a face na pré-visualização ou troque para o fluxo manual se
-              quiser montar um estado específico.
-            </p>
-          </article>
-          <article className="infoCard">
-            <span className="tag">saída</span>
-            <h3>O que sai daqui</h3>
-            <p>
-              Uma sessão completa com o cubo validado, movimentos lógicos e o plano
-              mecânico salvo para a tela de execução.
-            </p>
-          </article>
-        </div>
-      </section>
+      <FlowStepper activeStep={2} />
 
       <CubeScannerFlow />
     </main>

@@ -488,7 +488,7 @@ export function CubeScannerFlow() {
         <div className={styles.progressCard}>
           <div className={styles.progressHeader}>
             <div>
-              <strong>{stage === "capture" ? "Captura em andamento" : "Revisao final"}</strong>
+              <strong>{stage === "capture" ? "Captura em andamento" : "Revisão final"}</strong>
               <p>
                 {stage === "capture"
                   ? `Face atual: ${currentFace} (${currentFaceIndex + 1}/6)`
@@ -576,9 +576,6 @@ export function CubeScannerFlow() {
                           <p>
                             A câmera fica desligada até você iniciar a captura nesta tela.
                           </p>
-                          <button type="button" onClick={() => void startAutoScan()}>
-                            Abrir câmera e iniciar captura
-                          </button>
                         </>
                       ) : (
                         <>
@@ -589,9 +586,6 @@ export function CubeScannerFlow() {
                               desenvolvimento, rode <code>npm run dev:mobile</code>.
                             </p>
                           ) : null}
-                          <button type="button" onClick={() => void startAutoScan()}>
-                            Tentar novamente
-                          </button>
                         </>
                       )}
                     </div>
@@ -619,6 +613,8 @@ export function CubeScannerFlow() {
                         ? "Escaneando automaticamente..."
                         : status === "requesting"
                           ? "Abrindo câmera..."
+                          : status === "error"
+                            ? "Tentar novamente"
                           : status === "idle"
                             ? "Abrir câmera e iniciar escaneamento"
                             : completedFaces === 0
@@ -634,7 +630,7 @@ export function CubeScannerFlow() {
               <ScannerFaceGuide3D face={currentFace} />
 
               <div className={styles.captureMeta}>
-                <span className={styles.sectionTag}>situacao</span>
+                <span className={styles.sectionTag}>situação</span>
                 <p>
                   Faces confirmadas: {completedFaces}/6. Sempre revise e corrija antes
                   de resolver.

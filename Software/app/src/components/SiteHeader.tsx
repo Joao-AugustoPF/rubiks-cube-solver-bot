@@ -1,21 +1,7 @@
-"use client";
-
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import styles from "./SiteHeader.module.css";
 
-const NAV_ITEMS = [
-  { href: "/", label: "Início" },
-  { href: "/scan", label: "Scanner" },
-  { href: "/manual", label: "Manual" },
-  { href: "/solve", label: "Execução" },
-  { href: "/architecture", label: "Arquitetura" },
-  { href: "/esp32-architecture", label: "Firmware ESP32" },
-] as const;
-
 export function SiteHeader() {
-  const pathname = usePathname();
-
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
@@ -28,23 +14,17 @@ export function SiteHeader() {
           </span>
           <span className={styles.brandText}>
             <strong>Rubik&apos;s Resolver</strong>
-            <small>escaneie, resolva, anime, integre</small>
+            <small>mapear, resolver, assistir</small>
           </span>
         </Link>
 
-        <nav className={styles.nav} aria-label="Navegação principal">
-          {NAV_ITEMS.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`${styles.navLink} ${
-                pathname === item.href ? styles.navLinkActive : ""
-              }`}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+        <div className={styles.flowCue} aria-label="Fluxo guiado">
+          <span>1 Entrada</span>
+          <span aria-hidden="true">→</span>
+          <span>2 Resolver</span>
+          <span aria-hidden="true">→</span>
+          <span>3 Execução 3D</span>
+        </div>
       </div>
     </header>
   );

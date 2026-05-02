@@ -1,0 +1,126 @@
+.flow {
+  display: grid;
+  gap: 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: 1.35rem;
+  background: rgba(255, 253, 250, 0.86);
+  padding: 1rem;
+}
+
+.heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.heading strong {
+  font-family: var(--font-heading), sans-serif;
+  font-size: 1.08rem;
+}
+
+.heading span {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.steps {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.step {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.68rem;
+  align-items: start;
+  min-height: 96px;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: var(--surface);
+  padding: 0.85rem;
+}
+
+.step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 2rem;
+  left: calc(100% + 0.12rem);
+  width: 0.42rem;
+  height: 2px;
+  background: var(--border-strong);
+}
+
+.stepNumber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.15rem;
+  height: 2.15rem;
+  border-radius: 0.8rem;
+  background: var(--surface-soft);
+  color: var(--muted);
+  border: 1px solid var(--border);
+  font-family: var(--font-heading), sans-serif;
+  font-weight: 800;
+}
+
+.stepCopy {
+  display: grid;
+  gap: 0.22rem;
+}
+
+.stepCopy strong {
+  line-height: 1.12;
+}
+
+.stepCopy p {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.38;
+}
+
+.stepActive {
+  border-color: color-mix(in srgb, var(--primary) 44%, var(--border));
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--primary-soft) 36%, #ffffff),
+      var(--surface)
+    );
+  box-shadow: 0 14px 28px color-mix(in srgb, var(--primary) 10%, transparent);
+}
+
+.stepActive .stepNumber {
+  background: #111827;
+  color: #f9fafb;
+  border-color: #111827;
+}
+
+@media (max-width: 920px) {
+  .steps {
+    grid-template-columns: 1fr;
+  }
+
+  .step {
+    min-height: auto;
+  }
+
+  .step:not(:last-child)::after {
+    top: calc(100% + 0.14rem);
+    left: 1.9rem;
+    width: 2px;
+    height: 0.38rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .flow {
+    border-radius: 1.05rem;
+    padding: 0.8rem;
+  }
+}
