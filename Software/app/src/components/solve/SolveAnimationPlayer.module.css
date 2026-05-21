@@ -1,0 +1,237 @@
+.player {
+  display: grid;
+  gap: 0;
+}
+
+.commandBar {
+  display: grid;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--border);
+  background: #f8fafc;
+  padding: 0.9rem;
+}
+
+.telemetryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.telemetryGrid div {
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: 0.72rem;
+  background: var(--surface);
+  padding: 0.58rem 0.65rem;
+}
+
+.telemetryGrid span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.telemetryGrid strong {
+  display: block;
+  overflow: hidden;
+  font-family: var(--font-heading), sans-serif;
+  font-size: 1.05rem;
+  letter-spacing: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.progressBar {
+  width: 100%;
+  height: 10px;
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progressBar > div {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--success));
+  transition: width var(--duration-fast) var(--easing-standard);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.controls button {
+  min-height: 42px;
+  border: 1px solid var(--border);
+  border-radius: 0.68rem;
+  background: var(--surface);
+  color: var(--foreground);
+  padding: 0.5rem 0.72rem;
+  cursor: pointer;
+  font-weight: 900;
+  transition:
+    transform var(--duration-fast) var(--easing-standard),
+    border-color var(--duration-fast) var(--easing-standard);
+}
+
+.controls button:hover:not(:disabled) {
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+}
+
+.controls button:disabled {
+  opacity: 0.58;
+  cursor: not-allowed;
+}
+
+.speedControl {
+  flex: 1 1 260px;
+  display: grid;
+  gap: 0.24rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.speedControl input {
+  width: 100%;
+}
+
+.lowerPanel {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.76fr) minmax(0, 1fr);
+  gap: 0.8rem;
+  align-items: start;
+  border-top: 1px solid var(--border);
+  background: #f8fafc;
+  padding: 0.9rem;
+}
+
+.sequence,
+.result {
+  border: 1px solid var(--border);
+  border-radius: 0.8rem;
+  background: var(--surface);
+  padding: 0.85rem;
+}
+
+.sequence {
+  min-width: 0;
+  display: grid;
+  align-content: start;
+  gap: 0.65rem;
+}
+
+.sequenceHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.7rem;
+}
+
+.sequenceHeader span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.sequence h3 {
+  font-size: 1rem;
+  letter-spacing: 0;
+}
+
+.sequenceHeader strong {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-soft);
+  padding: 0.25rem 0.62rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.82rem;
+}
+
+.moveList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.36rem;
+  padding: 0;
+  list-style: none;
+}
+
+.moveChip {
+  flex: 0 0 auto;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 999px;
+  padding: 0.22rem 0.55rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.appliedMove {
+  border-color: rgba(22, 101, 52, 0.28);
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.currentMove {
+  border-color: rgba(37, 99, 235, 0.34);
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.stateComparison {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.result {
+  margin: 0.9rem;
+}
+
+.success {
+  color: var(--success);
+  font-weight: 900;
+}
+
+.error {
+  color: var(--error);
+  font-weight: 900;
+}
+
+.ready {
+  color: var(--success);
+}
+
+.waiting {
+  color: var(--warning);
+}
+
+@media (max-width: 1100px) {
+  .lowerPanel,
+  .stateComparison {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .telemetryGrid {
+    grid-template-columns: 1fr;
+  }
+}

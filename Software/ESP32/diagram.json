@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "author": "Rubik Solver",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "wokwi-esp32-devkit-v1",
+      "id": "esp",
+      "top": 0,
+      "left": 0,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led_status",
+      "top": -60,
+      "left": 200,
+      "attrs": { "color": "green", "label": "STATUS" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led_running",
+      "top": -60,
+      "left": 280,
+      "attrs": { "color": "red", "label": "RUNNING" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": 20,
+      "left": 200,
+      "attrs": { "value": "220" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r2",
+      "top": 20,
+      "left": 280,
+      "attrs": { "value": "220" }
+    }
+  ],
+  "connections": [
+    [ "esp:D2",  "r1:1",          "green", [] ],
+    [ "r1:2",    "led_status:A",  "green", [] ],
+    [ "led_status:C", "esp:GND",  "black", [] ],
+
+    [ "esp:D4",  "r2:1",          "red",   [] ],
+    [ "r2:2",    "led_running:A", "red",   [] ],
+    [ "led_running:C", "esp:GND", "black", [] ]
+  ],
+  "serialMonitor": {
+    "display": "terminal",
+    "newline": "lf"
+  }
+}
+

@@ -1,0 +1,42 @@
+.card {
+  border: 1px solid var(--border);
+  border-radius: 0.65rem;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  box-shadow: var(--card-shadow);
+  padding: 0.55rem;
+}
+
+.card header {
+  margin-bottom: 0.35rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.24rem;
+}
+
+.sticker {
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 0.32rem;
+  transition: transform var(--duration-fast) var(--easing-standard);
+}
+
+button.sticker {
+  cursor: pointer;
+}
+
+button.sticker:hover {
+  transform: scale(1.03);
+}
+
+.centerSticker {
+  border: 2px solid var(--primary);
+}
