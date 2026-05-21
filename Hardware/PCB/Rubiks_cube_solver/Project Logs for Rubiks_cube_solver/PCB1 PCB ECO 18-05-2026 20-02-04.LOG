@@ -1,0 +1,6 @@
+Removed Pin From Net: NetName=+5V_POWER Pin=J4-1
+Removed Pin From Net: NetName=+Vin Pin=J4-2
+Removed Pin From Net: NetName=+Vin Pin=J4-3
+Removed Pin From Net: NetName=+5V_CONTROLE Pin=J4-4
+Added Member To Class: ClassName=Sheet1 Member=Component J6 JST 5PIN
+Added Member To Class: ClassName=Sheet1 Member=Component J9 282834-2

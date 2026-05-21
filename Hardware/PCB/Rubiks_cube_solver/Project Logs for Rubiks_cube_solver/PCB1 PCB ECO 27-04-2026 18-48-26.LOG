@@ -1,0 +1,554 @@
+Added Component: Designator=C1(CAP 1206_3216 - 0.8MM)
+Add component (AddParameter): Name = "Applications"; Value = "SMPS Filtering"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Capacitance"; Value = "10 µF"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "componentlink1description"; Value = "Datasheet"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "componentlink1url"; Value = "http://www.yuden.co.jp/productdata/catalog/mlcc06_e.pdf"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "componentlink2description"; Value = "DigiKey Link"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "componentlink2url"; Value = "https://www.digikey.com/en/products/detail/taiyo-yuden/EMK316BJ106MD-T/6563474"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Device Package"; Value = "1206 (3216 Metric)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "lastupdated"; Value = "06/04/2026 19:37:58"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Lifecycle Status"; Value = "Active"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "manufacturer"; Value = "Taiyo Yuden"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Minimum Order"; Value = "1"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Mounting Type"; Value = "Surface Mount, MLCC"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Operating Temperature"; Value = "-55°C ~ 85°C"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Package / Case"; Value = "1206 (3216 Metric)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "packaging"; Value = "TapeAndReel"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Part Number"; Value = "EMK316BJ106MD-T"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Part Status"; Value = "Active"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "partid"; Value = "18996"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "price"; Value = "0.04"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "series"; Value = "M"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Size / Dimension"; Value = "0.126" L x 0.063" W (3.20mm x 1.60mm)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier 1"; Value = "DigiKey"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier Part Number 1"; Value = "587-4881-1-ND"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Temperature Coefficient"; Value = "X5R"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Thickness (Max)"; Value = "0.037" (0.95mm)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Tolerance"; Value = "±20%"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "value"; Value = "10 µF"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Voltage - Rated"; Value = "16V"; VariantName = "[No Variations]"
+Added Component: Designator=C2(CAP AL TH D8 L3.5 H12.5)
+Add component (AddParameter): Name = "Applications"; Value = "General Purpose"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Capacitance"; Value = "100 µF"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "componentlink1description"; Value = "Datasheet"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "componentlink1url"; Value = "http://nichicon-us.com/english/products/pdfs/e-ukl.pdf"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "componentlink2description"; Value = "DigiKey Link"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "componentlink2url"; Value = "https://www.digikey.com/en/products/detail/nichicon/UKL1C101MPD1TD/4317967"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Device Package"; Value = "Radial, Can"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Height - Seated (Max)"; Value = "0.492" (12.50mm)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "lastupdated"; Value = "05/04/2026 20:45:14"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Lead Spacing"; Value = "0.138" (3.50mm)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Lifecycle Status"; Value = "Active"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Lifetime @ Temp."; Value = "2000 Hrs @ 85°C"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "manufacturer"; Value = "Nichicon"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Minimum Order"; Value = "1"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Mounting Type"; Value = "Through Hole"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Operating Temperature"; Value = "-40°C ~ 85°C"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Package / Case"; Value = "Radial, Can"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "packaging"; Value = "TapeAndBox"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Part Number"; Value = "UKL1C101MPD1TD"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Part Status"; Value = "Active"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "partid"; Value = "7193"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Polarization"; Value = "Polar"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "price"; Value = "0.16"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Ripple Current @ High Frequency"; Value = "345 mA @ 10 kHz"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Ripple Current @ Low Frequency"; Value = "230 mA @ 120 Hz"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "series"; Value = "UKL"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Size / Dimension"; Value = "0.315" Dia (8.00mm)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier 1"; Value = "DigiKey"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier Part Number 1"; Value = "493-10478-1-ND"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Tolerance"; Value = "±20%"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "value"; Value = "100 µF"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Voltage - Rated"; Value = "16 V"; VariantName = "[No Variations]"
+Added Component: Designator=J1(CUI PJ-102AH)
+Add component (AddParameter): Name = "Actual Diameter"; Value = "0.079" (2.00mm ID), 0.256" (6.50mm OD)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1Description"; Value = "Datasheet"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1URL"; Value = "https://www.cuidevices.com/product/resource/digikeypdf/pj-102ah.pdf"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink2Description"; Value = "DigiKey Link"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink2URL"; Value = "//digikey.com/product-detail/en/cui-devices/PJ-102AH/CP-102AH-ND/408448"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Connector Type"; Value = "Jack"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Current Rating (Amps)"; Value = "5A"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Gender"; Value = "Male"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Industry Recognized Mating Diameter"; Value = "2.00mm ID (0.079"), 5.50mm OD (0.217")"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Internal Switch(s)"; Value = "Single Switch, Normally Closed"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "LastUpdated"; Value = "16/12/2019 19:01:27"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Lifecycle Status"; Value = "0"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer"; Value = "CUI Devices"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Material Flammability Rating"; Value = "UL94 V-0"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Mating Length/Depth"; Value = "0.354" (9.00mm)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Minimum Order"; Value = "1"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Mounting Type"; Value = "Through Hole, Right Angle"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Number of Positions/Contacts"; Value = "2 Conductors, 3 Contacts"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Packaging"; Value = "Tray"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Part Number"; Value = "PJ-102AH"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Part Status"; Value = "Active"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Price"; Value = "0.76"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Series"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Shielding"; Value = "Unshielded"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier 1"; Value = "DigiKey"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier Part Number 1"; Value = "CP-102AH-ND"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Termination"; Value = "Solder"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Voltage - Rated"; Value = "24VDC"; VariantName = "[No Variations]"
+Added Component: Designator=J2(FCI 06-381-5PIN)
+Add component (AddParameter): Name = "Color"; Value = "Green"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1Description"; Value = "Datasheet"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1URL"; Value = "http://portal.fciconnect.com/Comergent//fci/drawing/oqxx32x100j0g.pdf"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink2Description"; Value = "DigiKey Link"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink2URL"; Value = "//digikey.com/product-detail/en/amphenol-anytek/OQ0532510000G/609-3822-ND/2261276"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Contact Mating Finish"; Value = "Tin"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Current - UL"; Value = "10A"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Header Orientation"; Value = "90°, Right Angle"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "LastUpdated"; Value = "16/12/2019 19:15:59"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Lifecycle Status"; Value = "0"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer"; Value = "Amphenol Anytek"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Minimum Order"; Value = "1"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Mounting Type"; Value = "Through Hole"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Number of Levels"; Value = "1"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Number of Positions"; Value = "5"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Operating Temperature"; Value = "-40°C ~ 115°C"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Packaging"; Value = "Bulk"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Part Number"; Value = "OQ0532510000G"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Part Status"; Value = "Active"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Pitch"; Value = "0.150" (3.81mm)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Positions Per Level"; Value = "5"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Price"; Value = "0.67"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Series"; Value = "06-381"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier 1"; Value = "DigiKey"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier Part Number 1"; Value = "609-3822-ND"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Termination Style"; Value = "Solder"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Type"; Value = "Header, Male Pins, Shrouded (4 Side)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Voltage - UL"; Value = "300V"; VariantName = "[No Variations]"
+Added Component: Designator=J3(FCI 06-381-5PIN)
+Add component (AddParameter): Name = "Color"; Value = "Green"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1Description"; Value = "Datasheet"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1URL"; Value = "http://portal.fciconnect.com/Comergent//fci/drawing/oqxx32x100j0g.pdf"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink2Description"; Value = "DigiKey Link"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink2URL"; Value = "//digikey.com/product-detail/en/amphenol-anytek/OQ0532510000G/609-3822-ND/2261276"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Contact Mating Finish"; Value = "Tin"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Current - UL"; Value = "10A"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Header Orientation"; Value = "90°, Right Angle"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "LastUpdated"; Value = "16/12/2019 19:15:59"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Lifecycle Status"; Value = "0"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer"; Value = "Amphenol Anytek"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Minimum Order"; Value = "1"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Mounting Type"; Value = "Through Hole"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Number of Levels"; Value = "1"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Number of Positions"; Value = "5"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Operating Temperature"; Value = "-40°C ~ 115°C"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Packaging"; Value = "Bulk"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Part Number"; Value = "OQ0532510000G"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Part Status"; Value = "Active"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Pitch"; Value = "0.150" (3.81mm)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Positions Per Level"; Value = "5"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Price"; Value = "0.67"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Series"; Value = "06-381"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier 1"; Value = "DigiKey"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier Part Number 1"; Value = "609-3822-ND"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Termination Style"; Value = "Solder"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Type"; Value = "Header, Male Pins, Shrouded (4 Side)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Voltage - UL"; Value = "300V"; VariantName = "[No Variations]"
+Added Component: Designator=J4(FCI 06-381-5PIN)
+Add component (AddParameter): Name = "Color"; Value = "Green"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1Description"; Value = "Datasheet"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1URL"; Value = "http://portal.fciconnect.com/Comergent//fci/drawing/oqxx32x100j0g.pdf"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink2Description"; Value = "DigiKey Link"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink2URL"; Value = "//digikey.com/product-detail/en/amphenol-anytek/OQ0532510000G/609-3822-ND/2261276"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Contact Mating Finish"; Value = "Tin"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Current - UL"; Value = "10A"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Header Orientation"; Value = "90°, Right Angle"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "LastUpdated"; Value = "16/12/2019 19:15:59"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Lifecycle Status"; Value = "0"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer"; Value = "Amphenol Anytek"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Minimum Order"; Value = "1"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Mounting Type"; Value = "Through Hole"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Number of Levels"; Value = "1"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Number of Positions"; Value = "5"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Operating Temperature"; Value = "-40°C ~ 115°C"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Packaging"; Value = "Bulk"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Part Number"; Value = "OQ0532510000G"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Part Status"; Value = "Active"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Pitch"; Value = "0.150" (3.81mm)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Positions Per Level"; Value = "5"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Price"; Value = "0.67"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Series"; Value = "06-381"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier 1"; Value = "DigiKey"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier Part Number 1"; Value = "609-3822-ND"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Termination Style"; Value = "Solder"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Type"; Value = "Header, Male Pins, Shrouded (4 Side)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Voltage - UL"; Value = "300V"; VariantName = "[No Variations]"
+Added Component: Designator=J5(FCI 06-381-5PIN)
+Add component (AddParameter): Name = "Color"; Value = "Green"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1Description"; Value = "Datasheet"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1URL"; Value = "http://portal.fciconnect.com/Comergent//fci/drawing/oqxx32x100j0g.pdf"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink2Description"; Value = "DigiKey Link"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink2URL"; Value = "//digikey.com/product-detail/en/amphenol-anytek/OQ0532510000G/609-3822-ND/2261276"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Contact Mating Finish"; Value = "Tin"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Current - UL"; Value = "10A"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Header Orientation"; Value = "90°, Right Angle"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "LastUpdated"; Value = "16/12/2019 19:15:59"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Lifecycle Status"; Value = "0"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer"; Value = "Amphenol Anytek"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Minimum Order"; Value = "1"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Mounting Type"; Value = "Through Hole"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Number of Levels"; Value = "1"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Number of Positions"; Value = "5"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Operating Temperature"; Value = "-40°C ~ 115°C"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Packaging"; Value = "Bulk"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Part Number"; Value = "OQ0532510000G"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Part Status"; Value = "Active"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Pitch"; Value = "0.150" (3.81mm)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Positions Per Level"; Value = "5"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Price"; Value = "0.67"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Series"; Value = "06-381"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier 1"; Value = "DigiKey"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier Part Number 1"; Value = "609-3822-ND"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Termination Style"; Value = "Solder"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Type"; Value = "Header, Male Pins, Shrouded (4 Side)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Voltage - UL"; Value = "300V"; VariantName = "[No Variations]"
+Added Component: Designator=J6(FCI 06-381-5PIN)
+Add component (AddParameter): Name = "Color"; Value = "Green"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1Description"; Value = "Datasheet"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1URL"; Value = "http://portal.fciconnect.com/Comergent//fci/drawing/oqxx32x100j0g.pdf"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink2Description"; Value = "DigiKey Link"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink2URL"; Value = "//digikey.com/product-detail/en/amphenol-anytek/OQ0532510000G/609-3822-ND/2261276"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Contact Mating Finish"; Value = "Tin"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Current - UL"; Value = "10A"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Header Orientation"; Value = "90°, Right Angle"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "LastUpdated"; Value = "16/12/2019 19:15:59"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Lifecycle Status"; Value = "0"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer"; Value = "Amphenol Anytek"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Minimum Order"; Value = "1"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Mounting Type"; Value = "Through Hole"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Number of Levels"; Value = "1"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Number of Positions"; Value = "5"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Operating Temperature"; Value = "-40°C ~ 115°C"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Packaging"; Value = "Bulk"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Part Number"; Value = "OQ0532510000G"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Part Status"; Value = "Active"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Pitch"; Value = "0.150" (3.81mm)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Positions Per Level"; Value = "5"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Price"; Value = "0.67"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Series"; Value = "06-381"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier 1"; Value = "DigiKey"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier Part Number 1"; Value = "609-3822-ND"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Termination Style"; Value = "Solder"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Type"; Value = "Header, Male Pins, Shrouded (4 Side)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Voltage - UL"; Value = "300V"; VariantName = "[No Variations]"
+Added Component: Designator=U1(DIP762W46P254L1969H533Q16)
+Add component (AddParameter): Name = "Availability"; Value = "Not in stock"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Check_prices"; Value = "https://www.snapeda.com/parts/ULN2003/Texas+Instruments/view-part/?ref=eda"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "MF"; Value = "Texas Instruments"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "MP"; Value = "ULN2003"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Package"; Value = "SOIC-16 National Semiconductor"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Price"; Value = "None"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "SnapEDA_Link"; Value = "https://www.snapeda.com/parts/ULN2003/Texas+Instruments/view-part/?ref=snap"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Value"; Value = ""; VariantName = "[No Variations]"
+Added Component: Designator=U2(DIP762W46P254L1969H533Q16)
+Add component (AddParameter): Name = "Availability"; Value = "Not in stock"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Check_prices"; Value = "https://www.snapeda.com/parts/ULN2003/Texas+Instruments/view-part/?ref=eda"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "MF"; Value = "Texas Instruments"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "MP"; Value = "ULN2003"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Package"; Value = "SOIC-16 National Semiconductor"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Price"; Value = "None"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "SnapEDA_Link"; Value = "https://www.snapeda.com/parts/ULN2003/Texas+Instruments/view-part/?ref=snap"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Value"; Value = ""; VariantName = "[No Variations]"
+Added Component: Designator=U3(MODULE_ESP32_DEVKIT_V1)
+Add component (AddParameter): Name = "Check_prices"; Value = "https://www.snapeda.com/parts/ESP32-DEVKIT-V1/Do+it/view-part/?ref=eda"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "MF"; Value = "Do it"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "MP"; Value = "ESP32-DEVKIT-V1"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Package"; Value = "None"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "SnapEDA_Link"; Value = "https://www.snapeda.com/parts/ESP32-DEVKIT-V1/Do+it/view-part/?ref=snap"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Value"; Value = ""; VariantName = "[No Variations]"
+Added Component: Designator=U4(DIP762W46P254L1969H533Q16)
+Add component (AddParameter): Name = "Availability"; Value = "Not in stock"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Check_prices"; Value = "https://www.snapeda.com/parts/ULN2003/Texas+Instruments/view-part/?ref=eda"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "MF"; Value = "Texas Instruments"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "MP"; Value = "ULN2003"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Package"; Value = "SOIC-16 National Semiconductor"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Price"; Value = "None"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "SnapEDA_Link"; Value = "https://www.snapeda.com/parts/ULN2003/Texas+Instruments/view-part/?ref=snap"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Value"; Value = ""; VariantName = "[No Variations]"
+Added Component: Designator=U5(DIP762W46P254L1969H533Q16)
+Add component (AddParameter): Name = "Availability"; Value = "Not in stock"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Check_prices"; Value = "https://www.snapeda.com/parts/ULN2003/Texas+Instruments/view-part/?ref=eda"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "MF"; Value = "Texas Instruments"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "MP"; Value = "ULN2003"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Package"; Value = "SOIC-16 National Semiconductor"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Price"; Value = "None"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "SnapEDA_Link"; Value = "https://www.snapeda.com/parts/ULN2003/Texas+Instruments/view-part/?ref=snap"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Value"; Value = ""; VariantName = "[No Variations]"
+Added Component: Designator=U6(SOIC127P1032X265-16N)
+Add component (AddParameter): Name = "Availability"; Value = "In Stock"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Check_prices"; Value = "https://www.snapeda.com/parts/PCF8574T/NXP+Semiconductors/view-part/?ref=eda"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "MF"; Value = "NXP Semiconductors"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "MP"; Value = "PCF8574T"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Package"; Value = "SOIC-16 NXP Semiconductors"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Price"; Value = "None"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Purchase-URL"; Value = "https://pricing.snapeda.com/search/part/PCF8574T/?ref=eda"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "SnapEDA_Link"; Value = "https://www.snapeda.com/parts/PCF8574T/NXP+Semiconductors/view-part/?ref=snap"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Value"; Value = ""; VariantName = "[No Variations]"
+Added Component: Designator=U7(SOIC127P1032X265-16N)
+Add component (AddParameter): Name = "Availability"; Value = "In Stock"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Check_prices"; Value = "https://www.snapeda.com/parts/PCF8574T/NXP+Semiconductors/view-part/?ref=eda"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "MF"; Value = "NXP Semiconductors"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "MP"; Value = "PCF8574T"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Package"; Value = "SOIC-16 NXP Semiconductors"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Price"; Value = "None"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Purchase-URL"; Value = "https://pricing.snapeda.com/search/part/PCF8574T/?ref=eda"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "SnapEDA_Link"; Value = "https://www.snapeda.com/parts/PCF8574T/NXP+Semiconductors/view-part/?ref=snap"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Value"; Value = ""; VariantName = "[No Variations]"
+Added Component: Designator=U8(SOIC127P1032X265-16N)
+Add component (AddParameter): Name = "Availability"; Value = "In Stock"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Check_prices"; Value = "https://www.snapeda.com/parts/PCF8574T/NXP+Semiconductors/view-part/?ref=eda"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "MF"; Value = "NXP Semiconductors"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "MP"; Value = "PCF8574T"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Package"; Value = "SOIC-16 NXP Semiconductors"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Price"; Value = "None"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Purchase-URL"; Value = "https://pricing.snapeda.com/search/part/PCF8574T/?ref=eda"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "SnapEDA_Link"; Value = "https://www.snapeda.com/parts/PCF8574T/NXP+Semiconductors/view-part/?ref=snap"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Value"; Value = ""; VariantName = "[No Variations]"
+Added Component: Designator=U9(DIP762W46P254L1969H533Q16)
+Add component (AddParameter): Name = "Availability"; Value = "Not in stock"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Check_prices"; Value = "https://www.snapeda.com/parts/ULN2003/Texas+Instruments/view-part/?ref=eda"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "MF"; Value = "Texas Instruments"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "MP"; Value = "ULN2003"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Package"; Value = "SOIC-16 National Semiconductor"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Price"; Value = "None"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "SnapEDA_Link"; Value = "https://www.snapeda.com/parts/ULN2003/Texas+Instruments/view-part/?ref=snap"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Value"; Value = ""; VariantName = "[No Variations]"
+Added Pin To Net: NetName=+Vin Pin=C1-1
+Added Pin To Net: NetName=+Vin Pin=C2-1
+Added Pin To Net: NetName=+Vin Pin=J1-1
+Added Net: Name=+Vin
+Added Pin To Net: NetName=ESP_3V Pin=U3-1
+Added Pin To Net: NetName=ESP_3V Pin=U6-16
+Added Pin To Net: NetName=ESP_3V Pin=U7-1
+Added Pin To Net: NetName=ESP_3V Pin=U7-2
+Added Pin To Net: NetName=ESP_3V Pin=U7-16
+Added Pin To Net: NetName=ESP_3V Pin=U8-1
+Added Pin To Net: NetName=ESP_3V Pin=U8-16
+Added Net: Name=ESP_3V
+Added Pin To Net: NetName=ESP_SCL Pin=U3-14
+Added Pin To Net: NetName=ESP_SCL Pin=U6-14
+Added Pin To Net: NetName=ESP_SCL Pin=U7-14
+Added Pin To Net: NetName=ESP_SCL Pin=U8-14
+Added Net: Name=ESP_SCL
+Added Pin To Net: NetName=ESP_SDA Pin=U3-11
+Added Pin To Net: NetName=ESP_SDA Pin=U6-15
+Added Pin To Net: NetName=ESP_SDA Pin=U7-15
+Added Pin To Net: NetName=ESP_SDA Pin=U8-15
+Added Net: Name=ESP_SDA
+Added Pin To Net: NetName=GND Pin=C1-2
+Added Pin To Net: NetName=GND Pin=C2-2
+Added Pin To Net: NetName=GND Pin=J1-2
+Added Pin To Net: NetName=GND Pin=J1-3
+Added Pin To Net: NetName=GND Pin=U1-8
+Added Pin To Net: NetName=GND Pin=U2-8
+Added Pin To Net: NetName=GND Pin=U3-2
+Added Pin To Net: NetName=GND Pin=U3-29
+Added Pin To Net: NetName=GND Pin=U4-8
+Added Pin To Net: NetName=GND Pin=U5-8
+Added Pin To Net: NetName=GND Pin=U6-1
+Added Pin To Net: NetName=GND Pin=U6-2
+Added Pin To Net: NetName=GND Pin=U6-3
+Added Pin To Net: NetName=GND Pin=U6-8
+Added Pin To Net: NetName=GND Pin=U7-3
+Added Pin To Net: NetName=GND Pin=U7-8
+Added Pin To Net: NetName=GND Pin=U8-2
+Added Pin To Net: NetName=GND Pin=U8-3
+Added Pin To Net: NetName=GND Pin=U8-8
+Added Pin To Net: NetName=GND Pin=U9-8
+Added Net: Name=GND
+Added Pin To Net: NetName=ULN1_IN1 Pin=U1-1
+Added Pin To Net: NetName=ULN1_IN1 Pin=U6-4
+Added Net: Name=ULN1_IN1
+Added Pin To Net: NetName=ULN1_IN2 Pin=U1-2
+Added Pin To Net: NetName=ULN1_IN2 Pin=U6-5
+Added Net: Name=ULN1_IN2
+Added Pin To Net: NetName=ULN1_IN3 Pin=U1-3
+Added Pin To Net: NetName=ULN1_IN3 Pin=U6-6
+Added Net: Name=ULN1_IN3
+Added Pin To Net: NetName=ULN1_IN4 Pin=U1-4
+Added Pin To Net: NetName=ULN1_IN4 Pin=U6-7
+Added Net: Name=ULN1_IN4
+Added Pin To Net: NetName=ULN1_OUT1 Pin=J2-1
+Added Pin To Net: NetName=ULN1_OUT1 Pin=U1-16
+Added Net: Name=ULN1_OUT1
+Added Pin To Net: NetName=ULN1_OUT2 Pin=J2-2
+Added Pin To Net: NetName=ULN1_OUT2 Pin=U1-15
+Added Net: Name=ULN1_OUT2
+Added Pin To Net: NetName=ULN1_OUT3 Pin=J2-3
+Added Pin To Net: NetName=ULN1_OUT3 Pin=U1-14
+Added Net: Name=ULN1_OUT3
+Added Pin To Net: NetName=ULN1_OUT4 Pin=J2-4
+Added Pin To Net: NetName=ULN1_OUT4 Pin=U1-13
+Added Net: Name=ULN1_OUT4
+Added Pin To Net: NetName=ULN1_OUT5 Pin=J2-5
+Added Pin To Net: NetName=ULN1_OUT5 Pin=U1-12
+Added Net: Name=ULN1_OUT5
+Added Pin To Net: NetName=ULN2_IN1 Pin=U4-1
+Added Pin To Net: NetName=ULN2_IN1 Pin=U6-9
+Added Net: Name=ULN2_IN1
+Added Pin To Net: NetName=ULN2_IN2 Pin=U4-2
+Added Pin To Net: NetName=ULN2_IN2 Pin=U6-10
+Added Net: Name=ULN2_IN2
+Added Pin To Net: NetName=ULN2_IN3 Pin=U4-3
+Added Pin To Net: NetName=ULN2_IN3 Pin=U6-11
+Added Net: Name=ULN2_IN3
+Added Pin To Net: NetName=ULN2_IN4 Pin=U4-4
+Added Pin To Net: NetName=ULN2_IN4 Pin=U6-12
+Added Net: Name=ULN2_IN4
+Added Pin To Net: NetName=ULN2_OUT1 Pin=J3-1
+Added Pin To Net: NetName=ULN2_OUT1 Pin=U4-16
+Added Net: Name=ULN2_OUT1
+Added Pin To Net: NetName=ULN2_OUT2 Pin=J3-2
+Added Pin To Net: NetName=ULN2_OUT2 Pin=U4-15
+Added Net: Name=ULN2_OUT2
+Added Pin To Net: NetName=ULN2_OUT3 Pin=J3-3
+Added Pin To Net: NetName=ULN2_OUT3 Pin=U4-14
+Added Net: Name=ULN2_OUT3
+Added Pin To Net: NetName=ULN2_OUT4 Pin=J3-4
+Added Pin To Net: NetName=ULN2_OUT4 Pin=U4-13
+Added Net: Name=ULN2_OUT4
+Added Pin To Net: NetName=ULN2_OUT5 Pin=J3-5
+Added Pin To Net: NetName=ULN2_OUT5 Pin=U4-12
+Added Net: Name=ULN2_OUT5
+Added Pin To Net: NetName=ULN3_IN1 Pin=U2-1
+Added Pin To Net: NetName=ULN3_IN1 Pin=U8-4
+Added Net: Name=ULN3_IN1
+Added Pin To Net: NetName=ULN3_IN2 Pin=U2-2
+Added Pin To Net: NetName=ULN3_IN2 Pin=U8-5
+Added Net: Name=ULN3_IN2
+Added Pin To Net: NetName=ULN3_IN3 Pin=U2-3
+Added Pin To Net: NetName=ULN3_IN3 Pin=U8-6
+Added Net: Name=ULN3_IN3
+Added Pin To Net: NetName=ULN3_IN4 Pin=U2-4
+Added Pin To Net: NetName=ULN3_IN4 Pin=U8-7
+Added Net: Name=ULN3_IN4
+Added Pin To Net: NetName=ULN3_OUT1 Pin=J4-1
+Added Pin To Net: NetName=ULN3_OUT1 Pin=U2-16
+Added Net: Name=ULN3_OUT1
+Added Pin To Net: NetName=ULN3_OUT2 Pin=J4-2
+Added Pin To Net: NetName=ULN3_OUT2 Pin=U2-15
+Added Net: Name=ULN3_OUT2
+Added Pin To Net: NetName=ULN3_OUT3 Pin=J4-3
+Added Pin To Net: NetName=ULN3_OUT3 Pin=U2-14
+Added Net: Name=ULN3_OUT3
+Added Pin To Net: NetName=ULN3_OUT4 Pin=J4-4
+Added Pin To Net: NetName=ULN3_OUT4 Pin=U2-13
+Added Net: Name=ULN3_OUT4
+Added Pin To Net: NetName=ULN3_OUT5 Pin=J4-5
+Added Pin To Net: NetName=ULN3_OUT5 Pin=U2-12
+Added Net: Name=ULN3_OUT5
+Added Pin To Net: NetName=ULN4_IN1 Pin=U5-1
+Added Pin To Net: NetName=ULN4_IN1 Pin=U8-9
+Added Net: Name=ULN4_IN1
+Added Pin To Net: NetName=ULN4_IN2 Pin=U5-2
+Added Pin To Net: NetName=ULN4_IN2 Pin=U8-10
+Added Net: Name=ULN4_IN2
+Added Pin To Net: NetName=ULN4_IN3 Pin=U5-3
+Added Pin To Net: NetName=ULN4_IN3 Pin=U8-11
+Added Net: Name=ULN4_IN3
+Added Pin To Net: NetName=ULN4_IN4 Pin=U5-4
+Added Pin To Net: NetName=ULN4_IN4 Pin=U8-12
+Added Net: Name=ULN4_IN4
+Added Pin To Net: NetName=ULN4_OUT1 Pin=J5-1
+Added Pin To Net: NetName=ULN4_OUT1 Pin=U5-16
+Added Net: Name=ULN4_OUT1
+Added Pin To Net: NetName=ULN4_OUT2 Pin=J5-2
+Added Pin To Net: NetName=ULN4_OUT2 Pin=U5-15
+Added Net: Name=ULN4_OUT2
+Added Pin To Net: NetName=ULN4_OUT3 Pin=J5-3
+Added Pin To Net: NetName=ULN4_OUT3 Pin=U5-14
+Added Net: Name=ULN4_OUT3
+Added Pin To Net: NetName=ULN4_OUT4 Pin=J5-4
+Added Pin To Net: NetName=ULN4_OUT4 Pin=U5-13
+Added Net: Name=ULN4_OUT4
+Added Pin To Net: NetName=ULN4_OUT5 Pin=J5-5
+Added Pin To Net: NetName=ULN4_OUT5 Pin=U5-12
+Added Net: Name=ULN4_OUT5
+Added Pin To Net: NetName=ULN5_IN1 Pin=U7-4
+Added Pin To Net: NetName=ULN5_IN1 Pin=U9-1
+Added Net: Name=ULN5_IN1
+Added Pin To Net: NetName=ULN5_IN2 Pin=U7-5
+Added Pin To Net: NetName=ULN5_IN2 Pin=U9-2
+Added Net: Name=ULN5_IN2
+Added Pin To Net: NetName=ULN5_IN3 Pin=U7-6
+Added Pin To Net: NetName=ULN5_IN3 Pin=U9-3
+Added Net: Name=ULN5_IN3
+Added Pin To Net: NetName=ULN5_IN4 Pin=U7-7
+Added Pin To Net: NetName=ULN5_IN4 Pin=U9-4
+Added Net: Name=ULN5_IN4
+Added Pin To Net: NetName=ULN5_OUT1 Pin=J6-1
+Added Pin To Net: NetName=ULN5_OUT1 Pin=U9-16
+Added Net: Name=ULN5_OUT1
+Added Pin To Net: NetName=ULN5_OUT2 Pin=J6-2
+Added Pin To Net: NetName=ULN5_OUT2 Pin=U9-15
+Added Net: Name=ULN5_OUT2
+Added Pin To Net: NetName=ULN5_OUT3 Pin=J6-3
+Added Pin To Net: NetName=ULN5_OUT3 Pin=U9-14
+Added Net: Name=ULN5_OUT3
+Added Pin To Net: NetName=ULN5_OUT4 Pin=J6-4
+Added Pin To Net: NetName=ULN5_OUT4 Pin=U9-13
+Added Net: Name=ULN5_OUT4
+Added Pin To Net: NetName=ULN5_OUT5 Pin=J6-5
+Added Pin To Net: NetName=ULN5_OUT5 Pin=U9-12
+Added Net: Name=ULN5_OUT5
+Added Pin To Net: NetName=ULN_Vin Pin=U1-9
+Added Pin To Net: NetName=ULN_Vin Pin=U2-9
+Added Pin To Net: NetName=ULN_Vin Pin=U4-9
+Added Pin To Net: NetName=ULN_Vin Pin=U5-9
+Added Pin To Net: NetName=ULN_Vin Pin=U9-9
+Added Net: Name=ULN_Vin
+Added Class: Name=Sheet1
+Added Rule: Name=Schematic Supply Nets
+Added Rule: Name=Schematic Supply Nets_1
+Added Rule: Name=Schematic Supply Nets_2
+Added Rule: Name=Schematic Supply Nets_3
+Added Rule: Name=Schematic Supply Nets_4
+Added Rule: Name=Schematic Supply Nets_5
+Added Rule: Name=Schematic Supply Nets_6
+Added Rule: Name=Schematic Supply Nets_7
+Added Rule: Name=Schematic Supply Nets_8
+Added Rule: Name=Schematic Supply Nets_9
+Added Rule: Name=Schematic Supply Nets_10
+Added Rule: Name=Schematic Supply Nets_11
+Added Rule: Name=Schematic Supply Nets_12
+Added Rule: Name=Schematic Supply Nets_13
+Added Rule: Name=Schematic Supply Nets_14
+Added Rule: Name=Schematic Supply Nets_15
+Added Rule: Name=Schematic Supply Nets_16
+Added Rule: Name=Schematic Supply Nets_17
+Added Rule: Name=Schematic Supply Nets_18
+Added Rule: Name=Schematic Supply Nets_19
+Added Rule: Name=Schematic Supply Nets_20
+Added Rule: Name=Schematic Supply Nets_21
+Added Rule: Name=Schematic Supply Nets_22
+Added Rule: Name=Schematic Supply Nets_23
+Added Rule: Name=Schematic Supply Nets_24
+Added Rule: Name=Schematic Supply Nets_25
+Added Rule: Name=Schematic Supply Nets_26
+Added Rule: Name=Schematic Supply Nets_27
+Added Rule: Name=Schematic Supply Nets_28
+Added Rule: Name=Schematic Supply Nets_29
+Added Rule: Name=Schematic Supply Nets_30
+Added Rule: Name=Schematic Supply Nets_31
+Added Rule: Name=Schematic Supply Nets_32
+Added Rule: Name=Schematic Supply Nets_33
+Added Rule: Name=Schematic Supply Nets_34
+Added Rule: Name=Schematic Supply Nets_35
+Added Rule: Name=Schematic Supply Nets_36
+Added Rule: Name=Schematic Supply Nets_37
+Added Rule: Name=Schematic Supply Nets_38
+Added Rule: Name=Schematic Supply Nets_39
+Added Rule: Name=Schematic Supply Nets_40
+Added Rule: Name=Schematic Supply Nets_41
+Added Rule: Name=Schematic Supply Nets_42
+Added Rule: Name=Schematic Supply Nets_43
+Added Rule: Name=Schematic Supply Nets_44
+Added Rule: Name=Schematic Supply Nets_45
+Added Rule: Name=Schematic Supply Nets_46
+Added Rule: Name=Schematic Supply Nets_47
+Added Rule: Name=Schematic Supply Nets_48
+Added Rule: Name=Schematic Supply Nets_49
+Added Rule: Name=Schematic Supply Nets_50

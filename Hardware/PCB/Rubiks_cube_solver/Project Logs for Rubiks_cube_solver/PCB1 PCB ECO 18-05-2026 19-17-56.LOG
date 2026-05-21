@@ -1,0 +1,4 @@
+Removed Pin From Net: NetName=ULN_Vin Pin=J9-1
+Removed Pin From Net: NetName=+5V_CONTROL Pin=J9-2
+Added Pin To Net: NetName=+5V_CONTROL Pin=J9-1
+Added Pin To Net: NetName=ULN_Vin Pin=J9-2

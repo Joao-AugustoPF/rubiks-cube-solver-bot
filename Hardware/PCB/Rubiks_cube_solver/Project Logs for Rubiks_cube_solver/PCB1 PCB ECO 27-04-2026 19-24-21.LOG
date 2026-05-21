@@ -1,0 +1,8 @@
+Removed Pin From Net: NetName=ULN5_IN4 Pin=U7-9
+Removed Pin From Net: NetName=ULN5_IN3 Pin=U7-10
+Removed Pin From Net: NetName=ULN5_IN2 Pin=U7-11
+Removed Pin From Net: NetName=ULN5_IN1 Pin=U7-12
+Added Pin To Net: NetName=ULN5_IN4 Pin=U7-4
+Added Pin To Net: NetName=ULN5_IN3 Pin=U7-5
+Added Pin To Net: NetName=ULN5_IN2 Pin=U7-6
+Added Pin To Net: NetName=ULN5_IN1 Pin=U7-7

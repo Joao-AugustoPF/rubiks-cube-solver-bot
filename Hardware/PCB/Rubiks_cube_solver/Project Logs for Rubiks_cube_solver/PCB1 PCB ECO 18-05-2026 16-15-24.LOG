@@ -1,0 +1,16 @@
+Added Pin To Net: NetName=GND Pin=U10-1
+Added Pin To Net: NetName=GND Pin=U10-2
+Added Pin To Net: NetName=GND Pin=U10-3
+Added Pin To Net: NetName=ULN2_IN1 Pin=U10-4
+Added Pin To Net: NetName=ULN2_IN2 Pin=U10-5
+Added Pin To Net: NetName=ULN2_IN3 Pin=U10-6
+Added Pin To Net: NetName=ULN2_IN4 Pin=U10-7
+Added Pin To Net: NetName=GND Pin=U10-8
+Added Pin To Net: NetName=ULN1_IN1 Pin=U10-9
+Added Pin To Net: NetName=ULN1_IN2 Pin=U10-10
+Added Pin To Net: NetName=ULN1_IN3 Pin=U10-11
+Added Pin To Net: NetName=ULN1_IN4 Pin=U10-12
+Added Pin To Net: NetName=SCL Pin=U10-14
+Added Pin To Net: NetName=SDA Pin=U10-15
+Added Pin To Net: NetName=ESP_3V Pin=U10-16
+Added Member To Class: ClassName=Sheet1 Member=Component U10 PCF8574T

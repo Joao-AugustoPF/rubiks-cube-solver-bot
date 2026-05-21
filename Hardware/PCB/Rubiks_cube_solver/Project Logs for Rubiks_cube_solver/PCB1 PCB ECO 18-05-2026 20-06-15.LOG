@@ -1,0 +1,12 @@
+Removed Pin From Net: NetName=+5V_POWER Pin=U7-4
+Added Pin To Net: NetName=GND Pin=C19-2
+Added Pin To Net: NetName=GND Pin=C20-1
+Added Pin To Net: NetName=GND Pin=U7-1
+Added Pin To Net: NetName=+5V_CONTROLE Pin=U7-3
+Added Pin To Net: NetName=GND Pin=U7-4
+Added Member To Class: ClassName=Sheet1 Member=Component C19 10 µF
+Added Member To Class: ClassName=Sheet1 Member=Component C20 0.15 µF
+Added Member To Class: ClassName=Sheet1 Member=Component J5 JST 5PIN
+Added Member To Class: ClassName=Sheet1 Member=Component J8 282834-2
+Added Member To Class: ClassName=Sheet1 Member=Component U6 ULN2003
+Added Member To Class: ClassName=Sheet1 Member=Component U7 MINI 360

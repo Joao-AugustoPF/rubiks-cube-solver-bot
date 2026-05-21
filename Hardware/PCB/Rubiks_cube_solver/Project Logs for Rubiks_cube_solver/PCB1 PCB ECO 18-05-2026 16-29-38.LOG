@@ -1,0 +1,38 @@
+Removed Pin From Net: NetName=GND Pin=U3-1
+Removed Pin From Net: NetName=GND Pin=U7-1
+Added Pin To Net: NetName=ULN3_IN1 Pin=U3-1
+Added Pin To Net: NetName=ULN3_IN2 Pin=U3-2
+Added Pin To Net: NetName=ULN3_IN3 Pin=U3-3
+Added Pin To Net: NetName=ULN3_IN4 Pin=U3-4
+Added Pin To Net: NetName=GND Pin=U3-8
+Added Pin To Net: NetName=ULN_Vin Pin=U3-9
+Added Pin To Net: NetName=ULN3_OUT5 Pin=U3-12
+Added Pin To Net: NetName=ULN3_OUT4 Pin=U3-13
+Added Pin To Net: NetName=ULN3_OUT3 Pin=U3-14
+Added Pin To Net: NetName=ULN3_OUT2 Pin=U3-15
+Added Pin To Net: NetName=ULN3_OUT1 Pin=U3-16
+Added Pin To Net: NetName=ULN4_IN1 Pin=U7-1
+Added Pin To Net: NetName=ULN4_IN2 Pin=U7-2
+Added Pin To Net: NetName=ULN4_IN3 Pin=U7-3
+Added Pin To Net: NetName=ULN4_IN4 Pin=U7-4
+Added Pin To Net: NetName=GND Pin=U7-8
+Added Pin To Net: NetName=ULN_Vin Pin=U7-9
+Added Pin To Net: NetName=ULN4_OUT5 Pin=U7-12
+Added Pin To Net: NetName=ULN4_OUT4 Pin=U7-13
+Added Pin To Net: NetName=ULN4_OUT3 Pin=U7-14
+Added Pin To Net: NetName=ULN4_OUT2 Pin=U7-15
+Added Pin To Net: NetName=ULN4_OUT1 Pin=U7-16
+Added Pin To Net: NetName=ULN5_IN1 Pin=U9-1
+Added Pin To Net: NetName=ULN5_IN2 Pin=U9-2
+Added Pin To Net: NetName=ULN5_IN3 Pin=U9-3
+Added Pin To Net: NetName=ULN5_IN4 Pin=U9-4
+Added Pin To Net: NetName=GND Pin=U9-8
+Added Pin To Net: NetName=ULN_Vin Pin=U9-9
+Added Pin To Net: NetName=ULN5_OUT5 Pin=U9-12
+Added Pin To Net: NetName=ULN5_OUT4 Pin=U9-13
+Added Pin To Net: NetName=ULN5_OUT3 Pin=U9-14
+Added Pin To Net: NetName=ULN5_OUT2 Pin=U9-15
+Added Pin To Net: NetName=ULN5_OUT1 Pin=U9-16
+Added Member To Class: ClassName=Sheet1 Member=Component U3 ULN2003
+Added Member To Class: ClassName=Sheet1 Member=Component U7 ULN2003
+Added Member To Class: ClassName=Sheet1 Member=Component U9 ULN2003
