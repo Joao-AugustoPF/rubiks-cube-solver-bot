@@ -7,7 +7,7 @@
 #include "../config/Config.h"
 #include "../config/DeviceConfig.h"
 
-namespace Network {
+namespace AppNetwork {
 
 void connectWiFi() {
   String ssid = DeviceConfig::getWifiSsid();

@@ -5,20 +5,20 @@
 #include "freertos/task.h"
 #include "freertos/semphr.h"
 
-#include "config/Config.h"
-#include "config/DeviceConfig.h"
-#include "job/JobManager.h"
-#include "network/Network.h"
-#include "server/HttpServer.h"
-#include "actuators/Actuators.h"
-#include "utils/TimeUtils.h"
+#include "src/config/Config.h"
+#include "src/config/DeviceConfig.h"
+#include "src/job/JobManager.h"
+#include "src/network/Network.h"
+#include "src/server/HttpServer.h"
+#include "src/actuators/Actuators.h"
+#include "src/utils/TimeUtils.h"
 
 static WebServer server(HTTP_SERVER_PORT);
 
 static void taskHttp(void*) {
   for (;;) {
     HttpServer::handle(server);
-    vTaskDelay(pdMS_TO_TICKS(5));
+    vTaskDelay(pdMS_TO_TICKS(5)); 
   }
 }
 
@@ -68,7 +68,7 @@ static void taskLed(void*) {
 static void taskWatchdog(void*) {
   for (;;) {
     vTaskDelay(pdMS_TO_TICKS(WIFI_RECONNECT_INTERVAL_MS));
-    Network::reconnectIfNeeded();
+    AppNetwork::reconnectIfNeeded();
   }
 }
 
@@ -84,6 +84,40 @@ static void blinkBootSequence() {
   }
 }
 
+static void checkFactoryReset() {
+  pinMode(0, INPUT_PULLUP); 
+  
+  Serial.println("\n[BOOT] Voce tem 2 SEGUNDOS para apertar o botao BOOT e resetar a placa...");
+  
+  bool resetRequested = false;
+  
+  for (int i = 0; i < 20; i++) {
+    if (digitalRead(0) == LOW) {
+      resetRequested = true;
+      break;
+    }
+    delay(100);
+  }
+
+  if (resetRequested) {
+    Serial.println("\n[RESET] Botão BOOT detectado pressionado!");
+    Serial.println("[RESET] Iniciando formatação de fábrica...");
+    
+    for (int i = 0; i < 15; i++) {
+      digitalWrite(PIN_LED_STATUS, HIGH); delay(50);
+      digitalWrite(PIN_LED_STATUS, LOW);  delay(50);
+    }
+    
+    DeviceConfig::clear();
+    
+    Serial.println("[RESET] Placa resetada com sucesso! Reiniciando...\n");
+    delay(1000);
+    ESP.restart();
+  } else {
+    Serial.println("[BOOT] Inicializacao normal prosseguindo...\n");
+  }
+}
+
 static void createTasks() {
   xTaskCreatePinnedToCore(taskHttp,     "http",     STACK_HTTP,     nullptr, 4, nullptr, 0);
   xTaskCreatePinnedToCore(taskLed,      "led",      STACK_LED,      nullptr, 1, nullptr, 1);
@@ -96,12 +130,14 @@ void setup() {
   initPins();
   blinkBootSequence();
 
+  checkFactoryReset();
+
   JobManager::init();
   DeviceConfig::init();
 
   if (!DeviceConfig::isProvisioned()) {
     Serial.println("[BOOT] NVS vazia — entrando em modo provisionamento.");
-    HttpServer::startProvisioningAP(server);
+    HttpServer::startProvisioningAP();
     HttpServer::init(server);
     for (;;) {
       HttpServer::handle(server);
@@ -109,9 +145,9 @@ void setup() {
     }
   }
 
-  Network::connectWiFi();
-  Network::syncNTP();
-  Network::registerDevice();
+  AppNetwork::connectWiFi();
+  AppNetwork::syncNTP();
+  AppNetwork::registerDevice();
 
   HttpServer::init(server);
   createTasks();
@@ -120,5 +156,5 @@ void setup() {
 }
 
 void loop() {
-  vTaskDelay(portMAX_DELAY); // Tudo é gerenciado pelo FreeRTOS
+  vTaskDelay(portMAX_DELAY);
 }
