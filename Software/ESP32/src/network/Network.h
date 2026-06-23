@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Network {
+namespace AppNetwork {
   void connectWiFi();
   void syncNTP();
   bool registerDevice();

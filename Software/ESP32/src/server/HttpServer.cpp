@@ -15,6 +15,7 @@ static void handleNotFound(WebServer& server);
 
 struct SolverPayload {
   char jobId      [64];
+  char notation   [256];
   char actionsJson[HTTP_BODY_SIZE];
 };
 
@@ -39,6 +40,7 @@ static void taskSolver(void* pv) {
 
   JobManager::setStarted(jobId);
   Serial.printf("[SOLVER] Job %s iniciado\n", jobId);
+  Serial.printf("[SOLVER] >>> NOTAÇÃO RECEBIDA: %s <<<\n", payload->notation);
 
   for (JsonObject action : actionsDoc.as<JsonArray>()) {
     const char* type = action["type"] | "?";
@@ -139,6 +141,7 @@ static void handleStart(WebServer& server) {
   }
 
   strncpy(payload->jobId, jobId, sizeof(payload->jobId) - 1);
+  strncpy(payload->notation, doc["notation"] | "vazio", sizeof(payload->notation) - 1);
   serializeJson(doc["actions"], payload->actionsJson, sizeof(payload->actionsJson));
 
   BaseType_t created = xTaskCreatePinnedToCore(
