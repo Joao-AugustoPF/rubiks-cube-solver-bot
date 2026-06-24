@@ -8,6 +8,7 @@
 #include "src/config/Config.h"
 #include "src/config/DeviceConfig.h"
 #include "src/job/JobManager.h"
+#include "src/job/RemoteJobClient.h"
 #include "src/network/Network.h"
 #include "src/server/HttpServer.h"
 #include "src/actuators/Actuators.h"
@@ -72,6 +73,13 @@ static void taskWatchdog(void*) {
   }
 }
 
+static void taskRemoteJobs(void*) {
+  for (;;) {
+    RemoteJobClient::pollOnce();
+    vTaskDelay(pdMS_TO_TICKS(JOB_POLL_INTERVAL_MS));
+  }
+}
+
 static void initPins() {
   pinMode(PIN_LED_STATUS,  OUTPUT);
   pinMode(PIN_LED_RUNNING, OUTPUT);
@@ -120,6 +128,7 @@ static void checkFactoryReset() {
 
 static void createTasks() {
   xTaskCreatePinnedToCore(taskHttp,     "http",     STACK_HTTP,     nullptr, 4, nullptr, 0);
+  xTaskCreatePinnedToCore(taskRemoteJobs, "remote", STACK_REMOTE_JOB, nullptr, 2, nullptr, 1);
   xTaskCreatePinnedToCore(taskLed,      "led",      STACK_LED,      nullptr, 1, nullptr, 1);
   xTaskCreatePinnedToCore(taskWatchdog, "watchdog", STACK_WATCHDOG, nullptr, 2, nullptr, 0);
 }

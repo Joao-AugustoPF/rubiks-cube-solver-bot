@@ -2,7 +2,7 @@
 
 ## Resumo
 
-Este é o fluxo completo com ESP32 real via HTTP e fallback mock para desenvolvimento.
+Este é o fluxo completo com ESP32 real via polling HTTP e fallback mock para desenvolvimento.
 
 ## Sequência
 
@@ -31,14 +31,20 @@ Este é o fluxo completo com ESP32 real via HTTP e fallback mock para desenvolvi
 6. **Start da máquina**
    - `POST /api/machine/start`
    - exige cookie da aba operadora
-   - status inicial `queued`
+   - grava job na fila do backend com status inicial `queued`
 
-7. **Polling de status**
+7. **Polling do ESP32**
+   - `GET /api/device/jobs/next?deviceId=...`
+   - ESP32 baixa o job e executa localmente
+   - `POST /api/device/jobs/status`
+   - ESP32 envia progresso/status ao backend
+
+8. **Polling da web**
    - `GET /api/machine/status?jobId=...`
    - transições `queued -> started -> finished` (ou `error`)
    - inclui `progress` quando ESP/mock reporta avanço
 
-8. **Visualização sincronizada**
+9. **Visualização sincronizada**
    - com `progress.currentLogicalMoveIndex`, o cubo 3D mostra o estado físico atual
    - sem progresso, a animação local começa quando status vira `started`
 
@@ -56,6 +62,8 @@ Este é o fluxo completo com ESP32 real via HTTP e fallback mock para desenvolvi
 - `POST /api/cube/validate`
 - `POST /api/cube/solve`
 - `POST /api/device/register`
+- `GET /api/device/jobs/next`
+- `POST /api/device/jobs/status`
 - `GET|POST|DELETE /api/machine/session`
 - `POST /api/machine/start`
 - `GET /api/machine/status`

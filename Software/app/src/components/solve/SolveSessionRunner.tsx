@@ -148,12 +148,7 @@ export function SolveSessionRunner() {
 
   const progress = session?.machineExecution?.progress;
   const operatorLabel = controlSession?.isOperator ? "Operador" : "Visualização";
-  const connectionLabel =
-    controlSession?.gatewayMode === "esp32"
-      ? controlSession.device?.connected
-        ? "ESP32 conectado"
-        : "ESP32 pendente"
-      : "Mock local";
+  const connectionLabel = getConnectionLabel(controlSession);
 
   const canStartExecution =
     Boolean(controlSession?.isOperator) &&
@@ -375,4 +370,24 @@ function extractApiError(
   }
 
   return fallback;
+}
+
+function getConnectionLabel(
+  controlSession: MachineControlSessionResponse | null,
+): string {
+  if (!controlSession) {
+    return "desconhecida";
+  }
+  if (controlSession.gatewayMode === "mock") {
+    return "Mock local";
+  }
+  if (controlSession.gatewayMode === "direct") {
+    return controlSession.device?.connected
+      ? "ESP32 direto"
+      : "ESP32 direto pendente";
+  }
+
+  return controlSession.device?.connected
+    ? "ESP32 via polling"
+    : "Aguardando ESP32";
 }

@@ -1,5 +1,6 @@
 import type {
   MachineDeviceInfo,
+  MachineGatewayMode,
   MachineProgress,
   MachineStartRequest,
   MachineStatus,
@@ -7,9 +8,12 @@ import type {
 } from "@/types";
 import type { MachineGateway } from "./contracts";
 import { mockMachineGateway } from "./mock-machine-bridge";
-import { getDeviceBaseUrl, getMachineDeviceInfo } from "./machine-store";
-
-export type MachineGatewayMode = "mock" | "esp32";
+import {
+  getDeviceBaseUrl,
+  getMachineDeviceInfo,
+  getQueuedDeviceJobStatus,
+  queueDeviceJob,
+} from "./machine-store";
 
 export interface MachineGatewaySelection {
   gateway: MachineGateway;
@@ -18,6 +22,16 @@ export interface MachineGatewaySelection {
 }
 
 const REQUEST_TIMEOUT_MS = 8000;
+
+export class PollingMachineGateway implements MachineGateway {
+  async start(request: MachineStartRequest): Promise<MachineStatusResponse> {
+    return queueDeviceJob(request);
+  }
+
+  async status(jobId: string): Promise<MachineStatusResponse> {
+    return getQueuedDeviceJobStatus(jobId);
+  }
+}
 
 export class Esp32MachineGateway implements MachineGateway {
   async start(request: MachineStartRequest): Promise<MachineStatusResponse> {
@@ -50,9 +64,8 @@ export class Esp32MachineGateway implements MachineGateway {
 
 export function getMachineGatewaySelection(): MachineGatewaySelection {
   const forcedGateway = process.env.MACHINE_GATEWAY?.trim().toLowerCase();
-  const hasDeviceEndpoint = Boolean(getDeviceBaseUrl());
 
-  if (forcedGateway === "mock" || (!hasDeviceEndpoint && forcedGateway !== "esp32")) {
+  if (forcedGateway === "mock") {
     return {
       gateway: mockMachineGateway,
       mode: "mock",
@@ -60,9 +73,17 @@ export function getMachineGatewaySelection(): MachineGatewaySelection {
     };
   }
 
+  if (forcedGateway === "direct" || forcedGateway === "esp32") {
+    return {
+      gateway: new Esp32MachineGateway(),
+      mode: "direct",
+      device: getMachineDeviceInfo(),
+    };
+  }
+
   return {
-    gateway: new Esp32MachineGateway(),
-    mode: "esp32",
+    gateway: new PollingMachineGateway(),
+    mode: "polling",
     device: getMachineDeviceInfo(),
   };
 }

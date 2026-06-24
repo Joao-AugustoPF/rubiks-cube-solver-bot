@@ -70,6 +70,8 @@ export interface MachineDeviceInfo {
   lastSeenAt?: string;
 }
 
+export type MachineGatewayMode = "mock" | "polling" | "direct";
+
 export interface MachineStatusResponse {
   jobId: string;
   status: MachineStatus;
@@ -77,7 +79,7 @@ export interface MachineStatusResponse {
   errorMessage?: string;
   progress?: MachineProgress;
   currentCubeState?: CubeState;
-  gatewayMode?: "mock" | "esp32";
+  gatewayMode?: MachineGatewayMode;
   device?: MachineDeviceInfo;
 }
 
@@ -85,7 +87,24 @@ export interface MachineControlSessionResponse {
   isOperator: boolean;
   operatorLeaseExpiresAt?: string;
   activeSession?: import("./session").SolveSession;
-  gatewayMode?: "mock" | "esp32";
+  gatewayMode?: MachineGatewayMode;
   device?: MachineDeviceInfo;
   message?: string;
+}
+
+export interface DeviceJobResponse {
+  hasJob: boolean;
+  job?: {
+    jobId: string;
+    notation: string;
+    actions: MechanicalAction[];
+  };
+}
+
+export interface DeviceStatusUpdateRequest {
+  deviceId?: string;
+  jobId: string;
+  status: MachineStatus;
+  errorMessage?: string;
+  progress?: MachineProgress;
 }

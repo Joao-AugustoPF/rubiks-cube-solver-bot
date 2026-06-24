@@ -49,13 +49,13 @@ const LAYER_ITEMS = [
   {
     name: "Camada de Máquina",
     description:
-      "Planejamento mecânico abstrato, contratos tipados, gateway ESP32 e fallback mock.",
+      "Planejamento mecânico abstrato, contratos tipados, fila/polling ESP32 e fallback mock.",
     files: "src/lib/machine + src/types/machine.ts",
   },
   {
     name: "Backend no mesmo app",
     description:
-      "API routes Next.js para validate, solve, registro do ESP32, sessão, start e status.",
+      "API routes Next.js para validate, solve, registro do ESP32, fila, sessão, start e status.",
     files: "src/app/api",
   },
 ] as const;
@@ -96,7 +96,7 @@ const FOLDER_TREE: FolderNode[] = [
           { name: "cube/", kind: "dir", note: "Domínio do cubo" },
           { name: "scanner/", kind: "dir", note: "Leitura de cor da câmera" },
           { name: "solve-session/", kind: "dir", note: "Sessão consolidada de execução" },
-          { name: "machine/", kind: "dir", note: "Planner, gateway ESP32 e sessão" },
+          { name: "machine/", kind: "dir", note: "Planner, fila ESP32 e sessão" },
         ],
       },
       {
@@ -149,7 +149,9 @@ const ENDPOINTS = [
   { method: "GET", path: "/api/health", purpose: "status geral da aplicação" },
   { method: "POST", path: "/api/cube/validate", purpose: "validar CubeState" },
   { method: "POST", path: "/api/cube/solve", purpose: "gerar logicalMoves" },
-  { method: "POST", path: "/api/device/register", purpose: "registrar IP do ESP32" },
+  { method: "POST", path: "/api/device/register", purpose: "registrar presença do ESP32" },
+  { method: "GET", path: "/api/device/jobs/next", purpose: "ESP32 buscar próximo job" },
+  { method: "POST", path: "/api/device/jobs/status", purpose: "ESP32 reportar progresso" },
   { method: "POST", path: "/api/machine/session", purpose: "assumir operação" },
   { method: "POST", path: "/api/machine/start", purpose: "iniciar máquina" },
   { method: "GET", path: "/api/machine/status", purpose: "consultar status da execução" },
@@ -169,7 +171,7 @@ const START_GUIDE = [
   {
     title: "Se você quer saber o que falta",
     description:
-      "O backend já fala HTTP com o ESP32. O próximo passo é ajustar o planner à cinemática final do robô.",
+      "O ESP32 já busca jobs no backend. O próximo passo é ajustar o planner à cinemática final do robô.",
   },
 ] as const;
 
@@ -272,7 +274,7 @@ export function ArchitectureGuide() {
           </article>
           <article>
             <h3>src/lib/machine</h3>
-            <p>Planejamento mecânico, gateway ESP32, fallback mock e sessão ativa.</p>
+            <p>Planejamento mecânico, fila ESP32, fallback mock e sessão ativa.</p>
           </article>
           <article>
             <h3>src/types</h3>
@@ -402,8 +404,8 @@ export function ArchitectureGuide() {
       <section id="integracao-maquina" className={styles.section}>
         <h2>9. Integração com a Máquina</h2>
         <p>
-          A integração usa o backend Next.js como proxy HTTP para o ESP32 registrado,
-          mantendo mock local quando não há hardware conectado.
+          A integração usa o backend Next.js como fila pública. O ESP32 busca jobs
+          e reporta progresso, então não precisa receber conexão no IP local.
         </p>
         <div className={styles.endpointList}>
           {ENDPOINTS.map((endpoint) => (
@@ -431,7 +433,7 @@ export function ArchitectureGuide() {
           <li>Calcular solução lógica (`/api/cube/solve`).</li>
           <li>Criar `SolveSession` com `mechanicalPlan`.</li>
           <li>Abrir `/solve` e assumir a operação.</li>
-          <li>Enviar o plano ao ESP32 ou ao fallback mock.</li>
+          <li>Enfileirar o plano para o ESP32 ou usar o fallback mock.</li>
           <li>Acompanhar status e progresso até o final.</li>
         </ol>
       </section>
@@ -461,10 +463,10 @@ export function ArchitectureGuide() {
             </p>
           </details>
           <details>
-            <summary>Gateway ESP32 com fallback mock</summary>
+            <summary>Polling ESP32 com fallback mock</summary>
             <p>
-              Mantém a demo funcionando sem hardware, mas usa o mesmo contrato de
-              start/status quando o ESP32 está registrado.
+              Mantém a demo funcionando sem hardware e permite que o ESP32 funcione
+              atrás de NAT, buscando jobs no backend público.
             </p>
           </details>
         </div>
@@ -481,7 +483,7 @@ export function ArchitectureGuide() {
               <li>Scanner guiado com revisão manual</li>
               <li>Animação em tempo real baseada em logicalMoves</li>
               <li>Planner mecânico abstrato</li>
-              <li>API de máquina, operador, registro ESP32 e fallback mock</li>
+              <li>API de máquina, operador, polling ESP32 e fallback mock</li>
             </ul>
           </article>
           <article>

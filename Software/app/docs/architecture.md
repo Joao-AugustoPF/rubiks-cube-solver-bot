@@ -9,7 +9,7 @@ Camadas principais:
 - **Domínio do cubo**: modelagem, validação, serialização, aplicação de movimentos e solver lógico.
 - **Camada de scanner**: captura por câmera, leitura assistida e revisão manual.
 - **Sessão de execução**: consolida `initialCubeState`, `logicalMoves`, `mechanicalPlan` e progresso da máquina.
-- **Camada de máquina**: planner mecânico abstrato, gateway ESP32, fallback mock e controle de operador.
+- **Camada de máquina**: planner mecânico abstrato, fila de jobs para ESP32, fallback mock e controle de operador.
 - **UI de execução**: tela final com sessão ativa compartilhada, status da máquina e cubo 3D.
 
 ## Estrutura principal
@@ -18,7 +18,7 @@ Camadas principais:
 - `src/components`: UI por fluxo (`scanner`, `solve`, `cube`).
 - `src/lib/cube`: domínio puro do cubo (sem dependência de UI).
 - `src/lib/scanner`: leitura de cor e extração da grade 3x3.
-- `src/lib/machine`: planner, contrato, gateway ESP32, mock e sessão ativa.
+- `src/lib/machine`: planner, contrato, fila/polling ESP32, mock e sessão ativa.
 - `src/lib/solve-session`: criação/persistência da sessão de execução.
 - `src/types`: contratos tipados compartilhados.
 - `docs`: documentação de arquitetura e fluxos.
@@ -29,6 +29,8 @@ Camadas principais:
 - `POST /api/cube/validate`
 - `POST /api/cube/solve`
 - `POST /api/device/register`
+- `GET /api/device/jobs/next`
+- `POST /api/device/jobs/status`
 - `GET|POST|DELETE /api/machine/session`
 - `POST /api/machine/start`
 - `GET /api/machine/status?jobId=...`
@@ -47,7 +49,7 @@ Camadas principais:
 - Solve lógico usando `cubejs`.
 - Tela de execução completa em `/solve`.
 - Planejamento mecânico abstrato serializável.
-- Gateway HTTP para ESP32 com fallback mock.
+- Fila HTTP para ESP32 com fallback mock.
 - Controle de aba operadora por cookie HTTP-only.
 - Sessão ativa compartilhada no backend para visualizadores.
 - Persistência temporária de `SolveSession` no `localStorage`.

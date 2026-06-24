@@ -14,8 +14,8 @@ Fluxos implementados:
 - viewer 2D do cubo,
 - animação da solução em `/solve` com play/pause/reset/velocidade,
 - planejamento mecânico abstrato,
-- gateway real para ESP32 via HTTP, com fallback para mock local,
-- registro do ESP32 em `POST /api/device/register`,
+- fila de jobs para ESP32 via polling HTTP, com fallback para mock local,
+- registro/heartbeat do ESP32 em `POST /api/device/register`,
 - sessão ativa compartilhada no backend para espectadores acompanharem,
 - bloqueio de início por aba operadora,
 - progresso físico por ação (`completedActions/totalActions`) sincronizando o cubo 3D.
@@ -26,6 +26,8 @@ Fluxos implementados:
 - `POST /api/cube/validate`
 - `POST /api/cube/solve`
 - `POST /api/device/register`
+- `GET /api/device/jobs/next`
+- `POST /api/device/jobs/status`
 - `GET|POST|DELETE /api/machine/session`
 - `POST /api/machine/start`
 - `GET /api/machine/status`
@@ -35,11 +37,10 @@ Fluxos implementados:
 ```bash
 DEVICE_SECRET=meu-segredo-compartilhado
 
-# Desenvolvimento sem depender do registro do ESP32:
-DEVICE_IP_OVERRIDE=192.168.1.42
-
 # Opcional:
-MACHINE_GATEWAY=mock # força mock mesmo com ESP configurado
+MACHINE_GATEWAY=mock   # força mock local
+MACHINE_GATEWAY=direct # modo bancada: Next chama o IP do ESP32 diretamente
+DEVICE_IP_OVERRIDE=192.168.1.42 # usado apenas no modo direct
 MACHINE_OPERATOR_LEASE_SECONDS=1800
 ```
 
@@ -57,8 +58,10 @@ npm run test
 2. Validar e resolver (`/api/cube/validate` + `/api/cube/solve`).
 3. Gerar `SolveSession` com `mechanicalPlan`.
 4. Abrir execução (`/solve`) e clicar em **Iniciar execução**.
-5. Backend envia o plano para o ESP32 registrado ou para o mock local.
-6. `/solve` faz polling de status e mostra o cubo conforme o progresso reportado.
+5. Backend deixa o job na fila.
+6. ESP32 chama `GET /api/device/jobs/next`, baixa o job e executa.
+7. ESP32 reporta progresso em `POST /api/device/jobs/status`.
+8. `/solve` faz polling de status e mostra o cubo conforme o progresso reportado.
 
 ## Contratos e tipos centrais
 

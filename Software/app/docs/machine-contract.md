@@ -4,7 +4,9 @@ Este documento define o contrato estável entre frontend/backend e o firmware ES
 
 ## Objetivo
 
-Permitir que o sistema rode com ESP32 real via HTTP e mantenha fallback mock para desenvolvimento sem hardware.
+Permitir que o sistema rode com ESP32 real atrás de NAT/rede privada. A web
+enfileira jobs no backend público; o ESP32 busca jobs e reporta progresso.
+O modo direto por IP existe apenas para bancada local.
 
 ## Tipos principais
 
@@ -75,7 +77,7 @@ Response:
     "currentLogicalMoveIndex": 0,
     "totalLogicalMoves": 3
   },
-  "gatewayMode": "esp32"
+  "gatewayMode": "polling"
 }
 ```
 
@@ -115,9 +117,90 @@ Erro (exemplo):
 }
 ```
 
+### `GET /api/device/jobs/next?deviceId=rubik-solver-01`
+
+Chamado pelo ESP32 periodicamente. Se houver job em fila, o backend marca o job
+como `started` e devolve o plano mecânico.
+
+Headers:
+
+```text
+X-Device-Secret: <DEVICE_SECRET>
+X-Device-IP: 192.168.1.42
+```
+
+Sem job:
+
+```json
+{
+  "hasJob": false
+}
+```
+
+Com job:
+
+```json
+{
+  "hasJob": true,
+  "job": {
+    "jobId": "cube-001",
+    "notation": "U R2 F",
+    "actions": [
+      { "type": "home", "target": "all" },
+      { "type": "turn_face", "actuator": "right", "degrees": 90 }
+    ]
+  }
+}
+```
+
+### `POST /api/device/jobs/status`
+
+Chamado pelo ESP32 para atualizar progresso/status.
+
+Headers:
+
+```text
+X-Device-Secret: <DEVICE_SECRET>
+X-Device-IP: 192.168.1.42
+```
+
+Request:
+
+```json
+{
+  "deviceId": "rubik-solver-01",
+  "jobId": "cube-001",
+  "status": "started",
+  "progress": {
+    "currentActionIndex": 1,
+    "completedActions": 1,
+    "totalActions": 2,
+    "currentActionType": "turn_face"
+  }
+}
+```
+
+Para erro:
+
+```json
+{
+  "deviceId": "rubik-solver-01",
+  "jobId": "cube-001",
+  "status": "error",
+  "errorMessage": "Falha na ação: turn_face",
+  "progress": {
+    "currentActionIndex": 1,
+    "completedActions": 1,
+    "totalActions": 2,
+    "currentActionType": "turn_face"
+  }
+}
+```
+
 ### `POST /api/device/register`
 
-Chamado pelo ESP32 no boot/reconexão para informar o IP atual.
+Chamado pelo ESP32 no boot/reconexão para informar presença. O IP é metadata
+para debug; o backend público não depende dele para chamar a placa.
 
 Headers:
 
@@ -163,16 +246,17 @@ Gerencia a aba operadora e expõe a sessão ativa.
 
 ## O que o firmware precisa implementar
 
-1. Receber `MachineStartRequest` (ou equivalente transportado para ESP32).
-2. Executar `actions` na ordem, com idempotência por `jobId`.
-3. Expor/transmitir status compatível com:
+1. Chamar `POST /api/device/register` ao iniciar/reconectar.
+2. Fazer polling em `GET /api/device/jobs/next`.
+3. Executar `actions` na ordem, com idempotência por `jobId`.
+4. Enviar status compatível com:
   - `queued`
   - `started`
   - `finished`
   - `error`
-4. Retornar mensagem de erro quando falhar.
-5. Retornar `progress` com `currentActionIndex`, `completedActions`, `totalActions` e `currentActionType`.
-6. Manter compatibilidade de contrato para não quebrar frontend/backend já existentes.
+5. Retornar mensagem de erro quando falhar.
+6. Retornar `progress` com `currentActionIndex`, `completedActions`, `totalActions` e `currentActionType`.
+7. Manter compatibilidade de contrato para não quebrar frontend/backend já existentes.
 
 ## Fora de escopo deste documento
 

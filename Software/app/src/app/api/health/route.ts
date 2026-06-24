@@ -8,8 +8,9 @@ export async function GET() {
       scanner: false,
       solver: false,
       viewer3d: false,
-      esp32Firmware: false,
-      machineContractMock: true,
+      esp32Firmware: true,
+      machinePolling: true,
+      machineMockFallback: true,
     },
     timestamp: new Date().toISOString(),
   });

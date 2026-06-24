@@ -1,6 +1,9 @@
 import type {
+  DeviceJobResponse,
+  DeviceStatusUpdateRequest,
   MachineDeviceInfo,
   MachineProgress,
+  MachineStartRequest,
   MachineStatusResponse,
   MechanicalAction,
   SolveSession,
@@ -23,10 +26,24 @@ interface RegisteredDevice {
   lastSeenAt: string;
 }
 
+interface QueuedDeviceJob {
+  jobId: string;
+  notation: string;
+  actions: MechanicalAction[];
+  status: MachineStatusResponse["status"];
+  errorMessage?: string;
+  progress: MachineProgress;
+  deviceId?: string;
+  createdAt: string;
+  updatedAt: string;
+  claimedAt?: string;
+}
+
 interface MachineStore {
   activeSession: SolveSession | null;
   operatorLease: OperatorLease | null;
   registeredDevice: RegisteredDevice | null;
+  deviceJobs: Map<string, QueuedDeviceJob>;
 }
 
 interface OperatorClaim {
@@ -48,7 +65,11 @@ function getStore(): MachineStore {
       activeSession: null,
       operatorLease: null,
       registeredDevice: null,
+      deviceJobs: new Map(),
     };
+  }
+  if (!globalStore.__rubiksMachineStore.deviceJobs) {
+    globalStore.__rubiksMachineStore.deviceJobs = new Map();
   }
 
   return globalStore.__rubiksMachineStore;
@@ -238,6 +259,125 @@ export function enrichMachineStatus(
   return enriched;
 }
 
+export function queueDeviceJob(
+  request: MachineStartRequest,
+): MachineStatusResponse {
+  const store = getStore();
+  const existingActiveJob = [...store.deviceJobs.values()].find(
+    (job) => job.status === "queued" || job.status === "started",
+  );
+
+  if (existingActiveJob && existingActiveJob.jobId !== request.jobId) {
+    throw new Error(
+      `Máquina ocupada com o job ${existingActiveJob.jobId}. Aguarde finalizar antes de iniciar outro.`,
+    );
+  }
+
+  const existing = store.deviceJobs.get(request.jobId);
+  if (existing) {
+    return toMachineStatusResponse(existing);
+  }
+
+  const now = new Date().toISOString();
+  const job: QueuedDeviceJob = {
+    jobId: request.jobId,
+    notation: request.notation ?? request.logicalMoves?.join(" ") ?? "",
+    actions: [...request.actions],
+    status: "queued",
+    progress: {
+      currentActionIndex: 0,
+      completedActions: 0,
+      totalActions: request.actions.length,
+      currentActionType: request.actions[0]?.type,
+    },
+    createdAt: now,
+    updatedAt: now,
+  };
+
+  store.deviceJobs.set(job.jobId, job);
+  return toMachineStatusResponse(job);
+}
+
+export function getQueuedDeviceJobStatus(jobId: string): MachineStatusResponse {
+  const job = getStore().deviceJobs.get(jobId);
+  if (!job) {
+    return {
+      jobId,
+      status: "error",
+      updatedAt: new Date().toISOString(),
+      errorMessage: "Job não encontrado na fila do backend.",
+    };
+  }
+
+  return toMachineStatusResponse(job);
+}
+
+export function claimNextDeviceJob(deviceId: string): DeviceJobResponse {
+  const store = getStore();
+  const now = new Date().toISOString();
+  const job = [...store.deviceJobs.values()].find(
+    (candidate) => candidate.status === "queued",
+  );
+
+  if (!job) {
+    return { hasJob: false };
+  }
+
+  const updated: QueuedDeviceJob = {
+    ...job,
+    status: "started",
+    deviceId,
+    claimedAt: now,
+    updatedAt: now,
+    progress: {
+      ...job.progress,
+      currentActionIndex: 0,
+      completedActions: 0,
+      currentActionType: job.actions[0]?.type,
+    },
+  };
+
+  store.deviceJobs.set(updated.jobId, updated);
+  enrichMachineStatus(toMachineStatusResponse(updated));
+
+  return {
+    hasJob: true,
+    job: {
+      jobId: updated.jobId,
+      notation: updated.notation,
+      actions: [...updated.actions],
+    },
+  };
+}
+
+export function updateDeviceJobStatus(
+  update: DeviceStatusUpdateRequest,
+): MachineStatusResponse {
+  const store = getStore();
+  const job = store.deviceJobs.get(update.jobId);
+  if (!job) {
+    throw new Error(`Job ${update.jobId} não encontrado no backend.`);
+  }
+
+  const now = new Date().toISOString();
+  const progress = normalizeProgress(
+    update.progress ?? job.progress,
+    job.actions,
+    update.status,
+  );
+  const updated: QueuedDeviceJob = {
+    ...job,
+    status: update.status,
+    errorMessage: update.errorMessage,
+    deviceId: update.deviceId ?? job.deviceId,
+    progress,
+    updatedAt: now,
+  };
+
+  store.deviceJobs.set(updated.jobId, updated);
+  return enrichMachineStatus(toMachineStatusResponse(updated));
+}
+
 export function registerDevice(input: {
   ip: string;
   deviceId?: string;
@@ -276,12 +416,14 @@ export function getDeviceBaseUrl(): string | null {
 export function getMachineDeviceInfo(): MachineDeviceInfo {
   const configuredBaseUrl = getDeviceBaseUrl();
   const registeredDevice = getRegisteredDevice();
+  const gatewayMode = process.env.MACHINE_GATEWAY?.trim().toLowerCase();
+  const isDirectMode = gatewayMode === "direct" || gatewayMode === "esp32";
 
   return {
-    connected: Boolean(configuredBaseUrl),
+    connected: Boolean(registeredDevice || (isDirectMode && configuredBaseUrl)),
     deviceId: registeredDevice?.deviceId,
-    ip: registeredDevice?.ip ?? process.env.DEVICE_IP_OVERRIDE,
-    baseUrl: configuredBaseUrl ?? undefined,
+    ip: registeredDevice?.ip ?? (isDirectMode ? process.env.DEVICE_IP_OVERRIDE : undefined),
+    baseUrl: isDirectMode ? (configuredBaseUrl ?? undefined) : undefined,
     lastSeenAt: registeredDevice?.lastSeenAt,
   };
 }
@@ -291,6 +433,49 @@ export function resetMachineStoreForTests(): void {
     activeSession: null,
     operatorLease: null,
     registeredDevice: null,
+    deviceJobs: new Map(),
+  };
+}
+
+function toMachineStatusResponse(job: QueuedDeviceJob): MachineStatusResponse {
+  return {
+    jobId: job.jobId,
+    status: job.status,
+    updatedAt: job.updatedAt,
+    errorMessage: job.errorMessage,
+    progress: job.progress,
+  };
+}
+
+function normalizeProgress(
+  progress: MachineProgress,
+  actions: readonly MechanicalAction[],
+  status: MachineStatusResponse["status"],
+): MachineProgress {
+  const totalActions = actions.length;
+  const completedActions = clampInteger(
+    status === "finished"
+      ? totalActions
+      : progress.completedActions,
+    0,
+    totalActions,
+  );
+  const currentActionIndex = clampInteger(
+    progress.currentActionIndex ??
+      (completedActions >= totalActions
+        ? Math.max(totalActions - 1, 0)
+        : completedActions),
+    0,
+    Math.max(totalActions - 1, 0),
+  );
+
+  return {
+    ...progress,
+    currentActionIndex,
+    completedActions,
+    totalActions,
+    currentActionType:
+      progress.currentActionType ?? actions[currentActionIndex]?.type,
   };
 }
 
