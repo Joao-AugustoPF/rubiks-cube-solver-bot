@@ -18,7 +18,7 @@ const FLOW_STEPS = [
   {
     number: 3,
     title: "Assistir em 3D",
-    description: "Abra a execução, inicie o mock da máquina e veja cada camada girar.",
+    description: "Abra a execução, envie para a máquina e acompanhe o cubo físico.",
   },
 ] as const;
 

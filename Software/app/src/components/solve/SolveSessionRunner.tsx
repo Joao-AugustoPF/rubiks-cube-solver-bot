@@ -2,7 +2,13 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import type { MachineStartRequest, MachineStatus, MachineStatusResponse, SolveSession } from "@/types";
+import type {
+  MachineControlSessionResponse,
+  MachineStartRequest,
+  MachineStatus,
+  MachineStatusResponse,
+  SolveSession,
+} from "@/types";
 import {
   loadSolveSession,
   saveSolveSession,
@@ -15,22 +21,71 @@ const POLL_INTERVAL_MS = 750;
 
 export function SolveSessionRunner() {
   const [session, setSession] = useState<SolveSession | null>(null);
+  const [controlSession, setControlSession] =
+    useState<MachineControlSessionResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [machineStatus, setMachineStatus] = useState<MachineStatus | null>(null);
+  const [machineMoveIndex, setMachineMoveIndex] = useState<number | null>(null);
   const [machineError, setMachineError] = useState<string | null>(null);
   const [isStartingMachine, setIsStartingMachine] = useState(false);
   const [isPollingMachine, setIsPollingMachine] = useState(false);
 
   useEffect(() => {
-    const loaded = loadSolveSession();
-    setSession(loaded);
-    setMachineStatus(loaded?.machineExecution?.status ?? null);
-    setMachineError(loaded?.machineExecution?.errorMessage ?? null);
-    setIsLoading(false);
+    let cancelled = false;
+
+    async function initialize() {
+      const localSession = loadSolveSession();
+
+      try {
+        const response = await fetch("/api/machine/session", {
+          method: "POST",
+        });
+        const body = (await response.json()) as
+          | MachineControlSessionResponse
+          | { message?: string };
+
+        if (!response.ok || !("isOperator" in body)) {
+          throw new Error(
+            ("message" in body && body.message) ||
+              "Falha ao consultar sessão da máquina.",
+          );
+        }
+        if (cancelled) {
+          return;
+        }
+
+        setControlSession(body);
+        const activeSession = body.activeSession ?? localSession;
+        applyLoadedSession(activeSession);
+        if (body.activeSession) {
+          saveSolveSession(body.activeSession);
+        }
+      } catch (error) {
+        if (cancelled) {
+          return;
+        }
+        applyLoadedSession(localSession);
+        setMachineError(
+          error instanceof Error
+            ? error.message
+            : "Erro ao consultar sessão da máquina.",
+        );
+      } finally {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    void initialize();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
-    if (!session) {
+    if (!session?.jobId) {
       setIsPollingMachine(false);
       return;
     }
@@ -44,9 +99,11 @@ export function SolveSessionRunner() {
     const timer = window.setInterval(() => {
       void fetch(`/api/machine/status?jobId=${encodeURIComponent(session.jobId)}`)
         .then(async (response) => {
-          const body = (await response.json()) as MachineStatusResponse | { message?: string };
+          const body = (await response.json()) as
+            | MachineStatusResponse
+            | { message?: string };
           if (!response.ok || !("status" in body)) {
-            throw new Error(("message" in body && body.message) || "Falha ao consultar status da máquina.");
+            throw new Error(extractApiError(body, "Falha ao consultar status da máquina."));
           }
           if (cancelled) {
             return;
@@ -58,7 +115,11 @@ export function SolveSessionRunner() {
             return;
           }
           setMachineStatus("error");
-          setMachineError(error instanceof Error ? error.message : "Erro ao consultar status da máquina.");
+          setMachineError(
+            error instanceof Error
+              ? error.message
+              : "Erro ao consultar status da máquina.",
+          );
         });
     }, POLL_INTERVAL_MS);
 
@@ -67,32 +128,45 @@ export function SolveSessionRunner() {
       setIsPollingMachine(false);
       window.clearInterval(timer);
     };
-  }, [machineStatus, session]);
+  }, [machineStatus, session?.jobId]);
 
   const statusLabel = useMemo(() => {
     if (!machineStatus) {
-      return "Aguardando início manual";
+      return "Aguardando início";
     }
     if (machineStatus === "queued") {
-      return "queued";
+      return "Na fila";
     }
     if (machineStatus === "started") {
-      return "started";
+      return "Executando";
     }
     if (machineStatus === "finished") {
-      return "finished";
+      return "Finalizado";
     }
-    return "error";
+    return "Erro";
   }, [machineStatus]);
 
-  const canStartExecution =
-    !isStartingMachine && (machineStatus === null || machineStatus === "error");
+  const progress = session?.machineExecution?.progress;
+  const operatorLabel = controlSession?.isOperator ? "Operador" : "Visualização";
+  const connectionLabel =
+    controlSession?.gatewayMode === "esp32"
+      ? controlSession.device?.connected
+        ? "ESP32 conectado"
+        : "ESP32 pendente"
+      : "Mock local";
 
-  const startButtonLabel = isStartingMachine
-    ? "Iniciando mock..."
-    : machineStatus === null
-      ? "Iniciar execução"
-      : "Tentar iniciar novamente";
+  const canStartExecution =
+    Boolean(controlSession?.isOperator) &&
+    !isStartingMachine &&
+    (machineStatus === null || machineStatus === "error");
+
+  const startButtonLabel = !controlSession?.isOperator
+    ? "Visualização apenas"
+    : isStartingMachine
+      ? "Iniciando..."
+      : machineStatus === null
+        ? "Iniciar execução"
+        : "Tentar iniciar novamente";
 
   if (isLoading) {
     return (
@@ -107,8 +181,8 @@ export function SolveSessionRunner() {
       <section className={styles.block}>
         <h2>Comece pela etapa 1</h2>
         <p>
-          Esta tela só mostra a animação depois que uma sessão é criada no
-          scanner ou no editor manual.
+          Esta tela mostra a sessão criada no scanner/editor ou uma execução
+          ativa já registrada no backend.
         </p>
         <div className={styles.emptyActions}>
           <Link href="/scan" className={styles.linkButton}>
@@ -126,7 +200,7 @@ export function SolveSessionRunner() {
     <section className={styles.console} aria-label="Console da execução">
       <aside className={styles.machinePanel}>
         <div className={styles.panelHeader}>
-          <span className={styles.panelLabel}>Máquina mock</span>
+          <span className={styles.panelLabel}>Máquina</span>
           <span
             className={`${styles.badge} ${
               machineStatus ? styles[`badge_${machineStatus}`] : styles.badge_neutral
@@ -154,15 +228,23 @@ export function SolveSessionRunner() {
 
         <dl className={styles.runtimeList}>
           <div>
+            <dt>Permissão</dt>
+            <dd>{operatorLabel}</dd>
+          </div>
+          <div>
+            <dt>Conexão</dt>
+            <dd>{connectionLabel}</dd>
+          </div>
+          <div>
             <dt>Consulta de status</dt>
             <dd>{isPollingMachine ? "ativa" : "inativa"}</dd>
           </div>
           <div>
-            <dt>Disparo da animação</dt>
+            <dt>Progresso físico</dt>
             <dd>
-              {machineStatus === "started" || machineStatus === "finished"
-                ? "liberado"
-                : "aguardando start"}
+              {progress
+                ? `${progress.completedActions}/${progress.totalActions}`
+                : "sem telemetria"}
             </dd>
           </div>
         </dl>
@@ -178,22 +260,38 @@ export function SolveSessionRunner() {
           </button>
         </div>
         {machineError ? <p className={styles.error}>{machineError}</p> : null}
+        {controlSession?.message && !controlSession.isOperator ? (
+          <p className={styles.note}>{controlSession.message}</p>
+        ) : null}
         {machineStatus === "finished" ? (
           <p className={styles.success}>
-            Execução mock finalizada. A animação deve estar completa.
+            Execução finalizada. O cubo exibido acompanha o último progresso da máquina.
           </p>
         ) : null}
         <p className={styles.note}>
-          O botão envia o plano mecânico para o mock. Quando o status muda para{" "}
-          <code>started</code>, o palco 3D começa automaticamente.
+          O operador envia o plano mecânico para o backend. Outras abas acompanham
+          a mesma sessão sem poder iniciar comandos.
         </p>
       </aside>
 
       <div className={styles.stagePanel}>
-        <SolveAnimationPlayer session={session} machineStatus={machineStatus} />
+        <SolveAnimationPlayer
+          session={session}
+          machineStatus={machineStatus}
+          machineMoveIndex={machineMoveIndex}
+        />
       </div>
     </section>
   );
+
+  function applyLoadedSession(loaded: SolveSession | null) {
+    setSession(loaded);
+    setMachineStatus(loaded?.machineExecution?.status ?? null);
+    setMachineMoveIndex(
+      loaded?.machineExecution?.progress?.currentLogicalMoveIndex ?? null,
+    );
+    setMachineError(loaded?.machineExecution?.errorMessage ?? null);
+  }
 
   async function handleStartMachine() {
     if (!session) {
@@ -205,7 +303,10 @@ export function SolveSessionRunner() {
 
     const payload: MachineStartRequest = {
       jobId: session.jobId,
+      notation: session.logicalMoves.join(" "),
       actions: session.mechanicalPlan.actions,
+      initialCubeState: session.initialCubeState,
+      logicalMoves: session.logicalMoves,
     };
 
     try {
@@ -214,9 +315,11 @@ export function SolveSessionRunner() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const body = (await response.json()) as MachineStatusResponse | { message?: string };
+      const body = (await response.json()) as
+        | MachineStatusResponse
+        | { message?: string };
       if (!response.ok || !("status" in body)) {
-        throw new Error(("message" in body && body.message) || "Falha ao iniciar mock da máquina.");
+        throw new Error(extractApiError(body, "Falha ao iniciar máquina."));
       }
       applyMachineStatus(body);
     } catch (error: unknown) {
@@ -229,6 +332,7 @@ export function SolveSessionRunner() {
 
   function applyMachineStatus(statusResponse: MachineStatusResponse) {
     setMachineStatus(statusResponse.status);
+    setMachineMoveIndex(statusResponse.progress?.currentLogicalMoveIndex ?? null);
     setMachineError(statusResponse.errorMessage ?? null);
 
     setSession((previous) => {
@@ -243,6 +347,7 @@ export function SolveSessionRunner() {
           status: statusResponse.status,
           updatedAt: statusResponse.updatedAt,
           errorMessage: statusResponse.errorMessage,
+          progress: statusResponse.progress,
         },
       };
       saveSolveSession(updated);
@@ -253,6 +358,21 @@ export function SolveSessionRunner() {
       status: statusResponse.status,
       updatedAt: statusResponse.updatedAt,
       errorMessage: statusResponse.errorMessage,
+      progress: statusResponse.progress,
     });
   }
+}
+
+function extractApiError(
+  body: MachineStatusResponse | { message?: string },
+  fallback: string,
+): string {
+  if ("errorMessage" in body && body.errorMessage) {
+    return body.errorMessage;
+  }
+  if ("message" in body && body.message) {
+    return body.message;
+  }
+
+  return fallback;
 }

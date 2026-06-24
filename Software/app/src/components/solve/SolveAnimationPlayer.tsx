@@ -11,12 +11,15 @@ import styles from "./SolveAnimationPlayer.module.css";
 interface SolveAnimationPlayerProps {
   session: SolveSession;
   machineStatus?: "queued" | "started" | "finished" | "error" | null;
+  machineMoveIndex?: number | null;
 }
 
 export function SolveAnimationPlayer({
   session,
   machineStatus = null,
+  machineMoveIndex = null,
 }: SolveAnimationPlayerProps) {
+  const hasMachineProgress = typeof machineMoveIndex === "number";
   const {
     cubeState,
     currentMove,
@@ -29,7 +32,9 @@ export function SolveAnimationPlayer({
     setSpeedMs,
     speedMs,
     totalMoves,
-  } = useSolveAnimation(session);
+  } = useSolveAnimation(session, {
+    controlledMoveIndex: hasMachineProgress ? machineMoveIndex : undefined,
+  });
   const startedTriggerRef = useRef(false);
 
   useEffect(() => {
@@ -37,6 +42,9 @@ export function SolveAnimationPlayer({
   }, [session.jobId]);
 
   useEffect(() => {
+    if (hasMachineProgress) {
+      return;
+    }
     if (machineStatus !== "started" && machineStatus !== "finished") {
       return;
     }
@@ -45,7 +53,7 @@ export function SolveAnimationPlayer({
     }
     startedTriggerRef.current = true;
     play();
-  }, [machineStatus, play]);
+  }, [hasMachineProgress, machineStatus, play]);
 
   const isFinished = moveIndex >= totalMoves;
   const isSolvedAtEnd = isFinished && isSolvedCube(cubeState);
@@ -55,6 +63,7 @@ export function SolveAnimationPlayer({
   const hasMachineStarted =
     machineStatus === "started" || machineStatus === "finished";
   const waitingMachineStart = !hasMachineStarted && totalMoves > 0;
+  const controlsLockedByMachine = hasMachineProgress && hasMachineStarted;
 
   return (
     <section className={styles.player}>
@@ -67,7 +76,11 @@ export function SolveAnimationPlayer({
           <div>
             <span>Disparo</span>
             <strong className={hasMachineStarted ? styles.ready : styles.waiting}>
-              {hasMachineStarted ? "liberado" : "bloqueado"}
+              {controlsLockedByMachine
+                ? "sincronizado"
+                : hasMachineStarted
+                  ? "liberado"
+                  : "bloqueado"}
             </strong>
           </div>
           <div>
@@ -85,18 +98,27 @@ export function SolveAnimationPlayer({
           <button
             type="button"
             onClick={play}
-            disabled={!hasMachineStarted || isPlaying || isFinished}
+            disabled={
+              controlsLockedByMachine ||
+              !hasMachineStarted ||
+              isPlaying ||
+              isFinished
+            }
           >
             Reproduzir
           </button>
           <button
             type="button"
             onClick={pause}
-            disabled={!hasMachineStarted || !isPlaying}
+            disabled={controlsLockedByMachine || !hasMachineStarted || !isPlaying}
           >
             Pausar
           </button>
-          <button type="button" onClick={reset} disabled={!hasMachineStarted}>
+          <button
+            type="button"
+            onClick={reset}
+            disabled={controlsLockedByMachine || !hasMachineStarted}
+          >
             Reiniciar
           </button>
           <label className={styles.speedControl}>
@@ -177,7 +199,11 @@ export function SolveAnimationPlayer({
       <div className={styles.result}>
         {waitingMachineStart ? (
           <p className={styles.waiting}>
-            Aguardando a máquina mock iniciar para começar a animação.
+            Aguardando a máquina iniciar para começar a visualização.
+          </p>
+        ) : controlsLockedByMachine ? (
+          <p>
+            Visualização sincronizada pelo progresso reportado pela máquina.
           </p>
         ) : isFinished ? (
           isSolvedAtEnd ? (

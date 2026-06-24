@@ -77,6 +77,7 @@ ESP32 boot (Rede configurada)
 Frontend clica "Iniciar execução"
   └─► POST /api/machine/start
         body: { jobId: "cube-001", notation: "U R2 F B U D L2", actions: [...] }
+        cookie: rubik_solver_operator=<aba operadora>
 
 Next.js recebe e encaminha ao ESP32
   └─► POST http://192.168.1.42/start
@@ -87,9 +88,19 @@ Next.js recebe e encaminha ao ESP32
 Frontend faz polling
   └─► GET /api/machine/status?jobId=cube-001
         └─► GET http://192.168.1.42/status?jobId=cube-001
-            ← { jobId: "cube-001", status: "started", updatedAt: "..." }
+            ← {
+                 jobId: "cube-001",
+                 status: "started",
+                 updatedAt: "...",
+                 progress: {
+                   currentActionIndex: 2,
+                   completedActions: 2,
+                   totalActions: 20,
+                   currentActionType: "turn_face"
+                 }
+               }
 
-Animação inicia quando status = "started" ✓
+Web deriva o estado atual do cubo a partir do progresso físico ✓
 ` ` `
 
 ## 5. Testar o ESP32 manualmente (cURL)
@@ -137,6 +148,22 @@ curl -X POST http://IP_DO_ESP32/start \
 ` ` `bash
 curl -X GET "http://IP_DO_ESP32/status?jobId=teste-001" \
   -H "X-Device-Secret: meu-segredo-123"
+` ` `
+
+Resposta esperada:
+
+` ` `json
+{
+  "jobId": "teste-001",
+  "status": "started",
+  "updatedAt": "2026-06-24T18:00:00Z",
+  "progress": {
+    "currentActionIndex": 1,
+    "completedActions": 1,
+    "totalActions": 2,
+    "currentActionType": "wait"
+  }
+}
 ` ` `
 
 ## 6. Problema com VPS → ESP32 (NAT)

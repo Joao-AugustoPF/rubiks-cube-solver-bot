@@ -1,5 +1,5 @@
 import type { CubeState, LogicalMove } from "./cube";
-import type { MachineStatus, MechanicalPlan } from "./machine";
+import type { MachineProgress, MachineStatus, MechanicalPlan } from "./machine";
 
 export interface AnimationSettings {
   stepIntervalMs: number;
@@ -18,6 +18,7 @@ export interface SolveSession {
     status: MachineStatus;
     updatedAt: string;
     errorMessage?: string;
+    progress?: MachineProgress;
   };
 }
 

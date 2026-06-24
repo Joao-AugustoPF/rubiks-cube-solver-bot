@@ -24,7 +24,7 @@ const FLOW_STEPS = [
   "Solver",
   "Animação",
   "Planner Mecânico",
-  "ESP32 (futuro)",
+  "ESP32",
 ] as const;
 
 const LAYER_ITEMS = [
@@ -49,13 +49,13 @@ const LAYER_ITEMS = [
   {
     name: "Camada de Máquina",
     description:
-      "Planejamento mecânico abstrato, contratos tipados e gateway mock para troca futura pelo ESP32.",
+      "Planejamento mecânico abstrato, contratos tipados, gateway ESP32 e fallback mock.",
     files: "src/lib/machine + src/types/machine.ts",
   },
   {
     name: "Backend no mesmo app",
     description:
-      "API routes Next.js para validate, solve, machine start e machine status.",
+      "API routes Next.js para validate, solve, registro do ESP32, sessão, start e status.",
     files: "src/app/api",
   },
 ] as const;
@@ -96,7 +96,7 @@ const FOLDER_TREE: FolderNode[] = [
           { name: "cube/", kind: "dir", note: "Domínio do cubo" },
           { name: "scanner/", kind: "dir", note: "Leitura de cor da câmera" },
           { name: "solve-session/", kind: "dir", note: "Sessão consolidada de execução" },
-          { name: "machine/", kind: "dir", note: "Planner, contratos e mock" },
+          { name: "machine/", kind: "dir", note: "Planner, gateway ESP32 e sessão" },
         ],
       },
       {
@@ -149,7 +149,9 @@ const ENDPOINTS = [
   { method: "GET", path: "/api/health", purpose: "status geral da aplicação" },
   { method: "POST", path: "/api/cube/validate", purpose: "validar CubeState" },
   { method: "POST", path: "/api/cube/solve", purpose: "gerar logicalMoves" },
-  { method: "POST", path: "/api/machine/start", purpose: "iniciar máquina mock" },
+  { method: "POST", path: "/api/device/register", purpose: "registrar IP do ESP32" },
+  { method: "POST", path: "/api/machine/session", purpose: "assumir operação" },
+  { method: "POST", path: "/api/machine/start", purpose: "iniciar máquina" },
   { method: "GET", path: "/api/machine/status", purpose: "consultar status da execução" },
 ] as const;
 
@@ -157,7 +159,7 @@ const START_GUIDE = [
   {
     title: "Se você quer usar o produto",
     description:
-      "Comece em Scanner ou Manual. Depois siga para Execução para ver máquina mock e animação.",
+      "Comece em Scanner ou Manual. Depois siga para Execução para enviar à máquina e acompanhar o cubo.",
   },
   {
     title: "Se você quer entender o código",
@@ -167,7 +169,7 @@ const START_GUIDE = [
   {
     title: "Se você quer saber o que falta",
     description:
-      "O backend, o planner e o mock já estão prontos. O próximo passo é trocar o mock pelo firmware real do ESP32.",
+      "O backend já fala HTTP com o ESP32. O próximo passo é ajustar o planner à cinemática final do robô.",
   },
 ] as const;
 
@@ -220,8 +222,7 @@ export function ArchitectureGuide() {
         <h2>1. Visão Geral do Projeto</h2>
         <p>
           O sistema lê um cubo 3x3 por câmera, valida o estado, calcula a solução
-          lógica, anima a resolução e já prepara o plano mecânico para integração
-          futura com ESP32.
+          lógica, gera o plano mecânico e acompanha a execução reportada pelo ESP32.
         </p>
         <div className={styles.flowCards}>
           {FLOW_STEPS.map((step, index) => (
@@ -271,7 +272,7 @@ export function ArchitectureGuide() {
           </article>
           <article>
             <h3>src/lib/machine</h3>
-            <p>Planejamento mecânico abstrato, mock e contratos de gateway.</p>
+            <p>Planejamento mecânico, gateway ESP32, fallback mock e sessão ativa.</p>
           </article>
           <article>
             <h3>src/types</h3>
@@ -355,8 +356,8 @@ export function ArchitectureGuide() {
       <section id="animacao" className={styles.section}>
         <h2>7. Animação da Solução</h2>
         <p>
-          A animação usa apenas `logicalMoves` e `initialCubeState`. Ela não depende
-          de comandos mecânicos para avançar frame a frame.
+          A visualização deriva o cubo a partir de `logicalMoves` e `initialCubeState`.
+          Quando a máquina reporta progresso, esse índice controla o estado exibido.
         </p>
         <div className={styles.timeline}>
           <div>Estado inicial</div>
@@ -370,8 +371,8 @@ export function ArchitectureGuide() {
       <section id="planner" className={styles.section}>
         <h2>8. Planner Mecânico</h2>
         <p>
-          O planner converte solução lógica em um plano físico serializável para
-          integração futura com a máquina.
+          O planner converte solução lógica em um plano físico serializável enviado
+          ao backend e então ao ESP32.
         </p>
         <div className={styles.comparisonGrid}>
           <article>
@@ -401,8 +402,8 @@ export function ArchitectureGuide() {
       <section id="integracao-maquina" className={styles.section}>
         <h2>9. Integração com a Máquina</h2>
         <p>
-          A integração já está preparada por contrato e mock. O firmware real ainda
-          não foi implementado.
+          A integração usa o backend Next.js como proxy HTTP para o ESP32 registrado,
+          mantendo mock local quando não há hardware conectado.
         </p>
         <div className={styles.endpointList}>
           {ENDPOINTS.map((endpoint) => (
@@ -414,10 +415,10 @@ export function ArchitectureGuide() {
           ))}
         </div>
         <div className={styles.infoCallout}>
-          <h3>Trigger da animação</h3>
+          <h3>Sincronização visual</h3>
           <p>
-            A UI inicia a animação quando `GET /api/machine/status` retorna `started`.
-            O restante da animação roda localmente com os movimentos lógicos já calculados.
+            A UI usa `progress.currentLogicalMoveIndex` retornado por
+            `GET /api/machine/status` para exibir o estado atual do cubo físico.
           </p>
         </div>
       </section>
@@ -429,9 +430,9 @@ export function ArchitectureGuide() {
           <li>Validar estado no backend (`/api/cube/validate`).</li>
           <li>Calcular solução lógica (`/api/cube/solve`).</li>
           <li>Criar `SolveSession` com `mechanicalPlan`.</li>
-          <li>Abrir `/solve` e iniciar execução da máquina mock.</li>
-          <li>Receber status `started` e disparar animação.</li>
-          <li>Concluir visualização com progresso até o final.</li>
+          <li>Abrir `/solve` e assumir a operação.</li>
+          <li>Enviar o plano ao ESP32 ou ao fallback mock.</li>
+          <li>Acompanhar status e progresso até o final.</li>
         </ol>
       </section>
 
@@ -453,17 +454,17 @@ export function ArchitectureGuide() {
             </p>
           </details>
           <details>
-            <summary>Animação baseada em logicalMoves</summary>
+            <summary>Visualização baseada em logicalMoves</summary>
             <p>
-              Mantém a experiência visual desacoplada do hardware e permite teste
-              completo mesmo sem ESP32 real.
+              Permite derivar o estado atual do cubo a partir do progresso físico
+              sem exigir que o ESP32 conheça a lógica do cubo.
             </p>
           </details>
           <details>
-            <summary>Integração futura via contrato + mock</summary>
+            <summary>Gateway ESP32 com fallback mock</summary>
             <p>
-              Permite trocar apenas o gateway da máquina quando firmware estiver pronto,
-              preservando páginas, endpoints e tipos centrais.
+              Mantém a demo funcionando sem hardware, mas usa o mesmo contrato de
+              start/status quando o ESP32 está registrado.
             </p>
           </details>
         </div>
@@ -480,16 +481,16 @@ export function ArchitectureGuide() {
               <li>Scanner guiado com revisão manual</li>
               <li>Animação em tempo real baseada em logicalMoves</li>
               <li>Planner mecânico abstrato</li>
-              <li>API e mock de máquina</li>
+              <li>API de máquina, operador, registro ESP32 e fallback mock</li>
             </ul>
           </article>
           <article>
-            <h3>Próxima etapa (ESP32)</h3>
+            <h3>Próxima etapa</h3>
             <ul>
-              <li>Firmware para executar `MechanicalAction[]`</li>
-              <li>Canal de comunicação real com o backend</li>
-              <li>Publicação de status `queued/started/finished/error`</li>
-              <li>Substituição do mock sem quebrar contratos</li>
+              <li>Ajustar `MechanicalAction[]` à cinemática final</li>
+              <li>Persistir sessão ativa fora da memória do processo</li>
+              <li>Validar o tempo real dos atuadores no robô físico</li>
+              <li>Refinar sensores/feedback para progresso mais preciso</li>
             </ul>
           </article>
         </div>

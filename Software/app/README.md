@@ -14,16 +14,34 @@ Fluxos implementados:
 - viewer 2D do cubo,
 - animação da solução em `/solve` com play/pause/reset/velocidade,
 - planejamento mecânico abstrato,
-- mock de máquina com ciclo `queued -> started -> finished/error`,
-- gatilho de animação por status `started`.
+- gateway real para ESP32 via HTTP, com fallback para mock local,
+- registro do ESP32 em `POST /api/device/register`,
+- sessão ativa compartilhada no backend para espectadores acompanharem,
+- bloqueio de início por aba operadora,
+- progresso físico por ação (`completedActions/totalActions`) sincronizando o cubo 3D.
 
 ## Rotas de API
 
 - `GET /api/health`
 - `POST /api/cube/validate`
 - `POST /api/cube/solve`
+- `POST /api/device/register`
+- `GET|POST|DELETE /api/machine/session`
 - `POST /api/machine/start`
 - `GET /api/machine/status`
+
+## Variáveis de ambiente da máquina
+
+```bash
+DEVICE_SECRET=meu-segredo-compartilhado
+
+# Desenvolvimento sem depender do registro do ESP32:
+DEVICE_IP_OVERRIDE=192.168.1.42
+
+# Opcional:
+MACHINE_GATEWAY=mock # força mock mesmo com ESP configurado
+MACHINE_OPERATOR_LEASE_SECONDS=1800
+```
 
 ## Scripts
 
@@ -39,8 +57,8 @@ npm run test
 2. Validar e resolver (`/api/cube/validate` + `/api/cube/solve`).
 3. Gerar `SolveSession` com `mechanicalPlan`.
 4. Abrir execução (`/solve`) e clicar em **Iniciar execução**.
-5. Mock da máquina evolui de `queued` para `started`.
-6. Ao receber `started`, a animação inicia automaticamente.
+5. Backend envia o plano para o ESP32 registrado ou para o mock local.
+6. `/solve` faz polling de status e mostra o cubo conforme o progresso reportado.
 
 ## Contratos e tipos centrais
 
@@ -59,10 +77,12 @@ Arquivos:
 - Arquitetura consolidada: `docs/architecture.md`
 - Scanner: `docs/scanner.md`
 - Solver e validação: `docs/solver.md`
-- Contrato da máquina (mock -> ESP32): `docs/machine-contract.md`
+- Contrato da máquina (Next.js -> ESP32): `docs/machine-contract.md`
 - Animação: `docs/animation.md`
 - Fluxo ponta a ponta: `docs/execution-flow.md`
 
-## O que falta (integração ESP32 real)
+## Observação sobre estado físico
 
-Esta base **não implementa firmware**. A próxima etapa é substituir o gateway mock por integração real com ESP32, mantendo os mesmos contratos de start/status e o formato do plano mecânico.
+O backend só conhece o estado físico depois que alguém cria uma sessão pelo
+scanner/editor ou inicia uma execução. A partir desse ponto, outras abas
+conseguem abrir `/solve` e acompanhar a sessão ativa sem poder enviar comandos.

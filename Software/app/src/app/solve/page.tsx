@@ -10,8 +10,8 @@ export default function SolvePage() {
           <span className={styles.stageLabel}>Etapa 3 · Execução</span>
           <h1 id="execution-title">Console de execução</h1>
           <p>
-            Sessão, máquina mock, controles e cubo 3D ficam no mesmo painel para
-            acompanhar a solução em tempo real.
+            Sessão, controle da máquina e cubo 3D ficam no mesmo painel para
+            acompanhar o estado físico em tempo real.
           </p>
         </div>
         <div className={styles.headerActions} aria-label="Criar nova sessão">

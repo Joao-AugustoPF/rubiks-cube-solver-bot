@@ -45,6 +45,7 @@ export function updateSolveSessionMachineExecution(
       status: execution.status,
       updatedAt: execution.updatedAt,
       errorMessage: execution.errorMessage,
+      progress: execution.progress,
     },
   });
 }
@@ -107,6 +108,13 @@ function isSolveSession(value: unknown): value is SolveSession {
     ) {
       return false;
     }
+    if (
+      "progress" in machineExecution &&
+      machineExecution.progress !== undefined &&
+      !isMachineProgress(machineExecution.progress)
+    ) {
+      return false;
+    }
   }
 
   return true;
@@ -127,6 +135,30 @@ function isMachineStatus(value: unknown): value is MachineStatus {
     value === "started" ||
     value === "finished" ||
     value === "error"
+  );
+}
+
+function isMachineProgress(value: unknown): boolean {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    return false;
+  }
+
+  const candidate = value as Record<string, unknown>;
+  return (
+    typeof candidate.completedActions === "number" &&
+    typeof candidate.totalActions === "number" &&
+    (
+      candidate.currentActionIndex === undefined ||
+      typeof candidate.currentActionIndex === "number"
+    ) &&
+    (
+      candidate.currentLogicalMoveIndex === undefined ||
+      typeof candidate.currentLogicalMoveIndex === "number"
+    ) &&
+    (
+      candidate.totalLogicalMoves === undefined ||
+      typeof candidate.totalLogicalMoves === "number"
+    )
   );
 }
 

@@ -22,8 +22,17 @@ interface SolveAnimationController {
   setSpeedMs: (speedMs: number) => void;
 }
 
-export function useSolveAnimation(session: SolveSession): SolveAnimationController {
+interface UseSolveAnimationOptions {
+  controlledMoveIndex?: number;
+}
+
+export function useSolveAnimation(
+  session: SolveSession,
+  options: UseSolveAnimationOptions = {},
+): SolveAnimationController {
   const totalMoves = session.logicalMoves.length;
+  const controlledMoveIndex = options.controlledMoveIndex;
+  const hasControlledMoveIndex = typeof controlledMoveIndex === "number";
   const [moveIndex, setMoveIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(session.animation.autoPlay);
   const [speedMs, setSpeedMs] = useState(session.animation.stepIntervalMs);
@@ -41,7 +50,16 @@ export function useSolveAnimation(session: SolveSession): SolveAnimationControll
   ]);
 
   useEffect(() => {
-    if (!isPlaying || moveIndex >= totalMoves) {
+    if (!hasControlledMoveIndex) {
+      return;
+    }
+
+    setIsPlaying(false);
+    setMoveIndex(Math.min(Math.max(Math.floor(controlledMoveIndex), 0), totalMoves));
+  }, [controlledMoveIndex, hasControlledMoveIndex, totalMoves]);
+
+  useEffect(() => {
+    if (hasControlledMoveIndex || !isPlaying || moveIndex >= totalMoves) {
       if (moveIndex >= totalMoves) {
         setIsPlaying(false);
       }
@@ -55,7 +73,7 @@ export function useSolveAnimation(session: SolveSession): SolveAnimationControll
     }, speedMs);
 
     return () => window.clearTimeout(timer);
-  }, [isPlaying, moveIndex, totalMoves, speedMs]);
+  }, [hasControlledMoveIndex, isPlaying, moveIndex, totalMoves, speedMs]);
 
   const cubeState = useMemo(
     () =>
@@ -85,6 +103,9 @@ export function useSolveAnimation(session: SolveSession): SolveAnimationControll
     progress,
     speedMs,
     play: () => {
+      if (hasControlledMoveIndex) {
+        return;
+      }
       if (moveIndex >= totalMoves) {
         return;
       }
@@ -92,6 +113,9 @@ export function useSolveAnimation(session: SolveSession): SolveAnimationControll
     },
     pause: () => setIsPlaying(false),
     reset: () => {
+      if (hasControlledMoveIndex) {
+        return;
+      }
       setIsPlaying(false);
       setMoveIndex(0);
     },

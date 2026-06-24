@@ -8,9 +8,9 @@ Camadas principais:
 
 - **Domínio do cubo**: modelagem, validação, serialização, aplicação de movimentos e solver lógico.
 - **Camada de scanner**: captura por câmera, leitura assistida e revisão manual.
-- **Sessão de execução**: consolida `initialCubeState`, `logicalMoves`, `mechanicalPlan` e estado de animação.
-- **Camada de máquina**: planner mecânico abstrato + contrato de integração + mock.
-- **UI de execução**: tela final com start manual, status da máquina e animação.
+- **Sessão de execução**: consolida `initialCubeState`, `logicalMoves`, `mechanicalPlan` e progresso da máquina.
+- **Camada de máquina**: planner mecânico abstrato, gateway ESP32, fallback mock e controle de operador.
+- **UI de execução**: tela final com sessão ativa compartilhada, status da máquina e cubo 3D.
 
 ## Estrutura principal
 
@@ -18,7 +18,7 @@ Camadas principais:
 - `src/components`: UI por fluxo (`scanner`, `solve`, `cube`).
 - `src/lib/cube`: domínio puro do cubo (sem dependência de UI).
 - `src/lib/scanner`: leitura de cor e extração da grade 3x3.
-- `src/lib/machine`: planner, contrato e mock para substituição futura pelo ESP32.
+- `src/lib/machine`: planner, contrato, gateway ESP32, mock e sessão ativa.
 - `src/lib/solve-session`: criação/persistência da sessão de execução.
 - `src/types`: contratos tipados compartilhados.
 - `docs`: documentação de arquitetura e fluxos.
@@ -28,14 +28,16 @@ Camadas principais:
 - `GET /api/health`
 - `POST /api/cube/validate`
 - `POST /api/cube/solve`
+- `POST /api/device/register`
+- `GET|POST|DELETE /api/machine/session`
 - `POST /api/machine/start`
 - `GET /api/machine/status?jobId=...`
 
 ## Decisões arquiteturais
 
-- O frontend dispara animação apenas após status `started`.
-- A animação não depende de telemetria contínua da máquina.
-- A camada de máquina é desacoplada do hardware real por contrato estável.
+- O frontend usa progresso contínuo da máquina quando disponível.
+- Sem telemetria, a visualização ainda consegue usar animação local após `started`.
+- A camada de máquina mantém contrato estável para ESP32 e mock.
 - O domínio do cubo continua separado de UI e integração externa.
 
 ## Escopo implementado agora
@@ -45,15 +47,16 @@ Camadas principais:
 - Solve lógico usando `cubejs`.
 - Tela de execução completa em `/solve`.
 - Planejamento mecânico abstrato serializável.
-- Máquina mock com estados `queued`, `started`, `finished`, `error`.
+- Gateway HTTP para ESP32 com fallback mock.
+- Controle de aba operadora por cookie HTTP-only.
+- Sessão ativa compartilhada no backend para visualizadores.
 - Persistência temporária de `SolveSession` no `localStorage`.
 
 ## Fora de escopo (mantido)
 
-- Firmware ESP32 real.
-- Protocolo físico definitivo (serial/Wi-Fi/BLE).
-- Planejamento mecânico específico de hardware.
-- Viewer 3D.
+- Persistência distribuída de sessão ativa/operador em banco ou Redis.
+- Planejamento mecânico específico da cinemática final.
+- Feedback fino por sensores além do progresso por ação.
 
 ## Documentos complementares
 

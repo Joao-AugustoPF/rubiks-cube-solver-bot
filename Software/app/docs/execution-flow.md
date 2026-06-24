@@ -2,7 +2,7 @@
 
 ## Resumo
 
-Este é o fluxo completo atualmente demonstrável, funcionando integralmente com mock.
+Este é o fluxo completo com ESP32 real via HTTP e fallback mock para desenvolvimento.
 
 ## Sequência
 
@@ -25,18 +25,22 @@ Este é o fluxo completo atualmente demonstrável, funcionando integralmente com
 
 5. **Tela de execução**
    - `/solve`
-   - exibe dados da sessão e botão de start da máquina mock
+   - tenta assumir a operação via `/api/machine/session`
+   - exibe dados da sessão local ou sessão ativa já existente
 
-6. **Start da máquina mock**
+6. **Start da máquina**
    - `POST /api/machine/start`
+   - exige cookie da aba operadora
    - status inicial `queued`
 
 7. **Polling de status**
    - `GET /api/machine/status?jobId=...`
    - transições `queued -> started -> finished` (ou `error`)
+   - inclui `progress` quando ESP/mock reporta avanço
 
-8. **Gatilho da animação**
-   - ao receber `started`, animação inicia automaticamente
+8. **Visualização sincronizada**
+   - com `progress.currentLogicalMoveIndex`, o cubo 3D mostra o estado físico atual
+   - sem progresso, a animação local começa quando status vira `started`
 
 ## Sessão consolidada (`SolveSession`)
 
@@ -45,16 +49,18 @@ Este é o fluxo completo atualmente demonstrável, funcionando integralmente com
 - `logicalMoves`
 - `mechanicalPlan` (`jobId + actions`)
 - `animation` (`stepIntervalMs`, `autoPlay`)
-- `machineExecution` (`status`, `updatedAt`, `errorMessage?`)
+- `machineExecution` (`status`, `updatedAt`, `errorMessage?`, `progress?`)
 
 ## Endpoints envolvidos no fluxo
 
 - `POST /api/cube/validate`
 - `POST /api/cube/solve`
+- `POST /api/device/register`
+- `GET|POST|DELETE /api/machine/session`
 - `POST /api/machine/start`
 - `GET /api/machine/status`
 
 ## Pontos de extensão futura
 
-- trocar `MockMachineGateway` por integração real com ESP32
-- manter o mesmo contrato de start/status para não quebrar frontend
+- persistir sessão ativa e operador em Redis/banco quando houver múltiplas instâncias Next.js
+- evoluir `MechanicalAction` conforme a cinemática final do robô

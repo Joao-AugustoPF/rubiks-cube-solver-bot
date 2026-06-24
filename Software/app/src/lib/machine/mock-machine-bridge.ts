@@ -5,12 +5,16 @@ type StoredJob = {
   status: MachineStatusResponse["status"];
   updatedAt: string;
   errorMessage?: string;
+  currentActionIndex: number;
+  completedActions: number;
+  totalActions: number;
+  currentActionType?: string;
   startTimer?: ReturnType<typeof setTimeout>;
-  finishTimer?: ReturnType<typeof setTimeout>;
+  progressTimer?: ReturnType<typeof setInterval>;
 };
 
 const QUEUED_DELAY_MS = 900;
-const FINISHED_DELAY_MS = 2100;
+const ACTION_DELAY_MS = 420;
 
 export class MockMachineGateway implements MachineGateway {
   private readonly jobs = new Map<string, StoredJob>();
@@ -25,10 +29,17 @@ export class MockMachineGateway implements MachineGateway {
     const stored: StoredJob = {
       status: "queued",
       updatedAt: now,
+      currentActionIndex: 0,
+      completedActions: 0,
+      totalActions: request.actions.length,
     };
 
     this.jobs.set(request.jobId, stored);
-    this.scheduleLifecycle(request.jobId, request.simulateError ?? false);
+    this.scheduleLifecycle(
+      request.jobId,
+      request.actions.map((action) => action.type),
+      request.simulateError ?? false,
+    );
 
     return this.toStatusResponse(request.jobId, stored);
   }
@@ -47,7 +58,11 @@ export class MockMachineGateway implements MachineGateway {
     return this.toStatusResponse(jobId, job);
   }
 
-  private scheduleLifecycle(jobId: string, simulateError: boolean): void {
+  private scheduleLifecycle(
+    jobId: string,
+    actionTypes: string[],
+    simulateError: boolean,
+  ): void {
     const startTimer = setTimeout(() => {
       const current = this.jobs.get(jobId);
       if (!current) {
@@ -71,24 +86,46 @@ export class MockMachineGateway implements MachineGateway {
         ...current,
         status: "started",
         updatedAt: new Date().toISOString(),
+        currentActionIndex: 0,
+        completedActions: 0,
+        currentActionType: actionTypes[0],
       };
       this.jobs.set(jobId, started);
 
-      const finishTimer = setTimeout(() => {
+      const progressTimer = setInterval(() => {
         const latest = this.jobs.get(jobId);
         if (!latest || latest.status !== "started") {
+          clearInterval(progressTimer);
           return;
         }
+
+        const completedActions = Math.min(
+          latest.completedActions + 1,
+          latest.totalActions,
+        );
+        const isFinished = completedActions >= latest.totalActions;
+        const currentActionIndex = isFinished
+          ? Math.max(latest.totalActions - 1, 0)
+          : completedActions;
+
+        if (isFinished) {
+          clearInterval(progressTimer);
+        }
+
         this.jobs.set(jobId, {
           ...latest,
-          status: "finished",
+          status: isFinished ? "finished" : "started",
           updatedAt: new Date().toISOString(),
+          completedActions,
+          currentActionIndex,
+          currentActionType: actionTypes[currentActionIndex],
+          progressTimer: isFinished ? undefined : progressTimer,
         });
-      }, FINISHED_DELAY_MS);
+      }, ACTION_DELAY_MS);
 
       this.jobs.set(jobId, {
         ...started,
-        finishTimer,
+        progressTimer,
       });
     }, QUEUED_DELAY_MS);
 
@@ -108,6 +145,12 @@ export class MockMachineGateway implements MachineGateway {
       status: job.status,
       updatedAt: job.updatedAt,
       errorMessage: job.errorMessage,
+      progress: {
+        currentActionIndex: job.currentActionIndex,
+        completedActions: job.completedActions,
+        totalActions: job.totalActions,
+        currentActionType: job.currentActionType,
+      },
     };
   }
 }

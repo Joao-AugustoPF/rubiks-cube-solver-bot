@@ -25,7 +25,11 @@ static void taskSolver(void* pv) {
   SolverPayload* payload = (SolverPayload*)pv;
 
   char jobId[64];
+  char notation[256];
   strncpy(jobId, payload->jobId, sizeof(jobId) - 1);
+  jobId[sizeof(jobId) - 1] = '\0';
+  strncpy(notation, payload->notation, sizeof(notation) - 1);
+  notation[sizeof(notation) - 1] = '\0';
 
   StaticJsonDocument<HTTP_BODY_SIZE> actionsDoc;
   DeserializationError parseError = deserializeJson(actionsDoc, payload->actionsJson);
@@ -38,12 +42,17 @@ static void taskSolver(void* pv) {
     return;
   }
 
-  JobManager::setStarted(jobId);
-  Serial.printf("[SOLVER] Job %s iniciado\n", jobId);
-  Serial.printf("[SOLVER] >>> NOTAÇÃO RECEBIDA: %s <<<\n", payload->notation);
+  JsonArray actions = actionsDoc.as<JsonArray>();
+  const uint16_t totalActions = actions.size();
 
-  for (JsonObject action : actionsDoc.as<JsonArray>()) {
+  JobManager::setStarted(jobId, totalActions);
+  Serial.printf("[SOLVER] Job %s iniciado\n", jobId);
+  Serial.printf("[SOLVER] >>> NOTAÇÃO RECEBIDA: %s <<<\n", notation);
+
+  uint16_t actionIndex = 0;
+  for (JsonObject action : actions) {
     const char* type = action["type"] | "?";
+    JobManager::setActionProgress(actionIndex, actionIndex, type);
     Serial.printf("[SOLVER] Executando: %s\n", type);
 
     if (!Actuators::execute(action)) {
@@ -55,6 +64,15 @@ static void taskSolver(void* pv) {
       vTaskDelete(nullptr);
       return;
     }
+
+    actionIndex++;
+    uint16_t currentIndexAfter =
+      actionIndex >= totalActions ? totalActions - 1 : actionIndex;
+    JobManager::setActionProgress(
+      totalActions == 0 ? 0 : currentIndexAfter,
+      actionIndex,
+      type
+    );
   }
 
   JobManager::setFinished();
@@ -106,12 +124,24 @@ static void handleStart(WebServer& server) {
     return;
   }
 
+  JsonArray actions = doc["actions"].as<JsonArray>();
+  if (actions.isNull()) {
+    sendError(server, 400, "actions deve ser um array");
+    return;
+  }
+  const uint16_t totalActions = actions.size();
+
   if (JobManager::isBusyWith(jobId)) {
     Job snap; JobManager::getSnapshot(snap);
-    StaticJsonDocument<128> resp;
+    StaticJsonDocument<384> resp;
     resp["jobId"]     = jobId;
     resp["status"]    = JobManager::statusToString(snap.status);
     resp["updatedAt"] = TimeUtils::isoTimestamp();
+    JsonObject progress = resp.createNestedObject("progress");
+    progress["currentActionIndex"] = snap.currentActionIndex;
+    progress["completedActions"]   = snap.completedActions;
+    progress["totalActions"]       = snap.totalActions;
+    progress["currentActionType"]  = snap.currentActionType;
     sendJson(server, 200, resp);
     return;
   }
@@ -126,12 +156,16 @@ static void handleStart(WebServer& server) {
     return;
   }
 
-  JobManager::setQueued(jobId);
+  JobManager::setQueued(jobId, totalActions);
 
-  StaticJsonDocument<128> resp;
+  StaticJsonDocument<384> resp;
   resp["jobId"]     = jobId;
   resp["status"]    = "queued";
   resp["updatedAt"] = TimeUtils::isoTimestamp();
+  JsonObject progress = resp.createNestedObject("progress");
+  progress["currentActionIndex"] = 0;
+  progress["completedActions"]   = 0;
+  progress["totalActions"]       = totalActions;
   sendJson(server, 200, resp);
 
   SolverPayload* payload = (SolverPayload*)pvPortMalloc(sizeof(SolverPayload));
@@ -141,8 +175,10 @@ static void handleStart(WebServer& server) {
   }
 
   strncpy(payload->jobId, jobId, sizeof(payload->jobId) - 1);
+  payload->jobId[sizeof(payload->jobId) - 1] = '\0';
   strncpy(payload->notation, doc["notation"] | "vazio", sizeof(payload->notation) - 1);
-  serializeJson(doc["actions"], payload->actionsJson, sizeof(payload->actionsJson));
+  payload->notation[sizeof(payload->notation) - 1] = '\0';
+  serializeJson(actions, payload->actionsJson, sizeof(payload->actionsJson));
 
   BaseType_t created = xTaskCreatePinnedToCore(
     taskSolver, "solver", STACK_SOLVER, payload, 2, &_solverTaskHandle, 1
@@ -169,7 +205,7 @@ static void handleStatus(WebServer& server) {
   Job snap;
   JobManager::getSnapshot(snap);
 
-  StaticJsonDocument<256> resp;
+  StaticJsonDocument<384> resp;
   resp["jobId"]     = jobId;
   resp["updatedAt"] = TimeUtils::isoTimestamp();
 
@@ -184,6 +220,11 @@ static void handleStatus(WebServer& server) {
   if (snap.status == JobStatus::ERROR && strlen(snap.errorMessage) > 0) {
     resp["errorMessage"] = snap.errorMessage;
   }
+  JsonObject progress = resp.createNestedObject("progress");
+  progress["currentActionIndex"] = snap.currentActionIndex;
+  progress["completedActions"]   = snap.completedActions;
+  progress["totalActions"]       = snap.totalActions;
+  progress["currentActionType"]  = snap.currentActionType;
   sendJson(server, 200, resp);
 }
 
