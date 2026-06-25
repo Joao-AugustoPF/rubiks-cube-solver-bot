@@ -55,10 +55,13 @@ export function SolveSessionRunner() {
         }
 
         setControlSession(body);
-        const activeSession = body.activeSession ?? localSession;
-        applyLoadedSession(activeSession);
-        if (body.activeSession) {
-          saveSolveSession(body.activeSession);
+        const selectedSession = selectDisplayedSession(
+          localSession,
+          body.activeSession ?? null,
+        );
+        applyLoadedSession(selectedSession);
+        if (selectedSession && selectedSession.jobId === body.activeSession?.jobId) {
+          saveSolveSession(selectedSession);
         }
       } catch (error) {
         if (cancelled) {
@@ -153,15 +156,13 @@ export function SolveSessionRunner() {
   const canStartExecution =
     Boolean(controlSession?.isOperator) &&
     !isStartingMachine &&
-    (machineStatus === null || machineStatus === "error");
+    (machineStatus === null || isTerminalMachineStatus(machineStatus));
 
-  const startButtonLabel = !controlSession?.isOperator
-    ? "Visualização apenas"
-    : isStartingMachine
-      ? "Iniciando..."
-      : machineStatus === null
-        ? "Iniciar execução"
-        : "Tentar iniciar novamente";
+  const startButtonLabel = getStartButtonLabel({
+    isOperator: Boolean(controlSession?.isOperator),
+    isStartingMachine,
+    machineStatus,
+  });
 
   if (isLoading) {
     return (
@@ -296,12 +297,17 @@ export function SolveSessionRunner() {
     setIsStartingMachine(true);
     setMachineError(null);
 
+    const sessionForExecution = createSessionForMachineStart(
+      session,
+      isTerminalMachineStatus(machineStatus),
+    );
+
     const payload: MachineStartRequest = {
-      jobId: session.jobId,
-      notation: session.logicalMoves.join(" "),
-      actions: session.mechanicalPlan.actions,
-      initialCubeState: session.initialCubeState,
-      logicalMoves: session.logicalMoves,
+      jobId: sessionForExecution.jobId,
+      notation: sessionForExecution.logicalMoves.join(" "),
+      actions: sessionForExecution.mechanicalPlan.actions,
+      initialCubeState: sessionForExecution.initialCubeState,
+      logicalMoves: sessionForExecution.logicalMoves,
     };
 
     try {
@@ -316,7 +322,7 @@ export function SolveSessionRunner() {
       if (!response.ok || !("status" in body)) {
         throw new Error(extractApiError(body, "Falha ao iniciar máquina."));
       }
-      applyMachineStatus(body);
+      applyMachineStatus(body, sessionForExecution);
     } catch (error: unknown) {
       setMachineStatus("error");
       setMachineError(error instanceof Error ? error.message : "Erro ao iniciar máquina.");
@@ -325,19 +331,28 @@ export function SolveSessionRunner() {
     }
   }
 
-  function applyMachineStatus(statusResponse: MachineStatusResponse) {
+  function applyMachineStatus(
+    statusResponse: MachineStatusResponse,
+    baseSession?: SolveSession,
+  ) {
     setMachineStatus(statusResponse.status);
     setMachineMoveIndex(statusResponse.progress?.currentLogicalMoveIndex ?? null);
     setMachineError(statusResponse.errorMessage ?? null);
 
     setSession((previous) => {
-      if (!previous) {
+      const sessionToUpdate = baseSession ?? previous;
+      if (!sessionToUpdate) {
         return previous;
       }
 
       const updated: SolveSession = {
-        ...previous,
+        ...sessionToUpdate,
+        jobId: statusResponse.jobId,
         updatedAt: new Date().toISOString(),
+        mechanicalPlan: {
+          ...sessionToUpdate.mechanicalPlan,
+          jobId: statusResponse.jobId,
+        },
         machineExecution: {
           status: statusResponse.status,
           updatedAt: statusResponse.updatedAt,
@@ -370,6 +385,91 @@ function extractApiError(
   }
 
   return fallback;
+}
+
+function getStartButtonLabel(input: {
+  isOperator: boolean;
+  isStartingMachine: boolean;
+  machineStatus: MachineStatus | null;
+}): string {
+  if (!input.isOperator) {
+    return "Visualização apenas";
+  }
+  if (input.isStartingMachine) {
+    return "Iniciando...";
+  }
+  if (input.machineStatus === null) {
+    return "Iniciar execução";
+  }
+  if (input.machineStatus === "finished") {
+    return "Enviar novamente";
+  }
+  if (input.machineStatus === "error") {
+    return "Tentar novamente";
+  }
+
+  return "Execução em andamento";
+}
+
+function selectDisplayedSession(
+  localSession: SolveSession | null,
+  activeSession: SolveSession | null,
+): SolveSession | null {
+  if (!activeSession) {
+    return localSession;
+  }
+  if (!localSession) {
+    return activeSession;
+  }
+
+  const activeStatus = activeSession.machineExecution?.status ?? null;
+  if (activeStatus === "queued" || activeStatus === "started") {
+    return activeSession;
+  }
+
+  if (activeSession.jobId === localSession.jobId) {
+    return activeSession;
+  }
+
+  return getTimestamp(localSession.updatedAt) > getTimestamp(activeSession.updatedAt)
+    ? localSession
+    : activeSession;
+}
+
+function createSessionForMachineStart(
+  session: SolveSession,
+  forceNewJob: boolean,
+): SolveSession {
+  if (!forceNewJob) {
+    return session;
+  }
+
+  const jobId = createRetryJobId(session.jobId);
+  return {
+    ...session,
+    jobId,
+    updatedAt: new Date().toISOString(),
+    mechanicalPlan: {
+      ...session.mechanicalPlan,
+      jobId,
+    },
+    machineExecution: undefined,
+  };
+}
+
+function createRetryJobId(jobId: string): string {
+  const baseJobId = jobId.replace(/-run-[a-z0-9]+-[a-z0-9]+$/i, "");
+  const random = Math.random().toString(36).slice(2, 7);
+  return `${baseJobId}-run-${Date.now().toString(36)}-${random}`;
+}
+
+function isTerminalMachineStatus(status: MachineStatus | null): boolean {
+  return status === "finished" || status === "error";
+}
+
+function getTimestamp(value: string): number {
+  const timestamp = Date.parse(value);
+  return Number.isFinite(timestamp) ? timestamp : 0;
 }
 
 function getConnectionLabel(
