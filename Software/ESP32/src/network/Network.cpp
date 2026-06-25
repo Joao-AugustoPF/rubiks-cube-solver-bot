@@ -6,6 +6,7 @@
 #include <ArduinoJson.h>
 #include "../config/Config.h"
 #include "../config/DeviceConfig.h"
+#include "BackendHttpClient.h"
 
 namespace AppNetwork {
 
@@ -48,7 +49,14 @@ void syncNTP() {
 
 static bool postRegistration() {
   HTTPClient http;
-  http.begin(NEXTJS_REGISTER_URL);
+  WiFiClient plainClient;
+  WiFiClientSecure secureClient;
+
+  if (!BackendHttpClient::begin(http, plainClient, secureClient, String(NEXTJS_REGISTER_URL))) {
+    Serial.printf("[REG] URL inválida: %s\n", NEXTJS_REGISTER_URL);
+    return false;
+  }
+
   http.addHeader("Content-Type",    "application/json");
   http.addHeader("X-Device-Secret", DeviceConfig::getSecret());
 

@@ -37,27 +37,52 @@ Para levar a máquina para outro laboratório, casa ou evento, precisas de apaga
 
 ## 3. Configurar o Next.js
 
-Adiciona no `.env.local` (desenvolvimento) e nas variáveis de ambiente do VPS:
+Para produção em `https://cubo.joaoaugustopf.com`, configura as variáveis do
+Next.js assim:
 
-` ` `env
+```env
 DEVICE_SECRET=meu-segredo-123
+MACHINE_GATEWAY=polling
+MACHINE_OPERATOR_LEASE_SECONDS=1800
+```
 
-# Opcional para desenvolvimento sem hardware:
-# MACHINE_GATEWAY=mock
+Não configura `DEVICE_IP_OVERRIDE` nem `DEVICE_BASE_URL` em produção. O backend
+público não chama o IP privado do ESP32; o ESP32 é quem chama o backend.
 
-# Opcional para bancada local, quando o Next está na mesma rede do ESP32:
-# MACHINE_GATEWAY=direct
-# DEVICE_IP_OVERRIDE=192.168.1.42
-` ` `
+Para desenvolvimento sem hardware:
+
+```env
+DEVICE_SECRET=meu-segredo-123
+MACHINE_GATEWAY=mock
+```
+
+Para bancada local, quando o Next está na mesma rede do ESP32:
+
+```env
+DEVICE_SECRET=meu-segredo-123
+MACHINE_GATEWAY=direct
+DEVICE_IP_OVERRIDE=192.168.1.42
+```
 
 > O `DEVICE_SECRET` é uma chave partilhada entre o ESP32 e o Next.js.
 > Toda a requisição carrega o header `X-Device-Secret` para autenticação.
+
+O firmware já está configurado em `src/config/Config.h` para chamar:
+
+```text
+https://cubo.joaoaugustopf.com/api/device/register
+https://cubo.joaoaugustopf.com/api/device/jobs/next
+https://cubo.joaoaugustopf.com/api/device/jobs/status
+```
+
+Se mudares o domínio do deploy, altera esses três endpoints e grava novamente o
+firmware.
 
 ### Onde colocar os ficheiros
 
 Copia os ficheiros TypeScript para o teu projeto Next.js:
 
-` ` `text
+```text
 src/app/api/
 ├── device/
 │   ├── register/
@@ -70,13 +95,13 @@ src/app/api/
     │   └── route.ts        ← machine-start.ts
     └── status/
         └── route.ts        ← machine-status.ts
-` ` `
+```
 
 ## 4. Fluxo completo de Execução
 
-` ` `text
+```text
 ESP32 boot (Rede configurada)
-  └─► POST https://oteudominio.com/api/device/register
+  └─► POST https://cubo.joaoaugustopf.com/api/device/register
         body: { ip: "192.168.1.42", deviceId: "maquina-cubo-01" }
         header: X-Device-Secret: <secret>
         ← { ok: true }
@@ -88,12 +113,12 @@ Frontend clica "Iniciar execução"
         ← { jobId: "cube-001", status: "queued" }
 
 ESP32 faz polling no backend público
-  └─► GET https://oteudominio.com/api/device/jobs/next?deviceId=maquina-cubo-01
+  └─► GET https://cubo.joaoaugustopf.com/api/device/jobs/next?deviceId=maquina-cubo-01
         header: X-Device-Secret: <secret>
         ← { hasJob: true, job: { jobId: "cube-001", notation: "...", actions: [...] } }
 
 ESP32 executa e reporta progresso
-  └─► POST https://oteudominio.com/api/device/jobs/status
+  └─► POST https://cubo.joaoaugustopf.com/api/device/jobs/status
         body: { jobId: "cube-001", status: "started", progress: {...} }
 
 Frontend faz polling
@@ -101,7 +126,7 @@ Frontend faz polling
         ← { jobId: "cube-001", status: "started", progress: {...} }
 
 Web deriva o estado atual do cubo a partir do progresso físico ✓
-` ` `
+```
 
 ## 5. Testar o ESP32 manualmente (cURL)
 
@@ -109,7 +134,7 @@ Podes testar todos os endpoints diretamente do teu terminal:
 
 **A. Provisionar o Wi-Fi (Correr ligado na rede `RubikSolver-Setup`):**
 
-` ` `bash
+```bash
 curl -X POST http://192.168.4.1/provision \
   -H "Content-Type: application/json" \
   -d '{
@@ -118,26 +143,26 @@ curl -X POST http://192.168.4.1/provision \
         "secret": "meu-segredo-123",
         "deviceId": "maquina-cubo-01"
       }'
-` ` `
+```
 
 **B. Health check (Correr ligado na rede real):**
 
-` ` `bash
+```bash
 curl -X GET http://IP_DO_ESP32/health
-` ` `
+```
 
 **C. Buscar próximo job pelo ESP32:**
 
-` ` `bash
-curl -X GET "https://oteudominio.com/api/device/jobs/next?deviceId=maquina-cubo-01" \
+```bash
+curl -X GET "https://cubo.joaoaugustopf.com/api/device/jobs/next?deviceId=maquina-cubo-01" \
   -H "X-Device-Secret: meu-segredo-123" \
   -H "X-Device-IP: 192.168.1.42"
-` ` `
+```
 
 **D. Reportar Status do Job pelo ESP32:**
 
-` ` `bash
-curl -X POST "https://oteudominio.com/api/device/jobs/status" \
+```bash
+curl -X POST "https://cubo.joaoaugustopf.com/api/device/jobs/status" \
   -H "Content-Type: application/json" \
   -H "X-Device-Secret: meu-segredo-123" \
   -H "X-Device-IP: 192.168.1.42" \
@@ -152,11 +177,11 @@ curl -X POST "https://oteudominio.com/api/device/jobs/status" \
           "currentActionType": "wait"
         }
       }'
-` ` `
+```
 
 Resposta esperada:
 
-` ` `json
+```json
 {
   "jobId": "teste-001",
   "status": "started",
@@ -168,7 +193,7 @@ Resposta esperada:
     "currentActionType": "wait"
   }
 }
-` ` `
+```
 
 ## 6. Por que polling resolve o problema de NAT
 

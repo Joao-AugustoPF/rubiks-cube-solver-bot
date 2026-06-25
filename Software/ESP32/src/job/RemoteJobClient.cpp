@@ -8,6 +8,7 @@
 #include "../actuators/Actuators.h"
 #include "../config/Config.h"
 #include "../config/DeviceConfig.h"
+#include "../network/BackendHttpClient.h"
 #include "JobManager.h"
 
 namespace RemoteJobClient {
@@ -31,7 +32,14 @@ static bool postStatus(const char* jobId,
                        const char* currentActionType,
                        const char* errorMessage = nullptr) {
   HTTPClient http;
-  http.begin(NEXTJS_JOB_STATUS_URL);
+  WiFiClient plainClient;
+  WiFiClientSecure secureClient;
+
+  if (!BackendHttpClient::begin(http, plainClient, secureClient, String(NEXTJS_JOB_STATUS_URL))) {
+    Serial.printf("[REMOTE] URL de status inválida: %s\n", NEXTJS_JOB_STATUS_URL);
+    return false;
+  }
+
   addDeviceHeaders(http);
 
   StaticJsonDocument<512> body;
@@ -135,7 +143,14 @@ void pollOnce() {
                DeviceConfig::getDeviceId();
 
   HTTPClient http;
-  http.begin(url);
+  WiFiClient plainClient;
+  WiFiClientSecure secureClient;
+
+  if (!BackendHttpClient::begin(http, plainClient, secureClient, url)) {
+    Serial.printf("[REMOTE] URL de next inválida: %s\n", url.c_str());
+    return;
+  }
+
   addDeviceHeaders(http);
 
   int code = http.GET();

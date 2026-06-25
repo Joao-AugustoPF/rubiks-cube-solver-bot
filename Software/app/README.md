@@ -34,14 +34,26 @@ Fluxos implementados:
 
 ## Variáveis de ambiente da máquina
 
-```bash
+Produção em `https://cubo.joaoaugustopf.com`:
+
+```env
+DEVICE_SECRET=meu-segredo-compartilhado
+MACHINE_GATEWAY=polling
+MACHINE_OPERATOR_LEASE_SECONDS=1800
+```
+
+Nesse modo a web não precisa saber o IP do ESP32. O ESP32 chama o backend
+público para buscar jobs e reportar progresso.
+
+Desenvolvimento:
+
+```env
 DEVICE_SECRET=meu-segredo-compartilhado
 
 # Opcional:
 MACHINE_GATEWAY=mock   # força mock local
 MACHINE_GATEWAY=direct # modo bancada: Next chama o IP do ESP32 diretamente
 DEVICE_IP_OVERRIDE=192.168.1.42 # usado apenas no modo direct
-MACHINE_OPERATOR_LEASE_SECONDS=1800
 ```
 
 ## Scripts

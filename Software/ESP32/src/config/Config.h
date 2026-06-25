@@ -1,8 +1,8 @@
 #pragma once
 
-#define NEXTJS_REGISTER_URL  "http://cubo.joaoaugustopf.com/api/device/register"
-#define NEXTJS_JOB_NEXT_URL  "http://cubo.joaoaugustopf.com/api/device/jobs/next"
-#define NEXTJS_JOB_STATUS_URL "http://cubo.joaoaugustopf.com/api/device/jobs/status"
+#define NEXTJS_REGISTER_URL  "https://cubo.joaoaugustopf.com/api/device/register"
+#define NEXTJS_JOB_NEXT_URL  "https://cubo.joaoaugustopf.com/api/device/jobs/next"
+#define NEXTJS_JOB_STATUS_URL "https://cubo.joaoaugustopf.com/api/device/jobs/status"
 
 #define PROVISION_AP_SSID      "RubikSolver-Setup"
 #define PROVISION_AP_PASSWORD  ""
