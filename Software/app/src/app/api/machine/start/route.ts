@@ -39,8 +39,11 @@ export async function POST(request: Request) {
     );
   }
 
+  const gatewaySelection = getMachineGatewaySelection();
+  const isMockExecution = gatewaySelection.mode === "mock";
   const operator = refreshOperatorLease(getOperatorTokenFromRequest(request));
-  if (!operator.isOperator) {
+
+  if (!isMockExecution && !operator.isOperator) {
     return NextResponse.json<ApiErrorResponse>(
       {
         message:
@@ -51,7 +54,6 @@ export async function POST(request: Request) {
     );
   }
 
-  const gatewaySelection = getMachineGatewaySelection();
   let status: MachineStatusResponse;
 
   try {
@@ -78,7 +80,7 @@ export async function POST(request: Request) {
     gatewayMode: gatewaySelection.mode,
     device: gatewaySelection.device,
   });
-  if (operator.operatorToken) {
+  if (!isMockExecution && operator.operatorToken) {
     response.headers.append("Set-Cookie", buildOperatorCookie(operator.operatorToken));
   }
 
