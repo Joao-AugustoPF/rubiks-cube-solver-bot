@@ -37,7 +37,7 @@ Fluxos implementados:
 Produção em `https://cubo.joaoaugustopf.com`:
 
 ```env
-DEVICE_SECRET=meu-segredo-compartilhado
+DEVICE_SECRET=<DEVICE_SECRET>
 MACHINE_GATEWAY=polling
 MACHINE_OPERATOR_LEASE_SECONDS=1800
 ```
@@ -48,7 +48,7 @@ público para buscar jobs e reportar progresso.
 Desenvolvimento:
 
 ```env
-DEVICE_SECRET=meu-segredo-compartilhado
+DEVICE_SECRET=<DEVICE_SECRET>
 
 # Opcional:
 MACHINE_GATEWAY=mock   # força mock local
@@ -89,6 +89,7 @@ Arquivos:
 
 ## Documentação
 
+- Manual de funcionamento da web: `docs/manual-web.md`
 - Arquitetura consolidada: `docs/architecture.md`
 - Scanner: `docs/scanner.md`
 - Solver e validação: `docs/solver.md`
