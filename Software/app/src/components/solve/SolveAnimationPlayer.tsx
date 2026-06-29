@@ -12,12 +12,14 @@ interface SolveAnimationPlayerProps {
   session: SolveSession;
   machineStatus?: "queued" | "started" | "finished" | "error" | null;
   machineMoveIndex?: number | null;
+  onLocalAnimationFinished?: () => void;
 }
 
 export function SolveAnimationPlayer({
   session,
   machineStatus = null,
   machineMoveIndex = null,
+  onLocalAnimationFinished,
 }: SolveAnimationPlayerProps) {
   const hasMachineProgress = typeof machineMoveIndex === "number";
   const {
@@ -64,6 +66,21 @@ export function SolveAnimationPlayer({
     machineStatus === "started" || machineStatus === "finished";
   const waitingMachineStart = !hasMachineStarted && totalMoves > 0;
   const controlsLockedByMachine = hasMachineProgress && hasMachineStarted;
+
+  useEffect(() => {
+    if (!onLocalAnimationFinished) {
+      return;
+    }
+    if (hasMachineProgress || !hasMachineStarted || !isFinished) {
+      return;
+    }
+    onLocalAnimationFinished();
+  }, [
+    hasMachineProgress,
+    hasMachineStarted,
+    isFinished,
+    onLocalAnimationFinished,
+  ]);
 
   return (
     <section className={styles.player}>
@@ -199,7 +216,7 @@ export function SolveAnimationPlayer({
       <div className={styles.result}>
         {waitingMachineStart ? (
           <p className={styles.waiting}>
-            Aguardando a máquina iniciar para começar a visualização.
+            Aguardando o início da execução para começar a visualização.
           </p>
         ) : controlsLockedByMachine ? (
           <p>
