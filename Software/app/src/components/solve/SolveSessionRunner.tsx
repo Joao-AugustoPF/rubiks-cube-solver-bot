@@ -283,9 +283,7 @@ export function SolveSessionRunner() {
   function applyLoadedSession(loaded: SolveSession | null) {
     setSession(loaded);
     setMachineStatus(loaded?.machineExecution?.status ?? null);
-    setMachineMoveIndex(
-      loaded?.machineExecution?.progress?.currentLogicalMoveIndex ?? null,
-    );
+    setMachineMoveIndex(null);
     setMachineError(loaded?.machineExecution?.errorMessage ?? null);
   }
 
@@ -336,7 +334,7 @@ export function SolveSessionRunner() {
     baseSession?: SolveSession,
   ) {
     setMachineStatus(statusResponse.status);
-    setMachineMoveIndex(statusResponse.progress?.currentLogicalMoveIndex ?? null);
+    setMachineMoveIndex(null);
     setMachineError(statusResponse.errorMessage ?? null);
 
     setSession((previous) => {
