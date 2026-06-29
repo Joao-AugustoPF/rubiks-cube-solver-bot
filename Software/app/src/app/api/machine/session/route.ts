@@ -56,13 +56,14 @@ function buildControlSessionResponse(operator: {
   message?: string;
 }): MachineControlSessionResponse {
   const gatewaySelection = getMachineGatewaySelection();
+  const isMockExecution = gatewaySelection.mode === "mock";
 
   return {
-    isOperator: operator.isOperator,
-    operatorLeaseExpiresAt: operator.expiresAt,
+    isOperator: isMockExecution ? true : operator.isOperator,
+    operatorLeaseExpiresAt: isMockExecution ? undefined : operator.expiresAt,
     activeSession: getActiveMachineSession() ?? undefined,
     gatewayMode: gatewaySelection.mode,
     device: gatewaySelection.device,
-    message: operator.message,
+    message: isMockExecution ? undefined : operator.message,
   };
 }
