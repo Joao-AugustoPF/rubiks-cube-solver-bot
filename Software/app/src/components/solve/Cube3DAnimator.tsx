@@ -241,7 +241,7 @@ export function Cube3DAnimator({
 
   useEffect(() => {
     const context = contextRef.current;
-    if (!context) {
+    if (!context || !isRendererReady) {
       return;
     }
 
@@ -250,17 +250,12 @@ export function Cube3DAnimator({
     clearGroup(context.turnGroup);
     context.turnGroup.rotation.set(0, 0, 0);
     buildCubeMeshes(cubeState, context.baseGroup);
-  }, [cubeState]);
 
-  useEffect(() => {
-    const context = contextRef.current;
-    if (!context || !activeMove || moveIndex >= totalMoves) {
+    if (!activeMove || moveIndex >= totalMoves) {
       return;
     }
 
     const nextTurn = parseTurn(activeMove, moveIndex);
-    context.turnGroup.rotation.set(0, 0, 0);
-    moveAllChildren(context.turnGroup, context.baseGroup);
     moveLayerToTurnGroup(context.baseGroup, context.turnGroup, nextTurn);
     turnRef.current = {
       key: nextTurn.key,
@@ -269,7 +264,7 @@ export function Cube3DAnimator({
       startedAt: performance.now(),
       fraction: 0,
     };
-  }, [activeMove, moveIndex, totalMoves]);
+  }, [activeMove, cubeState, isRendererReady, moveIndex, totalMoves]);
 
   const currentLabel =
     activeMove && moveIndex < totalMoves ? activeMove : "finalizado";
@@ -400,12 +395,6 @@ function moveLayerToTurnGroup(
     if (logicalPosition[turn.axisIndex] === turn.layerValue) {
       turnGroup.add(child);
     }
-  }
-}
-
-function moveAllChildren(fromGroup: THREE.Group, toGroup: THREE.Group) {
-  for (const child of [...fromGroup.children]) {
-    toGroup.add(child);
   }
 }
 
